@@ -1,0 +1,112 @@
+---
+title: "TRIM"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r TRIM}
+listaSpecie <- distinct(dfo,species) %>% pull()
+nomeSpecie <- listaSpecie[77]
+
+odoTrim <- function(nomeSpecie) {
+  message("▶ Processing: ", nomeSpecie)
+  # Filter data for the species
+  df.test <- dfo %>% 
+    filter(bioregion == "Continental",
+           species == nomeSpecie) %>% 
+    group_by(date_year, cellcode) %>% 
+    count(name = "count")
+  # Check: at least 3 years
+  if (n_distinct(df.test$date_year) < 3) {
+    message("⚠️   Not enough years for ", nomeSpecie, " — skipped")
+    return(NULL)
+  }
+  # Check: at least 3 sites
+  if (n_distinct(df.test$cellcode) < 3) {
+    message("⚠️   Not enough sites for ", nomeSpecie, " — skipped")
+    return(NULL)
+  }
+  # Try to fit TRIM
+  res <- tryCatch({
+    m3 <- trim(count ~ cellcode + date_year, data = df.test, model = 3)
+    out <- overall(m3)
+    out$slope$species=nomeSpecie
+    # Filename
+    filename <- paste0("trim/trim_", gsub(" ", "_", nomeSpecie), ".pdf")
+    # Save PDF
+    pdf(filename, width = 7, height = 5)
+      plot(overall(m3), main = overall(m3)$slope$meaning)
+    dev.off()
+    message("✅   Completed: ", nomeSpecie)
+    return(out)
+  }, error = function(e) {
+    message("❌   FAILED for ", nomeSpecie, ": ", e$message)
+    return(NULL)
+  })
+  return(res)
+}
+
+# test su singole specie
+odoTrim("Aeshna affinis")
+odoTrim(listaSpecie[77])
+
+# Tabella con tutte le specie e relativi plot
+results <- lapply(listaSpecie, odoTrim)
+results_df <- do.call(bind_rows, lapply(results, function(x) x$slope))
+head(results_df)
+write.csv(results_df,'trim/trimResults.csv')
+```
+
+```{r}
+# celle monitorate x anno
+cells <- dfo %>% 
+  group_by(date_year) %>% 
+  distinct(cellcode)
+
+cells %>% 
+  count(date_year) %>% 
+  ggplot(aes(date_year,n))+
+    geom_area(fill='forestgreen', alpha=0.6)+
+  labs(y='no. cells\n', x='')
+```
+
+# occupancy
+```{r presence-absence}
+library(unmarked)
+
+# Create a presence-absence matrix
+library(dplyr)
+library(tidyr)
+
+# Convert to a presence-absence matrix for each species by cell and year
+df_pa <- dfo %>%
+  filter(species=='Calopteryx splendens') %>% 
+  mutate(presence = 1) %>%  # Marking presence
+  distinct(species, cellcode, date_year, presence) %>%
+  #filter(date_year==2003) %>% 
+  pivot_wider(names_from = date_year,
+              values_from = presence,
+              values_fill = 0)
+
+# View the result
+as_tibble(df_pa)
+```
+
+```{r}
+# Assuming df_pa is the presence-absence matrix and you have separate columns for each species
+umf <- unmarkedFrameOccu(y = as.matrix(df_pa[, -c(1:2)]),  
+                         # presence-absence matrix
+                         siteCovs = data.frame(cell = df_pa$cellcode),  
+                         # Site covariates
+                         obsCovs = NULL)
+
+summary(umf) 
+plot(umf, panels=6) # capture history plot
+
+# Model with temporal trend (date_year as a covariate)
+occupancy_model <- occu(~ 1 ~ 1, data = umf)
+
+```

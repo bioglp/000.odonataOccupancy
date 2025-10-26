@@ -1,0 +1,2 @@
+Species_nr;Monitoring_scheme;Start_year;Number_visits_spring;Census_method;Number_of_points_per_square_or_transect;Transect_length;Mapping_area;Count_unit;Base_year_first_year;Base_year_last_year;year_from;Count_aggregation;Recorded_species;All_localities_used_every_year;Serial_correlation;Overdispersion
+all;ABC;2001;5;1;NA;NA;NA;1;2001;2001;2001;MAX;1;1;TRUE;TRUE
