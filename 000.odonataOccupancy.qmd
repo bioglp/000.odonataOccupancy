@@ -16,6 +16,7 @@ editor_options:
 
 ## Libraries
 ```{r libraries}
+# https://bioglp.github.io/000.odonataOccupancy/000.odonataOccupancy.html
 dir.create('input', showWarnings = FALSE)
 #dir.create('output', showWarnings = FALSE)
 #dir.create('plots', showWarnings = FALSE)
@@ -32,10 +33,9 @@ Campi del dataset di partenza:
 dfo <- read.xlsx('input/datasetSegnalazioni_R20240103.xlsx')
 dfo <- dfo %>% filter(date_year<2024)
 glimpse(dfo)
-attach(dfo)
 ```
 
-La serie dati va dal `r min(date_year)` al `r max(date_year)`.
+La serie dati va dal `r min(dfo$date_year)` al `r max(dfo$date_year)`.
 
 
 ## Sampling efforts
