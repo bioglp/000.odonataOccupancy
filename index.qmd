@@ -1,0 +1,42 @@
+---
+title: "OdonataOccupancy"
+author: Gianandrea La Porta
+date: 2025-10-27
+format: 
+    html:
+        css: css/bujo01.css
+editor: source
+---
+## Link output elaborazioni
+
+  - [risultati](https://bioglp.github.io/000.odonataOccupancy/000.odonataOccupancy.html)
+  
+## Daily log
+
+* 2025-10-28
+    - nuova estrazione ornitho.it
+    
+* 2025-02-04
+    - [x] calcolare una curva di accumulazione per l'area nel tempo
+
+* 2025-01-08
+Occupancy models in R
+    - [unmarked](https://cran.r-project.org/web/packages/unmarked/vignettes/colext.html)
+    - [camtrapR](https://cran.r-project.org/web/packages/camtrapR/vignettes/camtrapr5.html)
+
+* 2025-01-03
+    - [ ] valutazione grid 5x5 o 20x20
+    - [x] preparazione dataset per avvio elaborazioni con rtrim riferimento temporale 1999-2024
+    - [x] possibile raggruppamento per classi di 5 anni
+
+* 2024-12-20
+    - nessun progresso
+
+* 2024-12-11
+    - [ ] ricerca paper su diffusione nel tempo delle specie aliene Piemonte-Lombardia
+    - [ ] Rappresentazione presenza *P.clarkii*
+    - [x] estrazione dati per lombardia e piemonte **area continentale** (celle > 50%)
+
+* 2024-11-27
+    - Presentazione di rtrim package
+    - Preparazione dataset per le elaborazioni: site, year, count, …, weight

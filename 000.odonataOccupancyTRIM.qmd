@@ -77,10 +77,6 @@ cells %>%
 ```{r presence-absence}
 library(unmarked)
 
-# Create a presence-absence matrix
-library(dplyr)
-library(tidyr)
-
 # Convert to a presence-absence matrix for each species by cell and year
 df_pa <- dfo %>%
   filter(species=='Calopteryx splendens') %>% 

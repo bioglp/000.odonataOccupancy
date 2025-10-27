@@ -28,10 +28,10 @@ p_load(tidyverse,gt,skimr,ggpubr,
 theme_set(theme_bw(base_size = 14))
 ```
 
-Campi del dataset di partenza:
+Campi del dataset di partenza filtrato per bioregione continentale:
 ```{r import data}
 dfo <- read.xlsx('input/datasetSegnalazioni_R20240103.xlsx')
-dfo <- dfo %>% filter(date_year<2024)
+dfo <- dfo %>% filter(date_year<2024, bioregion=='Continental')
 glimpse(dfo)
 ```
 
@@ -330,7 +330,7 @@ lapply(listaSpecie, odoTrendE)
 
 ## Uso di TRIM
 
-Applicazione della funzione TRIM senza correzioni.
+Applicazione della funzione TRIM senza correzioni. La serie temporale di molte specie non può essere elaborata per dati insufficienti.
 ```{r TRIM}
 odoTrim <- function(nomeSpecie) {
   message("▶ Processing: ", nomeSpecie)
@@ -386,6 +386,6 @@ gt(results_df)%>%
 #write.csv(results_df,'trim/trimResults.csv')
 ```
 
-## Modelli di occupancy
+## Modelli di occupancy?
 
 
