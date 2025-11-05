@@ -26,3 +26,9 @@ rownames(y_mat) <- y$cellcode
 
 head(y_mat)
 umf <- unmarkedFrameOccu(y = y_mat)
+
+
+
+
+
+

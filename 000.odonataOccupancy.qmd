@@ -437,6 +437,10 @@ df_occ50 <- df_occ %>%
 ```{r unmarked}
 library(unmarked)
 years <- 1999:2025
+nomeSp <- 'Aeshna affinis'
+
+effort_vec <- effort_df %>% 
+  dplyr::select(n_sites_censiti) %>% pull()
 
 occProb <- function(nomeSp) {
   #print(nomeSp)
@@ -451,16 +455,22 @@ detection_matrix <- df_sp %>%
   arrange(cellcode)
 # Conversione in oggetto umf
 y <- as.matrix(detection_matrix[,-1])
+effort_matrix <- matrix(rep(effort_vec, 
+                            each = nrow(y)), 
+                        nrow = nrow(y))
 rownames(y) <- detection_matrix$cellcode
-umf <- unmarkedFrameOccu(y = y)
+umf <- unmarkedFrameOccu(y = y, obsCovs = list(effort = effort_matrix))
 
-fm <- occu(~1 ~1, data = umf)
+fm <- occu(~effort ~1, data = umf)
 #summary(fm)
 
 pred_list <- lapply(seq_len(ncol(y)), function(i) {
   tryCatch({
-    umf_i <- unmarkedFrameOccu(y = as.matrix(y[, i]))
-    fm_i <- occu(~1 ~1, data = umf_i)
+    umf_i <- unmarkedFrameOccu(
+      y = as.matrix(y[, i]),
+      obsCovs = list(effort = as.matrix(effort_matrix[, i]))
+    )
+    fm_i <- occu(~effort ~1, data = umf_i)
     bt <- backTransform(fm_i, type = "state")
     data.frame(
       species = nomeSp,
@@ -513,25 +523,52 @@ species_trends <- results %>%
 ```
 
 ```{r unmarked_plot}
-sp <- 'Aeshna affinis'
+all_species_df <- all_species_df %>%
+  mutate(year_group = paste0(floor(year / 5) * 5, 
+                             "-", floor(year / 5) * 5 + 4))
+all_species_df$year_group[all_species_df$year_group == "2020-2024"] <- "2020-2025"
+all_species_df$year_group[all_species_df$year_group == "2025-2029"] <- "2020-2025"
 
-occu.plot <- function(sp){
-  all_species_df %>% 
-  filter(species==sp) %>% 
-  ggplot(aes(x = year, y = estimate)) +
-  #geom_line(color = "steelblue", linewidth = 1) +
-  geom_smooth(col='black')+
+occu.plot <- function(nomeSp){
+
+plot1 <- all_species_df %>% 
+  filter(species==nomeSp) %>% 
+  ggplot(aes(year, estimate)) +
+  geom_smooth(col='black', se=F)+
   geom_point(size = 4, color = "forestgreen") +
   # geom_ribbon(aes(ymin = lower, ymax = upper), 
-  #             alpha = 0.2, fill = "steelblue") +
+  #              alpha = 0.2, fill = "forestgreen") +
   labs(
     x = "\nYear",
     y = "Occupancy probability (ψ)\n",
-    title = sp
+    title = nomeSp
     ) +
+  ylim(0,1)+
   theme_minimal(base_size = 13)+
   theme(plot.title = element_text(face = 'italic'))
+
+plot5 <- all_species_df %>% 
+  filter(species==nomeSp) %>% 
+  group_by(year_group) %>% 
+  summarise(mean.est=mean(estimate),
+            dev.est=sd(estimate),
+            lower=mean.est-dev.est,
+            upper=mean.est+dev.est) %>% 
+  mutate(year=c(1999,2004,2009,2014,2019,2025)) %>% 
+  ggplot(aes(year, mean.est)) +
+  geom_smooth(col='black')+
+  geom_point(size = 4, color = "forestgreen") +
+  # geom_ribbon(aes(ymin = lower, ymax = upper), 
+  #              alpha = 0.2, fill = "forestgreen") +
+  labs(
+    x = "\nYear"
+    ) +
+  ylim(0,1)+
+  theme_minimal(base_size = 13)+
+  theme(plot.title = element_text(face = 'italic'))
+  
+plot1+plot5
 }
-#occu.plot(sp)
+#occu.plot(nomeSp)
 map(listaSpecie,occu.plot)
 ```
