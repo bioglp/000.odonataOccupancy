@@ -4,6 +4,7 @@ author: "Gianandrea La Porta"
 date: "2025-03-05"
 format: 
   html:
+    theme: cosmo
     code-fold: true
     code-fold-default: true
     toc: true
@@ -17,7 +18,6 @@ editor_options:
 ## Libraries
 
 ```{r libraries}
-# https://bioglp.github.io/000.odonataOccupancy/000.odonataOccupancy.html
 dir.create('input', showWarnings = FALSE)
 #dir.create('output', showWarnings = FALSE)
 #dir.create('plots', showWarnings = FALSE)
@@ -32,16 +32,25 @@ theme_set(theme_bw(base_size = 14))
 Campi del dataset di partenza filtrato per bioregione continentale:
 
 ```{r import data}
-dfo <- read.xlsx('input/datasetSegnalazioni_R20240103.xlsx')
-dfo <- dfo %>% filter(date_year<2024, bioregion=='Continental')
+dfo <- read.xlsx('input/datasetSegnalazioni_R20251031.xlsx')
+dfo <- dfo %>% rename_with(tolower)
+dfo <- dfo %>% filter(date_year>1998, date_year<2026, code=='Continental')
+dfo <- dfo %>% 
+  rename(species=latin_taxon)
 glimpse(dfo)
+```
+
+```{r nomiSpecie}
+# rinominare specie
+# dfo %>% distinct(species) %>% arrange() %>% pull()
+dfo$species[dfo$species=='Sympetrum fonscolombei'] <- 'Sympetrum fonscolombii'
 ```
 
 La serie dati va dal `r min(dfo$date_year)` al `r max(dfo$date_year)`.
 
 ## Sampling efforts
 
-Percentuale di celle indagate ogni anno sul totale complessivo nell'intero periodo.
+Percentuale di celle visitate ogni anno con almeno 1 segnalazione sul totale complessivo di celle calcolato considerando l'intero periodo `r min(dfo$date_year)`-`r max(dfo$date_year)`.
 
 ```{r 'sampling_effort'}
 # totale celle
@@ -102,6 +111,9 @@ make_matrix <- function(df_year) {
 dfo <- dfo %>%
   mutate(year_group = paste0(floor(date_year / 5) * 5, 
                              "-", floor(date_year / 5) * 5 + 4))
+dfo$year_group[dfo$year_group == "2020-2024"] <- "2020-2025"
+dfo$year_group[dfo$year_group == "2025-2029"] <- "2020-2025"
+  
 
 # Funzione per creare matrice sito × specie con conteggi
 make_matrix <- function(df_group) {
@@ -393,4 +405,133 @@ gt(results_df)%>%
 #write.csv(results_df,'trim/trimResults.csv')
 ```
 
-## Modelli di occupancy?
+## Modelli di occupancy
+
+```{r}
+df.occu <- dfo %>% 
+  select(date_year,species,cellcode) %>% as_tibble() %>% 
+    count(cellcode,species,date_year, name = 'n_occurrences')
+
+df_occ <- df.occu %>%
+  mutate(presence = ifelse(n_occurrences > 0, 1, 0)) %>%
+  complete(cellcode, species, date_year, 
+           fill = list(n_occurrences = 0, presence = 0))
+```
+
+```{r}
+# filtro delle specie con meno di 50 records totali
+# cfr. (Rapacciuolo et al. 2017)
+
+listaSpecie <- df_occ %>% 
+  group_by(species) %>% 
+  summarise(ntot=sum(n_occurrences)) %>% 
+  filter(ntot>=50) %>% 
+  distinct(species) %>% pull()
+
+df_occ50 <- df_occ %>% 
+  filter(species %in% listaSpecie)
+```
+
+## unmarked
+
+```{r unmarked}
+library(unmarked)
+years <- 1999:2025
+
+occProb <- function(nomeSp) {
+  #print(nomeSp)
+  df_sp <- df_occ50 %>% 
+  filter(species==nomeSp) %>% 
+  select(-n_occurrences,-species)
+
+detection_matrix <- df_sp %>%
+  pivot_wider(names_from = date_year, 
+              values_from = presence, 
+              values_fill = 0) %>%
+  arrange(cellcode)
+# Conversione in oggetto umf
+y <- as.matrix(detection_matrix[,-1])
+rownames(y) <- detection_matrix$cellcode
+umf <- unmarkedFrameOccu(y = y)
+
+fm <- occu(~1 ~1, data = umf)
+#summary(fm)
+
+pred_list <- lapply(seq_len(ncol(y)), function(i) {
+  tryCatch({
+    umf_i <- unmarkedFrameOccu(y = as.matrix(y[, i]))
+    fm_i <- occu(~1 ~1, data = umf_i)
+    bt <- backTransform(fm_i, type = "state")
+    data.frame(
+      species = nomeSp,
+      year = years[i],
+      estimate = bt@estimate,
+      lower = confint(bt)[1],
+      upper = confint(bt)[2]
+    )
+  },
+  error = function(e) {
+    message(nomeSp, " nell’anno ", years[i], ": ", e$message)
+    data.frame(
+      species = nomeSp,
+      year = years[i],
+      estimate = NA,
+      lower = NA,
+      upper = NA
+    )
+  })
+})
+
+pred_df <- do.call(rbind, pred_list)
+return(data = pred_df)
+}
+
+# listaSpecie
+# occProb("Sympecma paedisca")
+results <- map(listaSpecie, occProb)
+all_species_df <- bind_rows(results) %>% select(-lower, -upper)
+```
+
+```{r unmarked_trend}
+results <- all_species_df %>%
+  group_by(species) %>%
+  do({
+    mod <- glm(estimate ~ year, 
+               family = quasipoisson,
+               data = .)
+    tidy(mod)  # restituisce coefficienti, SE, p-value
+  }) %>%
+  ungroup()
+
+species_trends <- results %>%
+  filter(term == "year") %>%
+  mutate(trend = case_when(
+    estimate > 0 ~ "increase",
+    estimate < 0 ~ "decrease",
+    TRUE ~ "stable"
+  ))
+```
+
+```{r unmarked_plot}
+sp <- 'Aeshna affinis'
+
+occu.plot <- function(sp){
+  all_species_df %>% 
+  filter(species==sp) %>% 
+  ggplot(aes(x = year, y = estimate)) +
+  #geom_line(color = "steelblue", linewidth = 1) +
+  geom_smooth(col='black')+
+  geom_point(size = 4, color = "forestgreen") +
+  # geom_ribbon(aes(ymin = lower, ymax = upper), 
+  #             alpha = 0.2, fill = "steelblue") +
+  labs(
+    x = "\nYear",
+    y = "Occupancy probability (ψ)\n",
+    title = sp
+    ) +
+  theme_minimal(base_size = 13)+
+  theme(plot.title = element_text(face = 'italic'))
+}
+#occu.plot(sp)
+map(listaSpecie,occu.plot)
+```
