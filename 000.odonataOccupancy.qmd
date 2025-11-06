@@ -1,7 +1,7 @@
 ---
 title: "occupancyOdonata"
 author: "Gianandrea La Porta"
-date: "2025-03-05"
+date: "2025-11-05"
 format: 
   html:
     theme: cosmo
@@ -32,9 +32,11 @@ theme_set(theme_bw(base_size = 14))
 Campi del dataset di partenza filtrato per bioregione continentale:
 
 ```{r import data}
-dfo <- read.xlsx('input/datasetSegnalazioni_R20251031.xlsx')
+dfo <- read.xlsx('input/datasetSegnalazioni_R20251106.xlsx')
 dfo <- dfo %>% rename_with(tolower)
-dfo <- dfo %>% filter(date_year>1998, date_year<2026, code=='Continental')
+dfo <- dfo %>% filter(date_year>1998, 
+                      date_year<2026, 
+                      !is.null(cellcode20))
 dfo <- dfo %>% 
   rename(species=latin_taxon)
 glimpse(dfo)
