@@ -1,5 +1,5 @@
 ---
-title: "occupancyOdonata10k"
+title: "occupancyOdonata"
 author: "Gianandrea La Porta"
 date: "2025-11-05"
 format: 
@@ -32,9 +32,11 @@ theme_set(theme_bw(base_size = 14))
 Campi del dataset di partenza filtrato per bioregione continentale:
 
 ```{r import data}
+year_start <- 2005
+
 dfo <- read.xlsx('input/datasetSegnalazioni_R20251106.xlsx')
 dfo <- dfo %>% rename_with(tolower)
-dfo <- dfo %>% filter(date_year>2004, 
+dfo <- dfo %>% filter(date_year>=year_start, 
                       date_year<2026, 
                       !is.null(cellcode20))
 dfo <- dfo %>% 
@@ -47,12 +49,14 @@ glimpse(dfo)
 # dfo %>% distinct(species) %>% arrange() %>% pull()
 dfo$species[dfo$species=='Sympetrum fonscolombei'] <- 'Sympetrum fonscolombii'
 dfo$species[dfo$species=='Calopteryx splendens caprai'] <- 'Calopteryx splendens'
+dfo$species[dfo$species=='Calopteryx splendens splendens'] <- 'Calopteryx splendens'
 dfo$species[dfo$species=='Calopteryx virgo padana'] <- 'Calopteryx virgo'
+dfo$species[dfo$species=='Calopteryx virgo meridionalis'] <- 'Calopteryx virgo'
 dfo$species[dfo$species=='Gomphus flavipes'] <- 'Stylurus flavipes'
 dfo$species[dfo$species=='Lestes virens vestalis'] <- 'Lestes virens'
 dfo$species[dfo$species=='Onychogomphus forcipatus unguiculatus'] <- 'Onychogomphus forcipatus'
-dfo <- dfo %>% filter(species!='Odonata sp.')
-dfo <- dfo %>% filter(species!='Lestes sp.')
+dfo <- dfo %>% filter(!str_detect(species, "sp\\.$|sp\\s|sp$"))
+dfo <- dfo %>% filter(species!='No odonata')
 ```
 
 La serie dati va dal `r min(dfo$date_year)` al `r max(dfo$date_year)`.
@@ -448,7 +452,7 @@ Il modello utilizzato `occu(~effort ~1, data = umf)` considera una p in funzione
 
 ```{r unmarked}
 library(unmarked)
-years <- 2005:2025
+years <- year_start:2025
 #nomeSp <- 'Aeshna affinis'
 
 effort_vec <- effort_df %>% 

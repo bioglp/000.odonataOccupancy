@@ -9,7 +9,7 @@
 <meta name="author" content="Gianandrea La Porta">
 <meta name="dcterms.date" content="2025-11-05">
 
-<title>occupancyOdonata10k</title>
+<title>occupancyOdonata</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -101,7 +101,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">occupancyOdonata10k</h1>
+<h1 class="title">occupancyOdonata</h1>
 </div>
 
 
@@ -150,14 +150,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> <span class="fu">read.xlsx</span>(<span class="st">'input/datasetSegnalazioni_R20251106.xlsx'</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span> <span class="fu">rename_with</span>(tolower)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span> <span class="fu">filter</span>(date_year<span class="sc">&gt;</span><span class="dv">2004</span>, </span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                      date_year<span class="sc">&lt;</span><span class="dv">2026</span>, </span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                      <span class="sc">!</span><span class="fu">is.null</span>(cellcode20))</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span> </span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">species=</span>latin_taxon)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(dfo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>year_start <span class="ot">&lt;-</span> <span class="dv">2005</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> <span class="fu">read.xlsx</span>(<span class="st">'input/datasetSegnalazioni_R20251106.xlsx'</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span> <span class="fu">rename_with</span>(tolower)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span> <span class="fu">filter</span>(date_year<span class="sc">&gt;=</span>year_start, </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                      date_year<span class="sc">&lt;</span><span class="dv">2026</span>, </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                      <span class="sc">!</span><span class="fu">is.null</span>(cellcode20))</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span> </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">species=</span>latin_taxon)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(dfo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 107,834
@@ -199,12 +201,14 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># dfo %&gt;% distinct(species) %&gt;% arrange() %&gt;% pull()</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[dfo<span class="sc">$</span>species<span class="sc">==</span><span class="st">'Sympetrum fonscolombei'</span>] <span class="ot">&lt;-</span> <span class="st">'Sympetrum fonscolombii'</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[dfo<span class="sc">$</span>species<span class="sc">==</span><span class="st">'Calopteryx splendens caprai'</span>] <span class="ot">&lt;-</span> <span class="st">'Calopteryx splendens'</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[dfo<span class="sc">$</span>species<span class="sc">==</span><span class="st">'Calopteryx virgo padana'</span>] <span class="ot">&lt;-</span> <span class="st">'Calopteryx virgo'</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[dfo<span class="sc">$</span>species<span class="sc">==</span><span class="st">'Gomphus flavipes'</span>] <span class="ot">&lt;-</span> <span class="st">'Stylurus flavipes'</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[dfo<span class="sc">$</span>species<span class="sc">==</span><span class="st">'Lestes virens vestalis'</span>] <span class="ot">&lt;-</span> <span class="st">'Lestes virens'</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[dfo<span class="sc">$</span>species<span class="sc">==</span><span class="st">'Onychogomphus forcipatus unguiculatus'</span>] <span class="ot">&lt;-</span> <span class="st">'Onychogomphus forcipatus'</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span> <span class="fu">filter</span>(species<span class="sc">!=</span><span class="st">'Odonata sp.'</span>)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span> <span class="fu">filter</span>(species<span class="sc">!=</span><span class="st">'Lestes sp.'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[dfo<span class="sc">$</span>species<span class="sc">==</span><span class="st">'Calopteryx splendens splendens'</span>] <span class="ot">&lt;-</span> <span class="st">'Calopteryx splendens'</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[dfo<span class="sc">$</span>species<span class="sc">==</span><span class="st">'Calopteryx virgo padana'</span>] <span class="ot">&lt;-</span> <span class="st">'Calopteryx virgo'</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[dfo<span class="sc">$</span>species<span class="sc">==</span><span class="st">'Calopteryx virgo meridionalis'</span>] <span class="ot">&lt;-</span> <span class="st">'Calopteryx virgo'</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[dfo<span class="sc">$</span>species<span class="sc">==</span><span class="st">'Gomphus flavipes'</span>] <span class="ot">&lt;-</span> <span class="st">'Stylurus flavipes'</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[dfo<span class="sc">$</span>species<span class="sc">==</span><span class="st">'Lestes virens vestalis'</span>] <span class="ot">&lt;-</span> <span class="st">'Lestes virens'</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[dfo<span class="sc">$</span>species<span class="sc">==</span><span class="st">'Onychogomphus forcipatus unguiculatus'</span>] <span class="ot">&lt;-</span> <span class="st">'Onychogomphus forcipatus'</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(species, <span class="st">"sp</span><span class="sc">\\</span><span class="st">.$|sp</span><span class="sc">\\</span><span class="st">s|sp$"</span>))</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span> <span class="fu">filter</span>(species<span class="sc">!=</span><span class="st">'No odonata'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>La serie dati va dal 2005 al 2025.</p>
@@ -1278,214 +1282,33 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 </figure>
 </div>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[81]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/linear_trend-81.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[82]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/linear_trend-82.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[83]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/linear_trend-83.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[84]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/linear_trend-84.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[85]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/linear_trend-85.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[86]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/linear_trend-86.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[87]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/linear_trend-87.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[88]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/linear_trend-88.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[89]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/linear_trend-89.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[90]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/linear_trend-90.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[91]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/linear_trend-91.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[92]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/linear_trend-92.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[93]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/linear_trend-93.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[94]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/linear_trend-94.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[95]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/linear_trend-95.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[96]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/linear_trend-96.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
-<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Regressione lineare per tutte le specie</span></span>
-<span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>species_trends <span class="ot">&lt;-</span> species_sites <span class="sc">%&gt;%</span></span>
-<span id="cb106-4"><a href="#cb106-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species) <span class="sc">%&gt;%</span></span>
-<span id="cb106-5"><a href="#cb106-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do</span>(<span class="fu">tidy</span>(<span class="fu">lm</span>(n_sites <span class="sc">~</span> date_year, <span class="at">data =</span> .)))</span>
-<span id="cb106-6"><a href="#cb106-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb106-7"><a href="#cb106-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleziona solo le righe relative a date_year e con pendenza negativa</span></span>
-<span id="cb106-8"><a href="#cb106-8" aria-hidden="true" tabindex="-1"></a>negative_trends <span class="ot">&lt;-</span> species_trends <span class="sc">%&gt;%</span></span>
-<span id="cb106-9"><a href="#cb106-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"date_year"</span>, estimate <span class="sc">&lt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb106-10"><a href="#cb106-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(species, estimate, std.error, statistic, p.value)</span>
-<span id="cb106-11"><a href="#cb106-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb106-12"><a href="#cb106-12" aria-hidden="true" tabindex="-1"></a>negative_trends</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Regressione lineare per tutte le specie</span></span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>species_trends <span class="ot">&lt;-</span> species_sites <span class="sc">%&gt;%</span></span>
+<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species) <span class="sc">%&gt;%</span></span>
+<span id="cb90-5"><a href="#cb90-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do</span>(<span class="fu">tidy</span>(<span class="fu">lm</span>(n_sites <span class="sc">~</span> date_year, <span class="at">data =</span> .)))</span>
+<span id="cb90-6"><a href="#cb90-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-7"><a href="#cb90-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleziona solo le righe relative a date_year e con pendenza negativa</span></span>
+<span id="cb90-8"><a href="#cb90-8" aria-hidden="true" tabindex="-1"></a>negative_trends <span class="ot">&lt;-</span> species_trends <span class="sc">%&gt;%</span></span>
+<span id="cb90-9"><a href="#cb90-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"date_year"</span>, estimate <span class="sc">&lt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb90-10"><a href="#cb90-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(species, estimate, std.error, statistic, p.value)</span>
+<span id="cb90-11"><a href="#cb90-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-12"><a href="#cb90-12" aria-hidden="true" tabindex="-1"></a>negative_trends</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 12 × 5
-# Groups:   species [12]
-   species                        estimate std.error  statistic  p.value
-   &lt;chr&gt;                             &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;
- 1 Aeshnidae sp.                 -1.00e- 1  NaN      NaN        NaN     
- 2 Brachytron pratense           -1.19e- 1    0.0592  -2.01e+ 0   0.0699
- 3 Calopteryx haemorrhoidalis    -3.46e- 3    0.0236  -1.47e- 1   0.887 
- 4 Calopteryx virgo meridionalis -7.93e- 2    0.128   -6.21e- 1   0.548 
- 5 Coenagrion castellani         -3.62e-14    0.289   -1.25e-13   1.000 
- 6 Coenagrion pulchellum         -3.38e- 2    0.0951  -3.55e- 1   0.727 
- 7 No odonata                    -1.50e+ 0    0.289   -5.20e+ 0   0.121 
- 8 Onychogomphus sp.             -2   e- 1    0.762   -2.63e- 1   0.817 
- 9 Ophiogomphus cecilia          -3.05e- 1    0.147   -2.08e+ 0   0.0524
-10 Oxygastra curtisi             -9.52e- 2    0.596   -1.60e- 1   0.878 
-11 Somatochlora arctica          -1.03e- 2    0.0709  -1.45e- 1   0.887 
-12 Sympetrum sp.                 -1.81e- 1    0.674   -2.68e- 1   0.798 </code></pre>
+<pre><code># A tibble: 7 × 5
+# Groups:   species [7]
+  species                     estimate std.error statistic p.value
+  &lt;chr&gt;                          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+1 Brachytron pratense        -1.19e- 1    0.0592 -2.01e+ 0  0.0699
+2 Calopteryx haemorrhoidalis -3.46e- 3    0.0236 -1.47e- 1  0.887 
+3 Coenagrion castellani      -3.62e-14    0.289  -1.25e-13  1.000 
+4 Coenagrion pulchellum      -3.38e- 2    0.0951 -3.55e- 1  0.727 
+5 Ophiogomphus cecilia       -3.05e- 1    0.147  -2.08e+ 0  0.0524
+6 Oxygastra curtisi          -9.52e- 2    0.596  -1.60e- 1  0.878 
+7 Somatochlora arctica       -1.03e- 2    0.0709 -1.45e- 1  0.887 </code></pre>
 </div>
 </div>
 </section>
@@ -1495,92 +1318,90 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="co"># n_sites occupati da ciascuna specie per anno</span></span>
-<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a>species_sites <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span></span>
-<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species, date_year) <span class="sc">%&gt;%</span></span>
-<span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n_sites =</span> <span class="fu">n_distinct</span>(cellcode), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
-<span id="cb108-5"><a href="#cb108-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-6"><a href="#cb108-6" aria-hidden="true" tabindex="-1"></a><span class="co"># n_sites monitorati per anno</span></span>
-<span id="cb108-7"><a href="#cb108-7" aria-hidden="true" tabindex="-1"></a>effort_df <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span> </span>
-<span id="cb108-8"><a href="#cb108-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date_year) <span class="sc">%&gt;%</span></span>
-<span id="cb108-9"><a href="#cb108-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(cellcode) <span class="sc">%&gt;%</span> </span>
-<span id="cb108-10"><a href="#cb108-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(date_year, <span class="at">name =</span> <span class="st">'n_sites_censiti'</span>)</span>
-<span id="cb108-11"><a href="#cb108-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-12"><a href="#cb108-12" aria-hidden="true" tabindex="-1"></a>species_sites <span class="ot">&lt;-</span> species_sites <span class="sc">%&gt;%</span></span>
-<span id="cb108-13"><a href="#cb108-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(effort_df, <span class="at">by =</span> <span class="st">"date_year"</span>)</span>
-<span id="cb108-14"><a href="#cb108-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-15"><a href="#cb108-15" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> species_sites <span class="sc">%&gt;%</span></span>
-<span id="cb108-16"><a href="#cb108-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species) <span class="sc">%&gt;%</span></span>
-<span id="cb108-17"><a href="#cb108-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do</span>({</span>
-<span id="cb108-18"><a href="#cb108-18" aria-hidden="true" tabindex="-1"></a>    mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(n_sites <span class="sc">~</span> date_year, <span class="at">family =</span> quasipoisson,</span>
-<span id="cb108-19"><a href="#cb108-19" aria-hidden="true" tabindex="-1"></a>               <span class="at">offset =</span> <span class="fu">log</span>(n_sites_censiti), <span class="at">data =</span> .)</span>
-<span id="cb108-20"><a href="#cb108-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tidy</span>(mod)  <span class="co"># restituisce coefficienti, SE, p-value</span></span>
-<span id="cb108-21"><a href="#cb108-21" aria-hidden="true" tabindex="-1"></a>  }) <span class="sc">%&gt;%</span></span>
-<span id="cb108-22"><a href="#cb108-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
-<span id="cb108-23"><a href="#cb108-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-24"><a href="#cb108-24" aria-hidden="true" tabindex="-1"></a>species_trends <span class="ot">&lt;-</span> results <span class="sc">%&gt;%</span></span>
-<span id="cb108-25"><a href="#cb108-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"date_year"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb108-26"><a href="#cb108-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">trend =</span> <span class="fu">case_when</span>(</span>
-<span id="cb108-27"><a href="#cb108-27" aria-hidden="true" tabindex="-1"></a>    estimate <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"increase"</span>,</span>
-<span id="cb108-28"><a href="#cb108-28" aria-hidden="true" tabindex="-1"></a>    estimate <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"decrease"</span>,</span>
-<span id="cb108-29"><a href="#cb108-29" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"stable"</span></span>
-<span id="cb108-30"><a href="#cb108-30" aria-hidden="true" tabindex="-1"></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="co"># n_sites occupati da ciascuna specie per anno</span></span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>species_sites <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span></span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species, date_year) <span class="sc">%&gt;%</span></span>
+<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n_sites =</span> <span class="fu">n_distinct</span>(cellcode), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a><span class="co"># n_sites monitorati per anno</span></span>
+<span id="cb92-7"><a href="#cb92-7" aria-hidden="true" tabindex="-1"></a>effort_df <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span> </span>
+<span id="cb92-8"><a href="#cb92-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date_year) <span class="sc">%&gt;%</span></span>
+<span id="cb92-9"><a href="#cb92-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(cellcode) <span class="sc">%&gt;%</span> </span>
+<span id="cb92-10"><a href="#cb92-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(date_year, <span class="at">name =</span> <span class="st">'n_sites_censiti'</span>)</span>
+<span id="cb92-11"><a href="#cb92-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-12"><a href="#cb92-12" aria-hidden="true" tabindex="-1"></a>species_sites <span class="ot">&lt;-</span> species_sites <span class="sc">%&gt;%</span></span>
+<span id="cb92-13"><a href="#cb92-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(effort_df, <span class="at">by =</span> <span class="st">"date_year"</span>)</span>
+<span id="cb92-14"><a href="#cb92-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-15"><a href="#cb92-15" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> species_sites <span class="sc">%&gt;%</span></span>
+<span id="cb92-16"><a href="#cb92-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species) <span class="sc">%&gt;%</span></span>
+<span id="cb92-17"><a href="#cb92-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do</span>({</span>
+<span id="cb92-18"><a href="#cb92-18" aria-hidden="true" tabindex="-1"></a>    mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(n_sites <span class="sc">~</span> date_year, <span class="at">family =</span> quasipoisson,</span>
+<span id="cb92-19"><a href="#cb92-19" aria-hidden="true" tabindex="-1"></a>               <span class="at">offset =</span> <span class="fu">log</span>(n_sites_censiti), <span class="at">data =</span> .)</span>
+<span id="cb92-20"><a href="#cb92-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tidy</span>(mod)  <span class="co"># restituisce coefficienti, SE, p-value</span></span>
+<span id="cb92-21"><a href="#cb92-21" aria-hidden="true" tabindex="-1"></a>  }) <span class="sc">%&gt;%</span></span>
+<span id="cb92-22"><a href="#cb92-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb92-23"><a href="#cb92-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-24"><a href="#cb92-24" aria-hidden="true" tabindex="-1"></a>species_trends <span class="ot">&lt;-</span> results <span class="sc">%&gt;%</span></span>
+<span id="cb92-25"><a href="#cb92-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"date_year"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb92-26"><a href="#cb92-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">trend =</span> <span class="fu">case_when</span>(</span>
+<span id="cb92-27"><a href="#cb92-27" aria-hidden="true" tabindex="-1"></a>    estimate <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"increase"</span>,</span>
+<span id="cb92-28"><a href="#cb92-28" aria-hidden="true" tabindex="-1"></a>    estimate <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"decrease"</span>,</span>
+<span id="cb92-29"><a href="#cb92-29" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"stable"</span></span>
+<span id="cb92-30"><a href="#cb92-30" aria-hidden="true" tabindex="-1"></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Le specie che mostrano trend negativi significativi sono:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleziona solo le righe con pendenza negativa</span></span>
-<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a>negative_trends <span class="ot">&lt;-</span> species_trends <span class="sc">%&gt;%</span></span>
-<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"date_year"</span>, estimate <span class="sc">&lt;</span> <span class="dv">0</span>, p.value<span class="sc">&lt;</span><span class="fl">0.05</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb109-4"><a href="#cb109-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(species, estimate, std.error, statistic, p.value, trend)</span>
-<span id="cb109-5"><a href="#cb109-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-6"><a href="#cb109-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(negative_trends, <span class="at">n =</span> <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleziona solo le righe con pendenza negativa</span></span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>negative_trends <span class="ot">&lt;-</span> species_trends <span class="sc">%&gt;%</span></span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"date_year"</span>, estimate <span class="sc">&lt;</span> <span class="dv">0</span>, p.value<span class="sc">&lt;</span><span class="fl">0.05</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(species, estimate, std.error, statistic, p.value, trend)</span>
+<span id="cb93-5"><a href="#cb93-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-6"><a href="#cb93-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(negative_trends, <span class="at">n =</span> <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 14 × 6
-   species                       estimate std.error statistic   p.value trend   
-   &lt;chr&gt;                            &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;   
- 1 Aeshna isoceles                -0.0345   0.0142      -2.43 0.0255    decrease
- 2 Brachytron pratense            -0.114    0.0257      -4.44 0.000990  decrease
- 3 Calopteryx virgo meridionalis  -0.103    0.0450      -2.29 0.0449    decrease
- 4 Chalcolestes viridis           -0.0161   0.00678     -2.38 0.0279    decrease
- 5 Coenagrion castellani          -0.358    0.0239     -15.0  0.0425    decrease
- 6 Coenagrion pulchellum          -0.0714   0.0139      -5.13 0.0000598 decrease
- 7 Lestes dryas                   -0.0604   0.0192      -3.15 0.00526   decrease
- 8 Lestes sponsa                  -0.0249   0.00989     -2.51 0.0211    decrease
- 9 Lestes virens                  -0.0500   0.0178      -2.81 0.0112    decrease
-10 No odonata                     -0.688    0.00378   -182.   0.00350   decrease
-11 Ophiogomphus cecilia           -0.0961   0.0186      -5.16 0.0000663 decrease
-12 Somatochlora metallica         -0.0426   0.00994     -4.29 0.000395  decrease
-13 Sympetrum sanguineum           -0.0231   0.00901     -2.56 0.0190    decrease
-14 Sympetrum vulgatum             -0.0574   0.0234      -2.45 0.0262    decrease</code></pre>
+<pre><code># A tibble: 12 × 6
+   species                estimate std.error statistic   p.value trend   
+   &lt;chr&gt;                     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;   
+ 1 Aeshna isoceles         -0.0344   0.0142      -2.43 0.0258    decrease
+ 2 Brachytron pratense     -0.114    0.0257      -4.44 0.000997  decrease
+ 3 Chalcolestes viridis    -0.0161   0.00678     -2.37 0.0286    decrease
+ 4 Coenagrion castellani   -0.358    0.0239     -15.0  0.0425    decrease
+ 5 Coenagrion pulchellum   -0.0713   0.0139      -5.13 0.0000600 decrease
+ 6 Lestes dryas            -0.0604   0.0192      -3.15 0.00530   decrease
+ 7 Lestes sponsa           -0.0248   0.00988     -2.51 0.0213    decrease
+ 8 Lestes virens           -0.0499   0.0178      -2.81 0.0112    decrease
+ 9 Ophiogomphus cecilia    -0.0961   0.0186      -5.16 0.0000664 decrease
+10 Somatochlora metallica  -0.0426   0.00992     -4.29 0.000394  decrease
+11 Sympetrum sanguineum    -0.0230   0.00901     -2.55 0.0194    decrease
+12 Sympetrum vulgatum      -0.0573   0.0234      -2.45 0.0264    decrease</code></pre>
 </div>
 </div>
 <p>Grafico dei trend significativi</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico a barre con specie ordinate per stima significativa</span></span>
-<span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Le altre specie sono stabili</span></span>
-<span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a>species_trends <span class="sc">%&gt;%</span> </span>
-<span id="cb111-4"><a href="#cb111-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(estimate), p.value<span class="sc">&lt;</span><span class="fl">0.05</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb111-5"><a href="#cb111-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(species, estimate), </span>
-<span id="cb111-6"><a href="#cb111-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> estimate, <span class="at">fill =</span> trend)) <span class="sc">+</span></span>
-<span id="cb111-7"><a href="#cb111-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb111-8"><a href="#cb111-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span>  <span class="co"># barre orizzontali per leggibilità</span></span>
-<span id="cb111-9"><a href="#cb111-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb111-10"><a href="#cb111-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">""</span>,</span>
-<span id="cb111-11"><a href="#cb111-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"glm slope"</span>,</span>
-<span id="cb111-12"><a href="#cb111-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Trend"</span>,</span>
-<span id="cb111-13"><a href="#cb111-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">""</span></span>
-<span id="cb111-14"><a href="#cb111-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb111-15"><a href="#cb111-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"increase"</span> <span class="ot">=</span> <span class="st">"forestgreen"</span>,</span>
-<span id="cb111-16"><a href="#cb111-16" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"stable"</span> <span class="ot">=</span> <span class="st">"gray70"</span>,</span>
-<span id="cb111-17"><a href="#cb111-17" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"decrease"</span> <span class="ot">=</span> <span class="st">"red"</span>))<span class="sc">+</span></span>
-<span id="cb111-18"><a href="#cb111-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">'top'</span>,</span>
-<span id="cb111-19"><a href="#cb111-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">face=</span><span class="st">'italic'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico a barre con specie ordinate per stima significativa</span></span>
+<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Le altre specie sono stabili</span></span>
+<span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a>species_trends <span class="sc">%&gt;%</span> </span>
+<span id="cb95-4"><a href="#cb95-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(estimate), p.value<span class="sc">&lt;</span><span class="fl">0.05</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb95-5"><a href="#cb95-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(species, estimate), </span>
+<span id="cb95-6"><a href="#cb95-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> estimate, <span class="at">fill =</span> trend)) <span class="sc">+</span></span>
+<span id="cb95-7"><a href="#cb95-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb95-8"><a href="#cb95-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span>  <span class="co"># barre orizzontali per leggibilità</span></span>
+<span id="cb95-9"><a href="#cb95-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb95-10"><a href="#cb95-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">""</span>,</span>
+<span id="cb95-11"><a href="#cb95-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"glm slope"</span>,</span>
+<span id="cb95-12"><a href="#cb95-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Trend"</span>,</span>
+<span id="cb95-13"><a href="#cb95-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">""</span></span>
+<span id="cb95-14"><a href="#cb95-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb95-15"><a href="#cb95-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"increase"</span> <span class="ot">=</span> <span class="st">"forestgreen"</span>,</span>
+<span id="cb95-16"><a href="#cb95-16" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"stable"</span> <span class="ot">=</span> <span class="st">"gray70"</span>,</span>
+<span id="cb95-17"><a href="#cb95-17" aria-hidden="true" tabindex="-1"></a>                               <span class="st">"decrease"</span> <span class="ot">=</span> <span class="st">"red"</span>))<span class="sc">+</span></span>
+<span id="cb95-18"><a href="#cb95-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">'top'</span>,</span>
+<span id="cb95-19"><a href="#cb95-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">face=</span><span class="st">'italic'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1594,62 +1415,62 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generare valori predetti per ciascuna specie</span></span>
-<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a><span class="co"># single species</span></span>
-<span id="cb112-3"><a href="#cb112-3" aria-hidden="true" tabindex="-1"></a>sp_tmp <span class="ot">&lt;-</span> species_sites <span class="sc">%&gt;%</span> </span>
-<span id="cb112-4"><a href="#cb112-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(species<span class="sc">==</span>listaSpecie[<span class="dv">2</span>])</span>
-<span id="cb112-5"><a href="#cb112-5" aria-hidden="true" tabindex="-1"></a><span class="co"># mod1 &lt;- glm.nb(n_sites ~ date_year + offset(log(n_sites_censiti)), </span></span>
-<span id="cb112-6"><a href="#cb112-6" aria-hidden="true" tabindex="-1"></a><span class="co">#                      data = sp_tmp)  </span></span>
-<span id="cb112-7"><a href="#cb112-7" aria-hidden="true" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(n_sites <span class="sc">~</span> date_year, <span class="at">family =</span> poisson,</span>
-<span id="cb112-8"><a href="#cb112-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">offset =</span> <span class="fu">log</span>(n_sites_censiti), <span class="at">data =</span> sp_tmp)</span>
-<span id="cb112-9"><a href="#cb112-9" aria-hidden="true" tabindex="-1"></a>mod3 <span class="ot">&lt;-</span> <span class="fu">glm</span>(n_sites <span class="sc">~</span> date_year, <span class="at">family =</span> quasipoisson,</span>
-<span id="cb112-10"><a href="#cb112-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">offset =</span> <span class="fu">log</span>(n_sites_censiti), <span class="at">data =</span> sp_tmp)</span>
-<span id="cb112-11"><a href="#cb112-11" aria-hidden="true" tabindex="-1"></a><span class="co">#mod2;mod3</span></span>
-<span id="cb112-12"><a href="#cb112-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb112-13"><a href="#cb112-13" aria-hidden="true" tabindex="-1"></a>predicted_sites <span class="ot">&lt;-</span> species_sites <span class="sc">%&gt;%</span></span>
-<span id="cb112-14"><a href="#cb112-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(n_sites, n_sites_censiti, date_year) <span class="sc">%&gt;%</span> </span>
-<span id="cb112-15"><a href="#cb112-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species) <span class="sc">%&gt;%</span></span>
-<span id="cb112-16"><a href="#cb112-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do</span>({</span>
-<span id="cb112-17"><a href="#cb112-17" aria-hidden="true" tabindex="-1"></a>    mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(n_sites <span class="sc">~</span> date_year, <span class="at">family =</span> quasipoisson,</span>
-<span id="cb112-18"><a href="#cb112-18" aria-hidden="true" tabindex="-1"></a>                <span class="at">offset =</span> <span class="fu">log</span>(n_sites_censiti), <span class="at">data =</span> .)</span>
-<span id="cb112-19"><a href="#cb112-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.frame</span>(<span class="at">date_year =</span> .<span class="sc">$</span>date_year,</span>
-<span id="cb112-20"><a href="#cb112-20" aria-hidden="true" tabindex="-1"></a>               <span class="at">pred =</span> <span class="fu">predict</span>(mod, <span class="at">type =</span> <span class="st">"response"</span>))</span>
-<span id="cb112-21"><a href="#cb112-21" aria-hidden="true" tabindex="-1"></a>  }) <span class="sc">%&gt;%</span></span>
-<span id="cb112-22"><a href="#cb112-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
-<span id="cb112-23"><a href="#cb112-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb112-24"><a href="#cb112-24" aria-hidden="true" tabindex="-1"></a>predicted_sites <span class="ot">&lt;-</span> predicted_sites<span class="sc">%&gt;%</span> </span>
-<span id="cb112-25"><a href="#cb112-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(species_sites)</span>
-<span id="cb112-26"><a href="#cb112-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb112-27"><a href="#cb112-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafici aree-linee per specie</span></span>
-<span id="cb112-28"><a href="#cb112-28" aria-hidden="true" tabindex="-1"></a>odoTrendE <span class="ot">&lt;-</span> <span class="cf">function</span>(sp) {</span>
-<span id="cb112-29"><a href="#cb112-29" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> predicted_sites <span class="sc">%&gt;%</span> </span>
-<span id="cb112-30"><a href="#cb112-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(species <span class="sc">==</span> sp) <span class="sc">%&gt;%</span></span>
-<span id="cb112-31"><a href="#cb112-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">res=</span>n_sites<span class="sc">-</span>pred) <span class="sc">%&gt;%</span> </span>
-<span id="cb112-32"><a href="#cb112-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date_year, <span class="at">y =</span> pred)) <span class="sc">+</span></span>
-<span id="cb112-33"><a href="#cb112-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_area</span>(<span class="at">fill =</span> <span class="st">'forestgreen'</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>)<span class="sc">+</span></span>
-<span id="cb112-34"><a href="#cb112-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(</span>
-<span id="cb112-35"><a href="#cb112-35" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(<span class="at">x =</span> date_year, <span class="at">xend =</span> date_year, <span class="at">y =</span> n_sites, <span class="at">yend =</span> pred),</span>
-<span id="cb112-36"><a href="#cb112-36" aria-hidden="true" tabindex="-1"></a>      <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">col=</span><span class="st">'forestgreen'</span></span>
-<span id="cb112-37"><a href="#cb112-37" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb112-38"><a href="#cb112-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> n_sites), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb112-39"><a href="#cb112-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">"No. sites"</span>, <span class="at">title =</span> sp) <span class="sc">+</span></span>
-<span id="cb112-40"><a href="#cb112-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">'italic'</span>))</span>
-<span id="cb112-41"><a href="#cb112-41" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> predicted_sites <span class="sc">%&gt;%</span> </span>
-<span id="cb112-42"><a href="#cb112-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(species <span class="sc">==</span> sp) <span class="sc">%&gt;%</span></span>
-<span id="cb112-43"><a href="#cb112-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">res=</span>n_sites<span class="sc">-</span>pred) <span class="sc">%&gt;%</span> </span>
-<span id="cb112-44"><a href="#cb112-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date_year, <span class="at">y =</span> res)) <span class="sc">+</span></span>
-<span id="cb112-45"><a href="#cb112-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">col=</span><span class="st">'black'</span>)<span class="sc">+</span></span>
-<span id="cb112-46"><a href="#cb112-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">col =</span> <span class="st">'forestgreen'</span>, <span class="at">size=</span><span class="fl">1.5</span>)<span class="sc">+</span></span>
-<span id="cb112-47"><a href="#cb112-47" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">title =</span> <span class="st">"Residuals"</span>, <span class="at">y=</span><span class="st">''</span>) <span class="sc">+</span></span>
-<span id="cb112-48"><a href="#cb112-48" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">'italic'</span>)) </span>
-<span id="cb112-49"><a href="#cb112-49" aria-hidden="true" tabindex="-1"></a>  P <span class="sc">+</span> R</span>
-<span id="cb112-50"><a href="#cb112-50" aria-hidden="true" tabindex="-1"></a>  <span class="co"># filename &lt;- paste0("trend/glm_", gsub(" ", "_", sp), ".pdf")</span></span>
-<span id="cb112-51"><a href="#cb112-51" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ggsave(filename, width = 13, height = 5)</span></span>
-<span id="cb112-52"><a href="#cb112-52" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb112-53"><a href="#cb112-53" aria-hidden="true" tabindex="-1"></a><span class="co"># odoTrendE('Aeshna affinis')</span></span>
-<span id="cb112-54"><a href="#cb112-54" aria-hidden="true" tabindex="-1"></a><span class="co"># odoTrendE('Trithemis annulata')</span></span>
-<span id="cb112-55"><a href="#cb112-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb112-56"><a href="#cb112-56" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(listaSpecie, odoTrendE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generare valori predetti per ciascuna specie</span></span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="co"># single species</span></span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>sp_tmp <span class="ot">&lt;-</span> species_sites <span class="sc">%&gt;%</span> </span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(species<span class="sc">==</span>listaSpecie[<span class="dv">2</span>])</span>
+<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a><span class="co"># mod1 &lt;- glm.nb(n_sites ~ date_year + offset(log(n_sites_censiti)), </span></span>
+<span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a><span class="co">#                      data = sp_tmp)  </span></span>
+<span id="cb96-7"><a href="#cb96-7" aria-hidden="true" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(n_sites <span class="sc">~</span> date_year, <span class="at">family =</span> poisson,</span>
+<span id="cb96-8"><a href="#cb96-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">offset =</span> <span class="fu">log</span>(n_sites_censiti), <span class="at">data =</span> sp_tmp)</span>
+<span id="cb96-9"><a href="#cb96-9" aria-hidden="true" tabindex="-1"></a>mod3 <span class="ot">&lt;-</span> <span class="fu">glm</span>(n_sites <span class="sc">~</span> date_year, <span class="at">family =</span> quasipoisson,</span>
+<span id="cb96-10"><a href="#cb96-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">offset =</span> <span class="fu">log</span>(n_sites_censiti), <span class="at">data =</span> sp_tmp)</span>
+<span id="cb96-11"><a href="#cb96-11" aria-hidden="true" tabindex="-1"></a><span class="co">#mod2;mod3</span></span>
+<span id="cb96-12"><a href="#cb96-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-13"><a href="#cb96-13" aria-hidden="true" tabindex="-1"></a>predicted_sites <span class="ot">&lt;-</span> species_sites <span class="sc">%&gt;%</span></span>
+<span id="cb96-14"><a href="#cb96-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(n_sites, n_sites_censiti, date_year) <span class="sc">%&gt;%</span> </span>
+<span id="cb96-15"><a href="#cb96-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species) <span class="sc">%&gt;%</span></span>
+<span id="cb96-16"><a href="#cb96-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do</span>({</span>
+<span id="cb96-17"><a href="#cb96-17" aria-hidden="true" tabindex="-1"></a>    mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(n_sites <span class="sc">~</span> date_year, <span class="at">family =</span> quasipoisson,</span>
+<span id="cb96-18"><a href="#cb96-18" aria-hidden="true" tabindex="-1"></a>                <span class="at">offset =</span> <span class="fu">log</span>(n_sites_censiti), <span class="at">data =</span> .)</span>
+<span id="cb96-19"><a href="#cb96-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.frame</span>(<span class="at">date_year =</span> .<span class="sc">$</span>date_year,</span>
+<span id="cb96-20"><a href="#cb96-20" aria-hidden="true" tabindex="-1"></a>               <span class="at">pred =</span> <span class="fu">predict</span>(mod, <span class="at">type =</span> <span class="st">"response"</span>))</span>
+<span id="cb96-21"><a href="#cb96-21" aria-hidden="true" tabindex="-1"></a>  }) <span class="sc">%&gt;%</span></span>
+<span id="cb96-22"><a href="#cb96-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb96-23"><a href="#cb96-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-24"><a href="#cb96-24" aria-hidden="true" tabindex="-1"></a>predicted_sites <span class="ot">&lt;-</span> predicted_sites<span class="sc">%&gt;%</span> </span>
+<span id="cb96-25"><a href="#cb96-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(species_sites)</span>
+<span id="cb96-26"><a href="#cb96-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-27"><a href="#cb96-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafici aree-linee per specie</span></span>
+<span id="cb96-28"><a href="#cb96-28" aria-hidden="true" tabindex="-1"></a>odoTrendE <span class="ot">&lt;-</span> <span class="cf">function</span>(sp) {</span>
+<span id="cb96-29"><a href="#cb96-29" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> predicted_sites <span class="sc">%&gt;%</span> </span>
+<span id="cb96-30"><a href="#cb96-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(species <span class="sc">==</span> sp) <span class="sc">%&gt;%</span></span>
+<span id="cb96-31"><a href="#cb96-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">res=</span>n_sites<span class="sc">-</span>pred) <span class="sc">%&gt;%</span> </span>
+<span id="cb96-32"><a href="#cb96-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date_year, <span class="at">y =</span> pred)) <span class="sc">+</span></span>
+<span id="cb96-33"><a href="#cb96-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_area</span>(<span class="at">fill =</span> <span class="st">'forestgreen'</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>)<span class="sc">+</span></span>
+<span id="cb96-34"><a href="#cb96-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(</span>
+<span id="cb96-35"><a href="#cb96-35" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(<span class="at">x =</span> date_year, <span class="at">xend =</span> date_year, <span class="at">y =</span> n_sites, <span class="at">yend =</span> pred),</span>
+<span id="cb96-36"><a href="#cb96-36" aria-hidden="true" tabindex="-1"></a>      <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">col=</span><span class="st">'forestgreen'</span></span>
+<span id="cb96-37"><a href="#cb96-37" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb96-38"><a href="#cb96-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> n_sites), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb96-39"><a href="#cb96-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">"No. sites"</span>, <span class="at">title =</span> sp) <span class="sc">+</span></span>
+<span id="cb96-40"><a href="#cb96-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">'italic'</span>))</span>
+<span id="cb96-41"><a href="#cb96-41" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> predicted_sites <span class="sc">%&gt;%</span> </span>
+<span id="cb96-42"><a href="#cb96-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(species <span class="sc">==</span> sp) <span class="sc">%&gt;%</span></span>
+<span id="cb96-43"><a href="#cb96-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">res=</span>n_sites<span class="sc">-</span>pred) <span class="sc">%&gt;%</span> </span>
+<span id="cb96-44"><a href="#cb96-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date_year, <span class="at">y =</span> res)) <span class="sc">+</span></span>
+<span id="cb96-45"><a href="#cb96-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">col=</span><span class="st">'black'</span>)<span class="sc">+</span></span>
+<span id="cb96-46"><a href="#cb96-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">col =</span> <span class="st">'forestgreen'</span>, <span class="at">size=</span><span class="fl">1.5</span>)<span class="sc">+</span></span>
+<span id="cb96-47"><a href="#cb96-47" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">title =</span> <span class="st">"Residuals"</span>, <span class="at">y=</span><span class="st">''</span>) <span class="sc">+</span></span>
+<span id="cb96-48"><a href="#cb96-48" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">'italic'</span>)) </span>
+<span id="cb96-49"><a href="#cb96-49" aria-hidden="true" tabindex="-1"></a>  P <span class="sc">+</span> R</span>
+<span id="cb96-50"><a href="#cb96-50" aria-hidden="true" tabindex="-1"></a>  <span class="co"># filename &lt;- paste0("trend/glm_", gsub(" ", "_", sp), ".pdf")</span></span>
+<span id="cb96-51"><a href="#cb96-51" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ggsave(filename, width = 13, height = 5)</span></span>
+<span id="cb96-52"><a href="#cb96-52" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb96-53"><a href="#cb96-53" aria-hidden="true" tabindex="-1"></a><span class="co"># odoTrendE('Aeshna affinis')</span></span>
+<span id="cb96-54"><a href="#cb96-54" aria-hidden="true" tabindex="-1"></a><span class="co"># odoTrendE('Trithemis annulata')</span></span>
+<span id="cb96-55"><a href="#cb96-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-56"><a href="#cb96-56" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(listaSpecie, odoTrendE)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]</code></pre>
@@ -2530,182 +2351,6 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 </figure>
 </div>
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[81]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/glm_pred-81.png" class="img-fluid figure-img" width="1152"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[82]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/glm_pred-82.png" class="img-fluid figure-img" width="1152"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[83]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/glm_pred-83.png" class="img-fluid figure-img" width="1152"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[84]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/glm_pred-84.png" class="img-fluid figure-img" width="1152"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[85]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/glm_pred-85.png" class="img-fluid figure-img" width="1152"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[86]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/glm_pred-86.png" class="img-fluid figure-img" width="1152"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[87]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/glm_pred-87.png" class="img-fluid figure-img" width="1152"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[88]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/glm_pred-88.png" class="img-fluid figure-img" width="1152"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[89]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/glm_pred-89.png" class="img-fluid figure-img" width="1152"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[90]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/glm_pred-90.png" class="img-fluid figure-img" width="1152"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[91]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/glm_pred-91.png" class="img-fluid figure-img" width="1152"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[92]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/glm_pred-92.png" class="img-fluid figure-img" width="1152"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[93]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/glm_pred-93.png" class="img-fluid figure-img" width="1152"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[94]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/glm_pred-94.png" class="img-fluid figure-img" width="1152"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[95]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/glm_pred-95.png" class="img-fluid figure-img" width="1152"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[96]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/glm_pred-96.png" class="img-fluid figure-img" width="1152"></p>
-</figure>
-</div>
-</div>
 </div>
 </section>
 <section id="uso-di-trim" class="level2">
@@ -2714,47 +2359,47 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb209"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb209-1"><a href="#cb209-1" aria-hidden="true" tabindex="-1"></a>odoTrim <span class="ot">&lt;-</span> <span class="cf">function</span>(nomeSpecie) {</span>
-<span id="cb209-2"><a href="#cb209-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">"▶ Processing: "</span>, nomeSpecie)</span>
-<span id="cb209-3"><a href="#cb209-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter data for the species</span></span>
-<span id="cb209-4"><a href="#cb209-4" aria-hidden="true" tabindex="-1"></a>  df.test <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span> </span>
-<span id="cb209-5"><a href="#cb209-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(species <span class="sc">==</span> nomeSpecie) <span class="sc">%&gt;%</span> </span>
-<span id="cb209-6"><a href="#cb209-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(date_year, cellcode) <span class="sc">%&gt;%</span> </span>
-<span id="cb209-7"><a href="#cb209-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(<span class="at">name =</span> <span class="st">"count"</span>)</span>
-<span id="cb209-8"><a href="#cb209-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Check: at least 3 years</span></span>
-<span id="cb209-9"><a href="#cb209-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">n_distinct</span>(df.test<span class="sc">$</span>date_year) <span class="sc">&lt;</span> <span class="dv">3</span>) {</span>
-<span id="cb209-10"><a href="#cb209-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">"⚠️   Not enough years for "</span>, nomeSpecie, <span class="st">" — skipped"</span>)</span>
-<span id="cb209-11"><a href="#cb209-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
-<span id="cb209-12"><a href="#cb209-12" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb209-13"><a href="#cb209-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Check: at least 3 sites</span></span>
-<span id="cb209-14"><a href="#cb209-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">n_distinct</span>(df.test<span class="sc">$</span>cellcode) <span class="sc">&lt;</span> <span class="dv">3</span>) {</span>
-<span id="cb209-15"><a href="#cb209-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">"⚠️   Not enough sites for "</span>, nomeSpecie, <span class="st">" — skipped"</span>)</span>
-<span id="cb209-16"><a href="#cb209-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
-<span id="cb209-17"><a href="#cb209-17" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb209-18"><a href="#cb209-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Try to fit TRIM</span></span>
-<span id="cb209-19"><a href="#cb209-19" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
-<span id="cb209-20"><a href="#cb209-20" aria-hidden="true" tabindex="-1"></a>    m3 <span class="ot">&lt;-</span> <span class="fu">trim</span>(count <span class="sc">~</span> cellcode <span class="sc">+</span> date_year, <span class="at">data =</span> df.test, <span class="at">model =</span> <span class="dv">3</span>)</span>
-<span id="cb209-21"><a href="#cb209-21" aria-hidden="true" tabindex="-1"></a>    out <span class="ot">&lt;-</span> <span class="fu">overall</span>(m3)</span>
-<span id="cb209-22"><a href="#cb209-22" aria-hidden="true" tabindex="-1"></a>    out<span class="sc">$</span>slope<span class="sc">$</span>species<span class="ot">=</span>nomeSpecie</span>
-<span id="cb209-23"><a href="#cb209-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Filename</span></span>
-<span id="cb209-24"><a href="#cb209-24" aria-hidden="true" tabindex="-1"></a>    filename <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"trim/trim_"</span>, <span class="fu">gsub</span>(<span class="st">" "</span>, <span class="st">"_"</span>, nomeSpecie), <span class="st">".pdf"</span>)</span>
-<span id="cb209-25"><a href="#cb209-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Save PDF</span></span>
-<span id="cb209-26"><a href="#cb209-26" aria-hidden="true" tabindex="-1"></a>    <span class="co">#pdf(filename, width = 7, height = 5)</span></span>
-<span id="cb209-27"><a href="#cb209-27" aria-hidden="true" tabindex="-1"></a>      <span class="fu">plot</span>(<span class="fu">overall</span>(m3), <span class="at">main =</span> <span class="fu">paste0</span>(nomeSpecie,<span class="st">' - '</span>,<span class="fu">overall</span>(m3)<span class="sc">$</span>slope<span class="sc">$</span>meaning))</span>
-<span id="cb209-28"><a href="#cb209-28" aria-hidden="true" tabindex="-1"></a>    <span class="co">#dev.off()</span></span>
-<span id="cb209-29"><a href="#cb209-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">"✅   Completed: "</span>, nomeSpecie)</span>
-<span id="cb209-30"><a href="#cb209-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(out)</span>
-<span id="cb209-31"><a href="#cb209-31" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
-<span id="cb209-32"><a href="#cb209-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">"❌   FAILED for "</span>, nomeSpecie, <span class="st">": "</span>, e<span class="sc">$</span>message)</span>
-<span id="cb209-33"><a href="#cb209-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
-<span id="cb209-34"><a href="#cb209-34" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb209-35"><a href="#cb209-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(res)</span>
-<span id="cb209-36"><a href="#cb209-36" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb209-37"><a href="#cb209-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb209-38"><a href="#cb209-38" aria-hidden="true" tabindex="-1"></a><span class="co"># # test su singole specie</span></span>
-<span id="cb209-39"><a href="#cb209-39" aria-hidden="true" tabindex="-1"></a><span class="co"># odoTrim("Aeshna affinis")</span></span>
-<span id="cb209-40"><a href="#cb209-40" aria-hidden="true" tabindex="-1"></a><span class="co"># odoTrim(listaSpecie[77])</span></span>
-<span id="cb209-41"><a href="#cb209-41" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">lapply</span>(listaSpecie, odoTrim)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb177"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb177-1"><a href="#cb177-1" aria-hidden="true" tabindex="-1"></a>odoTrim <span class="ot">&lt;-</span> <span class="cf">function</span>(nomeSpecie) {</span>
+<span id="cb177-2"><a href="#cb177-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">"▶ Processing: "</span>, nomeSpecie)</span>
+<span id="cb177-3"><a href="#cb177-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter data for the species</span></span>
+<span id="cb177-4"><a href="#cb177-4" aria-hidden="true" tabindex="-1"></a>  df.test <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span> </span>
+<span id="cb177-5"><a href="#cb177-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(species <span class="sc">==</span> nomeSpecie) <span class="sc">%&gt;%</span> </span>
+<span id="cb177-6"><a href="#cb177-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(date_year, cellcode) <span class="sc">%&gt;%</span> </span>
+<span id="cb177-7"><a href="#cb177-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(<span class="at">name =</span> <span class="st">"count"</span>)</span>
+<span id="cb177-8"><a href="#cb177-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Check: at least 3 years</span></span>
+<span id="cb177-9"><a href="#cb177-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">n_distinct</span>(df.test<span class="sc">$</span>date_year) <span class="sc">&lt;</span> <span class="dv">3</span>) {</span>
+<span id="cb177-10"><a href="#cb177-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">"⚠️   Not enough years for "</span>, nomeSpecie, <span class="st">" — skipped"</span>)</span>
+<span id="cb177-11"><a href="#cb177-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
+<span id="cb177-12"><a href="#cb177-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb177-13"><a href="#cb177-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Check: at least 3 sites</span></span>
+<span id="cb177-14"><a href="#cb177-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">n_distinct</span>(df.test<span class="sc">$</span>cellcode) <span class="sc">&lt;</span> <span class="dv">3</span>) {</span>
+<span id="cb177-15"><a href="#cb177-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">"⚠️   Not enough sites for "</span>, nomeSpecie, <span class="st">" — skipped"</span>)</span>
+<span id="cb177-16"><a href="#cb177-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
+<span id="cb177-17"><a href="#cb177-17" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb177-18"><a href="#cb177-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Try to fit TRIM</span></span>
+<span id="cb177-19"><a href="#cb177-19" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
+<span id="cb177-20"><a href="#cb177-20" aria-hidden="true" tabindex="-1"></a>    m3 <span class="ot">&lt;-</span> <span class="fu">trim</span>(count <span class="sc">~</span> cellcode <span class="sc">+</span> date_year, <span class="at">data =</span> df.test, <span class="at">model =</span> <span class="dv">3</span>)</span>
+<span id="cb177-21"><a href="#cb177-21" aria-hidden="true" tabindex="-1"></a>    out <span class="ot">&lt;-</span> <span class="fu">overall</span>(m3)</span>
+<span id="cb177-22"><a href="#cb177-22" aria-hidden="true" tabindex="-1"></a>    out<span class="sc">$</span>slope<span class="sc">$</span>species<span class="ot">=</span>nomeSpecie</span>
+<span id="cb177-23"><a href="#cb177-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Filename</span></span>
+<span id="cb177-24"><a href="#cb177-24" aria-hidden="true" tabindex="-1"></a>    filename <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"trim/trim_"</span>, <span class="fu">gsub</span>(<span class="st">" "</span>, <span class="st">"_"</span>, nomeSpecie), <span class="st">".pdf"</span>)</span>
+<span id="cb177-25"><a href="#cb177-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Save PDF</span></span>
+<span id="cb177-26"><a href="#cb177-26" aria-hidden="true" tabindex="-1"></a>    <span class="co">#pdf(filename, width = 7, height = 5)</span></span>
+<span id="cb177-27"><a href="#cb177-27" aria-hidden="true" tabindex="-1"></a>      <span class="fu">plot</span>(<span class="fu">overall</span>(m3), <span class="at">main =</span> <span class="fu">paste0</span>(nomeSpecie,<span class="st">' - '</span>,<span class="fu">overall</span>(m3)<span class="sc">$</span>slope<span class="sc">$</span>meaning))</span>
+<span id="cb177-28"><a href="#cb177-28" aria-hidden="true" tabindex="-1"></a>    <span class="co">#dev.off()</span></span>
+<span id="cb177-29"><a href="#cb177-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">"✅   Completed: "</span>, nomeSpecie)</span>
+<span id="cb177-30"><a href="#cb177-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(out)</span>
+<span id="cb177-31"><a href="#cb177-31" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb177-32"><a href="#cb177-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(<span class="st">"❌   FAILED for "</span>, nomeSpecie, <span class="st">": "</span>, e<span class="sc">$</span>message)</span>
+<span id="cb177-33"><a href="#cb177-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
+<span id="cb177-34"><a href="#cb177-34" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb177-35"><a href="#cb177-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(res)</span>
+<span id="cb177-36"><a href="#cb177-36" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb177-37"><a href="#cb177-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb177-38"><a href="#cb177-38" aria-hidden="true" tabindex="-1"></a><span class="co"># # test su singole specie</span></span>
+<span id="cb177-39"><a href="#cb177-39" aria-hidden="true" tabindex="-1"></a><span class="co"># odoTrim("Aeshna affinis")</span></span>
+<span id="cb177-40"><a href="#cb177-40" aria-hidden="true" tabindex="-1"></a><span class="co"># odoTrim(listaSpecie[77])</span></span>
+<span id="cb177-41"><a href="#cb177-41" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">lapply</span>(listaSpecie, odoTrim)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -3113,43 +2758,36 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 </figure>
 </div>
 </div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/TRIM-52.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb210"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb210-1"><a href="#cb210-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tabella con tutte le specie e relativi plot</span></span>
-<span id="cb210-2"><a href="#cb210-2" aria-hidden="true" tabindex="-1"></a>results_df <span class="ot">&lt;-</span> <span class="fu">do.call</span>(bind_rows, <span class="fu">lapply</span>(results, <span class="cf">function</span>(x) x<span class="sc">$</span>slope))</span>
-<span id="cb210-3"><a href="#cb210-3" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(results_df)<span class="sc">%&gt;%</span></span>
-<span id="cb210-4"><a href="#cb210-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(</span>
-<span id="cb210-5"><a href="#cb210-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">where</span>(is.numeric),</span>
-<span id="cb210-6"><a href="#cb210-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">decimals =</span> <span class="dv">2</span></span>
-<span id="cb210-7"><a href="#cb210-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb178"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb178-1"><a href="#cb178-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tabella con tutte le specie e relativi plot</span></span>
+<span id="cb178-2"><a href="#cb178-2" aria-hidden="true" tabindex="-1"></a>results_df <span class="ot">&lt;-</span> <span class="fu">do.call</span>(bind_rows, <span class="fu">lapply</span>(results, <span class="cf">function</span>(x) x<span class="sc">$</span>slope))</span>
+<span id="cb178-3"><a href="#cb178-3" aria-hidden="true" tabindex="-1"></a><span class="fu">gt</span>(results_df)<span class="sc">%&gt;%</span></span>
+<span id="cb178-4"><a href="#cb178-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(</span>
+<span id="cb178-5"><a href="#cb178-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">where</span>(is.numeric),</span>
+<span id="cb178-6"><a href="#cb178-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">decimals =</span> <span class="dv">2</span></span>
+<span id="cb178-7"><a href="#cb178-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="evuwxhqrhy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#evuwxhqrhy table {
+<div id="crwvjuojnj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#crwvjuojnj table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#evuwxhqrhy thead, #evuwxhqrhy tbody, #evuwxhqrhy tfoot, #evuwxhqrhy tr, #evuwxhqrhy td, #evuwxhqrhy th {
+#crwvjuojnj thead, #crwvjuojnj tbody, #crwvjuojnj tfoot, #crwvjuojnj tr, #crwvjuojnj td, #crwvjuojnj th {
   border-style: none;
 }
 
-#evuwxhqrhy p {
+#crwvjuojnj p {
   margin: 0;
   padding: 0;
 }
 
-#evuwxhqrhy .gt_table {
+#crwvjuojnj .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -3175,12 +2813,12 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   border-left-color: #D3D3D3;
 }
 
-#evuwxhqrhy .gt_caption {
+#crwvjuojnj .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#evuwxhqrhy .gt_title {
+#crwvjuojnj .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -3192,7 +2830,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   border-bottom-width: 0;
 }
 
-#evuwxhqrhy .gt_subtitle {
+#crwvjuojnj .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -3204,7 +2842,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   border-top-width: 0;
 }
 
-#evuwxhqrhy .gt_heading {
+#crwvjuojnj .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -3216,13 +2854,13 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   border-right-color: #D3D3D3;
 }
 
-#evuwxhqrhy .gt_bottom_border {
+#crwvjuojnj .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#evuwxhqrhy .gt_col_headings {
+#crwvjuojnj .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3237,7 +2875,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   border-right-color: #D3D3D3;
 }
 
-#evuwxhqrhy .gt_col_heading {
+#crwvjuojnj .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3257,7 +2895,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   overflow-x: hidden;
 }
 
-#evuwxhqrhy .gt_column_spanner_outer {
+#crwvjuojnj .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3269,15 +2907,15 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   padding-right: 4px;
 }
 
-#evuwxhqrhy .gt_column_spanner_outer:first-child {
+#crwvjuojnj .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#evuwxhqrhy .gt_column_spanner_outer:last-child {
+#crwvjuojnj .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#evuwxhqrhy .gt_column_spanner {
+#crwvjuojnj .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -3289,11 +2927,11 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   width: 100%;
 }
 
-#evuwxhqrhy .gt_spanner_row {
+#crwvjuojnj .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#evuwxhqrhy .gt_group_heading {
+#crwvjuojnj .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3319,7 +2957,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   text-align: left;
 }
 
-#evuwxhqrhy .gt_empty_group_heading {
+#crwvjuojnj .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -3334,15 +2972,15 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   vertical-align: middle;
 }
 
-#evuwxhqrhy .gt_from_md > :first-child {
+#crwvjuojnj .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#evuwxhqrhy .gt_from_md > :last-child {
+#crwvjuojnj .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#evuwxhqrhy .gt_row {
+#crwvjuojnj .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3361,7 +2999,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   overflow-x: hidden;
 }
 
-#evuwxhqrhy .gt_stub {
+#crwvjuojnj .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3374,7 +3012,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   padding-right: 5px;
 }
 
-#evuwxhqrhy .gt_stub_row_group {
+#crwvjuojnj .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3388,15 +3026,15 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   vertical-align: top;
 }
 
-#evuwxhqrhy .gt_row_group_first td {
+#crwvjuojnj .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#evuwxhqrhy .gt_row_group_first th {
+#crwvjuojnj .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#evuwxhqrhy .gt_summary_row {
+#crwvjuojnj .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3406,16 +3044,16 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   padding-right: 5px;
 }
 
-#evuwxhqrhy .gt_first_summary_row {
+#crwvjuojnj .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#evuwxhqrhy .gt_first_summary_row.thick {
+#crwvjuojnj .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#evuwxhqrhy .gt_last_summary_row {
+#crwvjuojnj .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3425,7 +3063,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   border-bottom-color: #D3D3D3;
 }
 
-#evuwxhqrhy .gt_grand_summary_row {
+#crwvjuojnj .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3435,7 +3073,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   padding-right: 5px;
 }
 
-#evuwxhqrhy .gt_first_grand_summary_row {
+#crwvjuojnj .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3445,7 +3083,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   border-top-color: #D3D3D3;
 }
 
-#evuwxhqrhy .gt_last_grand_summary_row_top {
+#crwvjuojnj .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3455,11 +3093,11 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   border-bottom-color: #D3D3D3;
 }
 
-#evuwxhqrhy .gt_striped {
+#crwvjuojnj .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#evuwxhqrhy .gt_table_body {
+#crwvjuojnj .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3468,7 +3106,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   border-bottom-color: #D3D3D3;
 }
 
-#evuwxhqrhy .gt_footnotes {
+#crwvjuojnj .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3482,7 +3120,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   border-right-color: #D3D3D3;
 }
 
-#evuwxhqrhy .gt_footnote {
+#crwvjuojnj .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -3491,7 +3129,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   padding-right: 5px;
 }
 
-#evuwxhqrhy .gt_sourcenotes {
+#crwvjuojnj .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3505,7 +3143,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   border-right-color: #D3D3D3;
 }
 
-#evuwxhqrhy .gt_sourcenote {
+#crwvjuojnj .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -3513,72 +3151,72 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
   padding-right: 5px;
 }
 
-#evuwxhqrhy .gt_left {
+#crwvjuojnj .gt_left {
   text-align: left;
 }
 
-#evuwxhqrhy .gt_center {
+#crwvjuojnj .gt_center {
   text-align: center;
 }
 
-#evuwxhqrhy .gt_right {
+#crwvjuojnj .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#evuwxhqrhy .gt_font_normal {
+#crwvjuojnj .gt_font_normal {
   font-weight: normal;
 }
 
-#evuwxhqrhy .gt_font_bold {
+#crwvjuojnj .gt_font_bold {
   font-weight: bold;
 }
 
-#evuwxhqrhy .gt_font_italic {
+#crwvjuojnj .gt_font_italic {
   font-style: italic;
 }
 
-#evuwxhqrhy .gt_super {
+#crwvjuojnj .gt_super {
   font-size: 65%;
 }
 
-#evuwxhqrhy .gt_footnote_marks {
+#crwvjuojnj .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#evuwxhqrhy .gt_asterisk {
+#crwvjuojnj .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#evuwxhqrhy .gt_indent_1 {
+#crwvjuojnj .gt_indent_1 {
   text-indent: 5px;
 }
 
-#evuwxhqrhy .gt_indent_2 {
+#crwvjuojnj .gt_indent_2 {
   text-indent: 10px;
 }
 
-#evuwxhqrhy .gt_indent_3 {
+#crwvjuojnj .gt_indent_3 {
   text-indent: 15px;
 }
 
-#evuwxhqrhy .gt_indent_4 {
+#crwvjuojnj .gt_indent_4 {
   text-indent: 20px;
 }
 
-#evuwxhqrhy .gt_indent_5 {
+#crwvjuojnj .gt_indent_5 {
   text-indent: 25px;
 }
 
-#evuwxhqrhy .katex-display {
+#crwvjuojnj .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#evuwxhqrhy div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#crwvjuojnj div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -3693,7 +3331,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <td class="gt_row gt_right" headers="se_add">0.01</td>
 <td class="gt_row gt_right" headers="mul">1.01</td>
 <td class="gt_row gt_right" headers="se_mul">0.01</td>
-<td class="gt_row gt_right" headers="p">0.22</td>
+<td class="gt_row gt_right" headers="p">0.24</td>
 <td class="gt_row gt_left" headers="meaning">Stable</td>
 <td class="gt_row gt_left" headers="species">Calopteryx virgo</td>
 </tr>
@@ -3929,17 +3567,6 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <td class="gt_row gt_left" headers="species">Libellula quadrimaculata</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_right" headers="from">2,021.00</td>
-<td class="gt_row gt_right" headers="upto">2,023.00</td>
-<td class="gt_row gt_right" headers="add">0.00</td>
-<td class="gt_row gt_right" headers="se_add">0.71</td>
-<td class="gt_row gt_right" headers="mul">1.00</td>
-<td class="gt_row gt_right" headers="se_mul">0.71</td>
-<td class="gt_row gt_right" headers="p">1.00</td>
-<td class="gt_row gt_left" headers="meaning">Uncertain</td>
-<td class="gt_row gt_left" headers="species">No odonata</td>
-</tr>
-<tr class="even">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.04</td>
@@ -3950,7 +3577,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
 <td class="gt_row gt_left" headers="species">Onychogomphus forcipatus</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.02</td>
@@ -3961,7 +3588,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <td class="gt_row gt_left" headers="meaning">Uncertain</td>
 <td class="gt_row gt_left" headers="species">Onychogomphus uncatus</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="gt_row gt_right" headers="from">2,006.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">−0.07</td>
@@ -3972,7 +3599,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <td class="gt_row gt_left" headers="meaning">Moderate decrease (p&lt;0.05)</td>
 <td class="gt_row gt_left" headers="species">Ophiogomphus cecilia</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.00</td>
@@ -3983,7 +3610,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <td class="gt_row gt_left" headers="meaning">Stable</td>
 <td class="gt_row gt_left" headers="species">Orthetrum albistylum</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.01</td>
@@ -3994,7 +3621,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <td class="gt_row gt_left" headers="meaning">Stable</td>
 <td class="gt_row gt_left" headers="species">Orthetrum brunneum</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.02</td>
@@ -4005,7 +3632,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
 <td class="gt_row gt_left" headers="species">Orthetrum cancellatum</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.04</td>
@@ -4016,7 +3643,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
 <td class="gt_row gt_left" headers="species">Orthetrum coerulescens</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="gt_row gt_right" headers="from">2,006.00</td>
 <td class="gt_row gt_right" headers="upto">2,013.00</td>
 <td class="gt_row gt_right" headers="add">−0.05</td>
@@ -4027,7 +3654,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <td class="gt_row gt_left" headers="meaning">Uncertain</td>
 <td class="gt_row gt_left" headers="species">Oxygastra curtisi</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.02</td>
@@ -4038,7 +3665,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
 <td class="gt_row gt_left" headers="species">Platycnemis pennipes</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.01</td>
@@ -4049,7 +3676,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <td class="gt_row gt_left" headers="meaning">Stable</td>
 <td class="gt_row gt_left" headers="species">Pyrrhosoma nymphula</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="gt_row gt_right" headers="from">2,007.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.01</td>
@@ -4060,7 +3687,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <td class="gt_row gt_left" headers="meaning">Uncertain</td>
 <td class="gt_row gt_left" headers="species">Somatochlora alpestris</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="gt_row gt_right" headers="from">2,006.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">−0.01</td>
@@ -4071,7 +3698,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <td class="gt_row gt_left" headers="meaning">Stable</td>
 <td class="gt_row gt_left" headers="species">Somatochlora flavomaculata</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">−0.03</td>
@@ -4082,7 +3709,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <td class="gt_row gt_left" headers="meaning">Moderate decrease (p&lt;0.01)</td>
 <td class="gt_row gt_left" headers="species">Somatochlora metallica</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.01</td>
@@ -4093,7 +3720,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <td class="gt_row gt_left" headers="meaning">Stable</td>
 <td class="gt_row gt_left" headers="species">Sympecma fusca</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.02</td>
@@ -4104,7 +3731,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <td class="gt_row gt_left" headers="meaning">Uncertain</td>
 <td class="gt_row gt_left" headers="species">Sympetrum danae</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="gt_row gt_right" headers="from">2,006.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.04</td>
@@ -4115,7 +3742,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.05)</td>
 <td class="gt_row gt_left" headers="species">Sympetrum depressiusculum</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.00</td>
@@ -4126,7 +3753,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <td class="gt_row gt_left" headers="meaning">Stable</td>
 <td class="gt_row gt_left" headers="species">Sympetrum fonscolombii</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.00</td>
@@ -4137,7 +3764,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <td class="gt_row gt_left" headers="meaning">Stable</td>
 <td class="gt_row gt_left" headers="species">Sympetrum pedemontanum</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">−0.01</td>
@@ -4148,7 +3775,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <td class="gt_row gt_left" headers="meaning">Stable</td>
 <td class="gt_row gt_left" headers="species">Sympetrum sanguineum</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.03</td>
@@ -4159,7 +3786,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <td class="gt_row gt_left" headers="meaning">Uncertain</td>
 <td class="gt_row gt_left" headers="species">Sympetrum striolatum</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="gt_row gt_right" headers="from">2,017.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.09</td>
@@ -4177,7 +3804,7 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb211"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb211-1"><a href="#cb211-1" aria-hidden="true" tabindex="-1"></a><span class="co">#write.csv(results_df,'trim/trimResults.csv')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb179"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb179-1"><a href="#cb179-1" aria-hidden="true" tabindex="-1"></a><span class="co">#write.csv(results_df,'trim/trimResults.csv')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -4186,30 +3813,30 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb212"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb212-1"><a href="#cb212-1" aria-hidden="true" tabindex="-1"></a>df.occu <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span> </span>
-<span id="cb212-2"><a href="#cb212-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date_year,species,cellcode) <span class="sc">%&gt;%</span> <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb212-3"><a href="#cb212-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(cellcode,species,date_year, <span class="at">name =</span> <span class="st">'n_occurrences'</span>)</span>
-<span id="cb212-4"><a href="#cb212-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb212-5"><a href="#cb212-5" aria-hidden="true" tabindex="-1"></a>df_occ <span class="ot">&lt;-</span> df.occu <span class="sc">%&gt;%</span></span>
-<span id="cb212-6"><a href="#cb212-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">presence =</span> <span class="fu">ifelse</span>(n_occurrences <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb212-7"><a href="#cb212-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">complete</span>(cellcode, species, date_year, </span>
-<span id="cb212-8"><a href="#cb212-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">n_occurrences =</span> <span class="dv">0</span>, <span class="at">presence =</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb180"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb180-1"><a href="#cb180-1" aria-hidden="true" tabindex="-1"></a>df.occu <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span> </span>
+<span id="cb180-2"><a href="#cb180-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date_year,species,cellcode) <span class="sc">%&gt;%</span> <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb180-3"><a href="#cb180-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(cellcode,species,date_year, <span class="at">name =</span> <span class="st">'n_occurrences'</span>)</span>
+<span id="cb180-4"><a href="#cb180-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb180-5"><a href="#cb180-5" aria-hidden="true" tabindex="-1"></a>df_occ <span class="ot">&lt;-</span> df.occu <span class="sc">%&gt;%</span></span>
+<span id="cb180-6"><a href="#cb180-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">presence =</span> <span class="fu">ifelse</span>(n_occurrences <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb180-7"><a href="#cb180-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">complete</span>(cellcode, species, date_year, </span>
+<span id="cb180-8"><a href="#cb180-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">n_occurrences =</span> <span class="dv">0</span>, <span class="at">presence =</span> <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb213"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb213-1"><a href="#cb213-1" aria-hidden="true" tabindex="-1"></a><span class="co"># filtro delle specie con meno di 50 records totali</span></span>
-<span id="cb213-2"><a href="#cb213-2" aria-hidden="true" tabindex="-1"></a><span class="co"># cfr. (Rapacciuolo et al. 2017)</span></span>
-<span id="cb213-3"><a href="#cb213-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb213-4"><a href="#cb213-4" aria-hidden="true" tabindex="-1"></a>listaSpecie <span class="ot">&lt;-</span> df_occ <span class="sc">%&gt;%</span> </span>
-<span id="cb213-5"><a href="#cb213-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species) <span class="sc">%&gt;%</span> </span>
-<span id="cb213-6"><a href="#cb213-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">ntot=</span><span class="fu">sum</span>(n_occurrences)) <span class="sc">%&gt;%</span> </span>
-<span id="cb213-7"><a href="#cb213-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ntot<span class="sc">&gt;=</span><span class="dv">50</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb213-8"><a href="#cb213-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(species) <span class="sc">%&gt;%</span> <span class="fu">pull</span>()</span>
-<span id="cb213-9"><a href="#cb213-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb213-10"><a href="#cb213-10" aria-hidden="true" tabindex="-1"></a>df_occ50 <span class="ot">&lt;-</span> df_occ <span class="sc">%&gt;%</span> </span>
-<span id="cb213-11"><a href="#cb213-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species <span class="sc">%in%</span> listaSpecie)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb181"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb181-1"><a href="#cb181-1" aria-hidden="true" tabindex="-1"></a><span class="co"># filtro delle specie con meno di 50 records totali</span></span>
+<span id="cb181-2"><a href="#cb181-2" aria-hidden="true" tabindex="-1"></a><span class="co"># cfr. (Rapacciuolo et al. 2017)</span></span>
+<span id="cb181-3"><a href="#cb181-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb181-4"><a href="#cb181-4" aria-hidden="true" tabindex="-1"></a>listaSpecie <span class="ot">&lt;-</span> df_occ <span class="sc">%&gt;%</span> </span>
+<span id="cb181-5"><a href="#cb181-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species) <span class="sc">%&gt;%</span> </span>
+<span id="cb181-6"><a href="#cb181-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">ntot=</span><span class="fu">sum</span>(n_occurrences)) <span class="sc">%&gt;%</span> </span>
+<span id="cb181-7"><a href="#cb181-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ntot<span class="sc">&gt;=</span><span class="dv">50</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb181-8"><a href="#cb181-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(species) <span class="sc">%&gt;%</span> <span class="fu">pull</span>()</span>
+<span id="cb181-9"><a href="#cb181-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb181-10"><a href="#cb181-10" aria-hidden="true" tabindex="-1"></a>df_occ50 <span class="ot">&lt;-</span> df_occ <span class="sc">%&gt;%</span> </span>
+<span id="cb181-11"><a href="#cb181-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species <span class="sc">%in%</span> listaSpecie)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -4219,166 +3846,166 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb214"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb214-1"><a href="#cb214-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(unmarked)</span>
-<span id="cb214-2"><a href="#cb214-2" aria-hidden="true" tabindex="-1"></a>years <span class="ot">&lt;-</span> <span class="dv">2005</span><span class="sc">:</span><span class="dv">2025</span></span>
-<span id="cb214-3"><a href="#cb214-3" aria-hidden="true" tabindex="-1"></a><span class="co">#nomeSp &lt;- 'Aeshna affinis'</span></span>
-<span id="cb214-4"><a href="#cb214-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb214-5"><a href="#cb214-5" aria-hidden="true" tabindex="-1"></a>effort_vec <span class="ot">&lt;-</span> effort_df <span class="sc">%&gt;%</span> </span>
-<span id="cb214-6"><a href="#cb214-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(n_sites_censiti)</span>
-<span id="cb214-7"><a href="#cb214-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb214-8"><a href="#cb214-8" aria-hidden="true" tabindex="-1"></a>occProb <span class="ot">&lt;-</span> <span class="cf">function</span>(nomeSp) {</span>
-<span id="cb214-9"><a href="#cb214-9" aria-hidden="true" tabindex="-1"></a>  <span class="co">#print(nomeSp)</span></span>
-<span id="cb214-10"><a href="#cb214-10" aria-hidden="true" tabindex="-1"></a>  df_sp <span class="ot">&lt;-</span> df_occ50 <span class="sc">%&gt;%</span> </span>
-<span id="cb214-11"><a href="#cb214-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species<span class="sc">==</span>nomeSp) <span class="sc">%&gt;%</span> </span>
-<span id="cb214-12"><a href="#cb214-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>n_occurrences,<span class="sc">-</span>species)</span>
-<span id="cb214-13"><a href="#cb214-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb214-14"><a href="#cb214-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (nomeSp <span class="sc">==</span> <span class="st">"Trithemis annulata"</span>) {</span>
-<span id="cb214-15"><a href="#cb214-15" aria-hidden="true" tabindex="-1"></a>    df_sp <span class="ot">&lt;-</span> df_sp <span class="sc">%&gt;%</span> <span class="fu">filter</span>(date_year <span class="sc">&gt;</span> <span class="dv">2016</span>)</span>
-<span id="cb214-16"><a href="#cb214-16" aria-hidden="true" tabindex="-1"></a>    effort_vec <span class="ot">&lt;-</span> effort_vec[<span class="dv">19</span><span class="sc">:</span><span class="dv">27</span>]</span>
-<span id="cb214-17"><a href="#cb214-17" aria-hidden="true" tabindex="-1"></a>    years <span class="ot">&lt;-</span> <span class="dv">2017</span><span class="sc">:</span><span class="dv">2025</span></span>
-<span id="cb214-18"><a href="#cb214-18" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb214-19"><a href="#cb214-19" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb214-20"><a href="#cb214-20" aria-hidden="true" tabindex="-1"></a>detection_matrix <span class="ot">&lt;-</span> df_sp <span class="sc">%&gt;%</span></span>
-<span id="cb214-21"><a href="#cb214-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> date_year, </span>
-<span id="cb214-22"><a href="#cb214-22" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_from =</span> presence, </span>
-<span id="cb214-23"><a href="#cb214-23" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_fill =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb214-24"><a href="#cb214-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(cellcode)</span>
-<span id="cb214-25"><a href="#cb214-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Conversione in oggetto umf</span></span>
-<span id="cb214-26"><a href="#cb214-26" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(detection_matrix[,<span class="sc">-</span><span class="dv">1</span>])</span>
-<span id="cb214-27"><a href="#cb214-27" aria-hidden="true" tabindex="-1"></a>effort_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(effort_vec, </span>
-<span id="cb214-28"><a href="#cb214-28" aria-hidden="true" tabindex="-1"></a>                            <span class="at">each =</span> <span class="fu">nrow</span>(y)), </span>
-<span id="cb214-29"><a href="#cb214-29" aria-hidden="true" tabindex="-1"></a>                        <span class="at">nrow =</span> <span class="fu">nrow</span>(y))</span>
-<span id="cb214-30"><a href="#cb214-30" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(y) <span class="ot">&lt;-</span> detection_matrix<span class="sc">$</span>cellcode</span>
-<span id="cb214-31"><a href="#cb214-31" aria-hidden="true" tabindex="-1"></a>umf <span class="ot">&lt;-</span> <span class="fu">unmarkedFrameOccu</span>(<span class="at">y =</span> y, <span class="at">obsCovs =</span> <span class="fu">list</span>(<span class="at">effort =</span> effort_matrix))</span>
-<span id="cb214-32"><a href="#cb214-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb214-33"><a href="#cb214-33" aria-hidden="true" tabindex="-1"></a>fm <span class="ot">&lt;-</span> <span class="fu">occu</span>(<span class="sc">~</span>effort <span class="sc">~</span><span class="dv">1</span>, <span class="at">data =</span> umf)</span>
-<span id="cb214-34"><a href="#cb214-34" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fm)</span></span>
-<span id="cb214-35"><a href="#cb214-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb214-36"><a href="#cb214-36" aria-hidden="true" tabindex="-1"></a>pred_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">seq_len</span>(<span class="fu">ncol</span>(y)), <span class="cf">function</span>(i) {</span>
-<span id="cb214-37"><a href="#cb214-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tryCatch</span>({</span>
-<span id="cb214-38"><a href="#cb214-38" aria-hidden="true" tabindex="-1"></a>    umf_i <span class="ot">&lt;-</span> <span class="fu">unmarkedFrameOccu</span>(</span>
-<span id="cb214-39"><a href="#cb214-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="fu">as.matrix</span>(y[, i]),</span>
-<span id="cb214-40"><a href="#cb214-40" aria-hidden="true" tabindex="-1"></a>      <span class="at">obsCovs =</span> <span class="fu">list</span>(<span class="at">effort =</span> <span class="fu">as.matrix</span>(effort_matrix[, i]))</span>
-<span id="cb214-41"><a href="#cb214-41" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb214-42"><a href="#cb214-42" aria-hidden="true" tabindex="-1"></a>    fm_i <span class="ot">&lt;-</span> <span class="fu">occu</span>(<span class="sc">~</span>effort <span class="sc">~</span><span class="dv">1</span>, <span class="at">data =</span> umf_i)</span>
-<span id="cb214-43"><a href="#cb214-43" aria-hidden="true" tabindex="-1"></a>    bt <span class="ot">&lt;-</span> <span class="fu">backTransform</span>(fm_i, <span class="at">type =</span> <span class="st">"state"</span>)</span>
-<span id="cb214-44"><a href="#cb214-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.frame</span>(</span>
-<span id="cb214-45"><a href="#cb214-45" aria-hidden="true" tabindex="-1"></a>      <span class="at">species =</span> nomeSp,</span>
-<span id="cb214-46"><a href="#cb214-46" aria-hidden="true" tabindex="-1"></a>      <span class="at">year =</span> years[i],</span>
-<span id="cb214-47"><a href="#cb214-47" aria-hidden="true" tabindex="-1"></a>      <span class="at">estimate =</span> bt<span class="sc">@</span>estimate,</span>
-<span id="cb214-48"><a href="#cb214-48" aria-hidden="true" tabindex="-1"></a>      <span class="at">lower =</span> <span class="fu">confint</span>(bt)[<span class="dv">1</span>],</span>
-<span id="cb214-49"><a href="#cb214-49" aria-hidden="true" tabindex="-1"></a>      <span class="at">upper =</span> <span class="fu">confint</span>(bt)[<span class="dv">2</span>]</span>
-<span id="cb214-50"><a href="#cb214-50" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb214-51"><a href="#cb214-51" aria-hidden="true" tabindex="-1"></a>  },</span>
-<span id="cb214-52"><a href="#cb214-52" aria-hidden="true" tabindex="-1"></a>  <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
-<span id="cb214-53"><a href="#cb214-53" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(nomeSp, <span class="st">" nell’anno "</span>, years[i], <span class="st">": "</span>, e<span class="sc">$</span>message)</span>
-<span id="cb214-54"><a href="#cb214-54" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.frame</span>(</span>
-<span id="cb214-55"><a href="#cb214-55" aria-hidden="true" tabindex="-1"></a>      <span class="at">species =</span> nomeSp,</span>
-<span id="cb214-56"><a href="#cb214-56" aria-hidden="true" tabindex="-1"></a>      <span class="at">year =</span> years[i],</span>
-<span id="cb214-57"><a href="#cb214-57" aria-hidden="true" tabindex="-1"></a>      <span class="at">estimate =</span> <span class="cn">NA</span>,</span>
-<span id="cb214-58"><a href="#cb214-58" aria-hidden="true" tabindex="-1"></a>      <span class="at">lower =</span> <span class="cn">NA</span>,</span>
-<span id="cb214-59"><a href="#cb214-59" aria-hidden="true" tabindex="-1"></a>      <span class="at">upper =</span> <span class="cn">NA</span></span>
-<span id="cb214-60"><a href="#cb214-60" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb214-61"><a href="#cb214-61" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb214-62"><a href="#cb214-62" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb214-63"><a href="#cb214-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb214-64"><a href="#cb214-64" aria-hidden="true" tabindex="-1"></a>pred_df <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, pred_list)</span>
-<span id="cb214-65"><a href="#cb214-65" aria-hidden="true" tabindex="-1"></a><span class="fu">return</span>(<span class="at">data =</span> pred_df)</span>
-<span id="cb214-66"><a href="#cb214-66" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb214-67"><a href="#cb214-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb214-68"><a href="#cb214-68" aria-hidden="true" tabindex="-1"></a><span class="co"># listaSpecie</span></span>
-<span id="cb214-69"><a href="#cb214-69" aria-hidden="true" tabindex="-1"></a><span class="co"># occProb("Trithemis annulata")</span></span>
-<span id="cb214-70"><a href="#cb214-70" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">map</span>(listaSpecie, occProb)</span>
-<span id="cb214-71"><a href="#cb214-71" aria-hidden="true" tabindex="-1"></a>all_species_df <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(results) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>lower, <span class="sc">-</span>upper)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb182"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb182-1"><a href="#cb182-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(unmarked)</span>
+<span id="cb182-2"><a href="#cb182-2" aria-hidden="true" tabindex="-1"></a>years <span class="ot">&lt;-</span> year_start<span class="sc">:</span><span class="dv">2025</span></span>
+<span id="cb182-3"><a href="#cb182-3" aria-hidden="true" tabindex="-1"></a><span class="co">#nomeSp &lt;- 'Aeshna affinis'</span></span>
+<span id="cb182-4"><a href="#cb182-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb182-5"><a href="#cb182-5" aria-hidden="true" tabindex="-1"></a>effort_vec <span class="ot">&lt;-</span> effort_df <span class="sc">%&gt;%</span> </span>
+<span id="cb182-6"><a href="#cb182-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(n_sites_censiti)</span>
+<span id="cb182-7"><a href="#cb182-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb182-8"><a href="#cb182-8" aria-hidden="true" tabindex="-1"></a>occProb <span class="ot">&lt;-</span> <span class="cf">function</span>(nomeSp) {</span>
+<span id="cb182-9"><a href="#cb182-9" aria-hidden="true" tabindex="-1"></a>  <span class="co">#print(nomeSp)</span></span>
+<span id="cb182-10"><a href="#cb182-10" aria-hidden="true" tabindex="-1"></a>  df_sp <span class="ot">&lt;-</span> df_occ50 <span class="sc">%&gt;%</span> </span>
+<span id="cb182-11"><a href="#cb182-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species<span class="sc">==</span>nomeSp) <span class="sc">%&gt;%</span> </span>
+<span id="cb182-12"><a href="#cb182-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>n_occurrences,<span class="sc">-</span>species)</span>
+<span id="cb182-13"><a href="#cb182-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb182-14"><a href="#cb182-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (nomeSp <span class="sc">==</span> <span class="st">"Trithemis annulata"</span>) {</span>
+<span id="cb182-15"><a href="#cb182-15" aria-hidden="true" tabindex="-1"></a>    df_sp <span class="ot">&lt;-</span> df_sp <span class="sc">%&gt;%</span> <span class="fu">filter</span>(date_year <span class="sc">&gt;</span> <span class="dv">2016</span>)</span>
+<span id="cb182-16"><a href="#cb182-16" aria-hidden="true" tabindex="-1"></a>    effort_vec <span class="ot">&lt;-</span> effort_vec[<span class="dv">19</span><span class="sc">:</span><span class="dv">27</span>]</span>
+<span id="cb182-17"><a href="#cb182-17" aria-hidden="true" tabindex="-1"></a>    years <span class="ot">&lt;-</span> <span class="dv">2017</span><span class="sc">:</span><span class="dv">2025</span></span>
+<span id="cb182-18"><a href="#cb182-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb182-19"><a href="#cb182-19" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb182-20"><a href="#cb182-20" aria-hidden="true" tabindex="-1"></a>detection_matrix <span class="ot">&lt;-</span> df_sp <span class="sc">%&gt;%</span></span>
+<span id="cb182-21"><a href="#cb182-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> date_year, </span>
+<span id="cb182-22"><a href="#cb182-22" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_from =</span> presence, </span>
+<span id="cb182-23"><a href="#cb182-23" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_fill =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb182-24"><a href="#cb182-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(cellcode)</span>
+<span id="cb182-25"><a href="#cb182-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Conversione in oggetto umf</span></span>
+<span id="cb182-26"><a href="#cb182-26" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(detection_matrix[,<span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb182-27"><a href="#cb182-27" aria-hidden="true" tabindex="-1"></a>effort_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(effort_vec, </span>
+<span id="cb182-28"><a href="#cb182-28" aria-hidden="true" tabindex="-1"></a>                            <span class="at">each =</span> <span class="fu">nrow</span>(y)), </span>
+<span id="cb182-29"><a href="#cb182-29" aria-hidden="true" tabindex="-1"></a>                        <span class="at">nrow =</span> <span class="fu">nrow</span>(y))</span>
+<span id="cb182-30"><a href="#cb182-30" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(y) <span class="ot">&lt;-</span> detection_matrix<span class="sc">$</span>cellcode</span>
+<span id="cb182-31"><a href="#cb182-31" aria-hidden="true" tabindex="-1"></a>umf <span class="ot">&lt;-</span> <span class="fu">unmarkedFrameOccu</span>(<span class="at">y =</span> y, <span class="at">obsCovs =</span> <span class="fu">list</span>(<span class="at">effort =</span> effort_matrix))</span>
+<span id="cb182-32"><a href="#cb182-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb182-33"><a href="#cb182-33" aria-hidden="true" tabindex="-1"></a>fm <span class="ot">&lt;-</span> <span class="fu">occu</span>(<span class="sc">~</span>effort <span class="sc">~</span><span class="dv">1</span>, <span class="at">data =</span> umf)</span>
+<span id="cb182-34"><a href="#cb182-34" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(fm)</span></span>
+<span id="cb182-35"><a href="#cb182-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb182-36"><a href="#cb182-36" aria-hidden="true" tabindex="-1"></a>pred_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">seq_len</span>(<span class="fu">ncol</span>(y)), <span class="cf">function</span>(i) {</span>
+<span id="cb182-37"><a href="#cb182-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tryCatch</span>({</span>
+<span id="cb182-38"><a href="#cb182-38" aria-hidden="true" tabindex="-1"></a>    umf_i <span class="ot">&lt;-</span> <span class="fu">unmarkedFrameOccu</span>(</span>
+<span id="cb182-39"><a href="#cb182-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="fu">as.matrix</span>(y[, i]),</span>
+<span id="cb182-40"><a href="#cb182-40" aria-hidden="true" tabindex="-1"></a>      <span class="at">obsCovs =</span> <span class="fu">list</span>(<span class="at">effort =</span> <span class="fu">as.matrix</span>(effort_matrix[, i]))</span>
+<span id="cb182-41"><a href="#cb182-41" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb182-42"><a href="#cb182-42" aria-hidden="true" tabindex="-1"></a>    fm_i <span class="ot">&lt;-</span> <span class="fu">occu</span>(<span class="sc">~</span>effort <span class="sc">~</span><span class="dv">1</span>, <span class="at">data =</span> umf_i)</span>
+<span id="cb182-43"><a href="#cb182-43" aria-hidden="true" tabindex="-1"></a>    bt <span class="ot">&lt;-</span> <span class="fu">backTransform</span>(fm_i, <span class="at">type =</span> <span class="st">"state"</span>)</span>
+<span id="cb182-44"><a href="#cb182-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.frame</span>(</span>
+<span id="cb182-45"><a href="#cb182-45" aria-hidden="true" tabindex="-1"></a>      <span class="at">species =</span> nomeSp,</span>
+<span id="cb182-46"><a href="#cb182-46" aria-hidden="true" tabindex="-1"></a>      <span class="at">year =</span> years[i],</span>
+<span id="cb182-47"><a href="#cb182-47" aria-hidden="true" tabindex="-1"></a>      <span class="at">estimate =</span> bt<span class="sc">@</span>estimate,</span>
+<span id="cb182-48"><a href="#cb182-48" aria-hidden="true" tabindex="-1"></a>      <span class="at">lower =</span> <span class="fu">confint</span>(bt)[<span class="dv">1</span>],</span>
+<span id="cb182-49"><a href="#cb182-49" aria-hidden="true" tabindex="-1"></a>      <span class="at">upper =</span> <span class="fu">confint</span>(bt)[<span class="dv">2</span>]</span>
+<span id="cb182-50"><a href="#cb182-50" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb182-51"><a href="#cb182-51" aria-hidden="true" tabindex="-1"></a>  },</span>
+<span id="cb182-52"><a href="#cb182-52" aria-hidden="true" tabindex="-1"></a>  <span class="at">error =</span> <span class="cf">function</span>(e) {</span>
+<span id="cb182-53"><a href="#cb182-53" aria-hidden="true" tabindex="-1"></a>    <span class="fu">message</span>(nomeSp, <span class="st">" nell’anno "</span>, years[i], <span class="st">": "</span>, e<span class="sc">$</span>message)</span>
+<span id="cb182-54"><a href="#cb182-54" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.frame</span>(</span>
+<span id="cb182-55"><a href="#cb182-55" aria-hidden="true" tabindex="-1"></a>      <span class="at">species =</span> nomeSp,</span>
+<span id="cb182-56"><a href="#cb182-56" aria-hidden="true" tabindex="-1"></a>      <span class="at">year =</span> years[i],</span>
+<span id="cb182-57"><a href="#cb182-57" aria-hidden="true" tabindex="-1"></a>      <span class="at">estimate =</span> <span class="cn">NA</span>,</span>
+<span id="cb182-58"><a href="#cb182-58" aria-hidden="true" tabindex="-1"></a>      <span class="at">lower =</span> <span class="cn">NA</span>,</span>
+<span id="cb182-59"><a href="#cb182-59" aria-hidden="true" tabindex="-1"></a>      <span class="at">upper =</span> <span class="cn">NA</span></span>
+<span id="cb182-60"><a href="#cb182-60" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb182-61"><a href="#cb182-61" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb182-62"><a href="#cb182-62" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb182-63"><a href="#cb182-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb182-64"><a href="#cb182-64" aria-hidden="true" tabindex="-1"></a>pred_df <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, pred_list)</span>
+<span id="cb182-65"><a href="#cb182-65" aria-hidden="true" tabindex="-1"></a><span class="fu">return</span>(<span class="at">data =</span> pred_df)</span>
+<span id="cb182-66"><a href="#cb182-66" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb182-67"><a href="#cb182-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb182-68"><a href="#cb182-68" aria-hidden="true" tabindex="-1"></a><span class="co"># listaSpecie</span></span>
+<span id="cb182-69"><a href="#cb182-69" aria-hidden="true" tabindex="-1"></a><span class="co"># occProb("Trithemis annulata")</span></span>
+<span id="cb182-70"><a href="#cb182-70" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">map</span>(listaSpecie, occProb)</span>
+<span id="cb182-71"><a href="#cb182-71" aria-hidden="true" tabindex="-1"></a>all_species_df <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(results) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>lower, <span class="sc">-</span>upper)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb215"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb215-1"><a href="#cb215-1" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> all_species_df <span class="sc">%&gt;%</span></span>
-<span id="cb215-2"><a href="#cb215-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species) <span class="sc">%&gt;%</span></span>
-<span id="cb215-3"><a href="#cb215-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do</span>({</span>
-<span id="cb215-4"><a href="#cb215-4" aria-hidden="true" tabindex="-1"></a>    mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(estimate <span class="sc">~</span> year, </span>
-<span id="cb215-5"><a href="#cb215-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">family =</span> quasipoisson,</span>
-<span id="cb215-6"><a href="#cb215-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> .)</span>
-<span id="cb215-7"><a href="#cb215-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tidy</span>(mod)  <span class="co"># restituisce coefficienti, SE, p-value</span></span>
-<span id="cb215-8"><a href="#cb215-8" aria-hidden="true" tabindex="-1"></a>  }) <span class="sc">%&gt;%</span></span>
-<span id="cb215-9"><a href="#cb215-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
-<span id="cb215-10"><a href="#cb215-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb215-11"><a href="#cb215-11" aria-hidden="true" tabindex="-1"></a>species_trends <span class="ot">&lt;-</span> results <span class="sc">%&gt;%</span></span>
-<span id="cb215-12"><a href="#cb215-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"year"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb215-13"><a href="#cb215-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">trend =</span> <span class="fu">case_when</span>(</span>
-<span id="cb215-14"><a href="#cb215-14" aria-hidden="true" tabindex="-1"></a>    estimate <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"increase"</span>,</span>
-<span id="cb215-15"><a href="#cb215-15" aria-hidden="true" tabindex="-1"></a>    estimate <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"decrease"</span>,</span>
-<span id="cb215-16"><a href="#cb215-16" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"stable"</span></span>
-<span id="cb215-17"><a href="#cb215-17" aria-hidden="true" tabindex="-1"></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb183"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb183-1"><a href="#cb183-1" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> all_species_df <span class="sc">%&gt;%</span></span>
+<span id="cb183-2"><a href="#cb183-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species) <span class="sc">%&gt;%</span></span>
+<span id="cb183-3"><a href="#cb183-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do</span>({</span>
+<span id="cb183-4"><a href="#cb183-4" aria-hidden="true" tabindex="-1"></a>    mod <span class="ot">&lt;-</span> <span class="fu">glm</span>(estimate <span class="sc">~</span> year, </span>
+<span id="cb183-5"><a href="#cb183-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">family =</span> quasipoisson,</span>
+<span id="cb183-6"><a href="#cb183-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> .)</span>
+<span id="cb183-7"><a href="#cb183-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tidy</span>(mod)  <span class="co"># restituisce coefficienti, SE, p-value</span></span>
+<span id="cb183-8"><a href="#cb183-8" aria-hidden="true" tabindex="-1"></a>  }) <span class="sc">%&gt;%</span></span>
+<span id="cb183-9"><a href="#cb183-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb183-10"><a href="#cb183-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb183-11"><a href="#cb183-11" aria-hidden="true" tabindex="-1"></a>species_trends <span class="ot">&lt;-</span> results <span class="sc">%&gt;%</span></span>
+<span id="cb183-12"><a href="#cb183-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"year"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb183-13"><a href="#cb183-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">trend =</span> <span class="fu">case_when</span>(</span>
+<span id="cb183-14"><a href="#cb183-14" aria-hidden="true" tabindex="-1"></a>    estimate <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"increase"</span>,</span>
+<span id="cb183-15"><a href="#cb183-15" aria-hidden="true" tabindex="-1"></a>    estimate <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"decrease"</span>,</span>
+<span id="cb183-16"><a href="#cb183-16" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"stable"</span></span>
+<span id="cb183-17"><a href="#cb183-17" aria-hidden="true" tabindex="-1"></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb216"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb216-1"><a href="#cb216-1" aria-hidden="true" tabindex="-1"></a>all_species_df <span class="ot">&lt;-</span> all_species_df <span class="sc">%&gt;%</span></span>
-<span id="cb216-2"><a href="#cb216-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year_group =</span> <span class="fu">paste0</span>(<span class="fu">floor</span>(year <span class="sc">/</span> <span class="dv">5</span>) <span class="sc">*</span> <span class="dv">5</span>, </span>
-<span id="cb216-3"><a href="#cb216-3" aria-hidden="true" tabindex="-1"></a>                             <span class="st">"-"</span>, <span class="fu">floor</span>(year <span class="sc">/</span> <span class="dv">5</span>) <span class="sc">*</span> <span class="dv">5</span> <span class="sc">+</span> <span class="dv">4</span>))</span>
-<span id="cb216-4"><a href="#cb216-4" aria-hidden="true" tabindex="-1"></a>all_species_df<span class="sc">$</span>year_group[all_species_df<span class="sc">$</span>year_group <span class="sc">==</span> <span class="st">"2020-2024"</span>] <span class="ot">&lt;-</span> <span class="st">"2020-2025"</span></span>
-<span id="cb216-5"><a href="#cb216-5" aria-hidden="true" tabindex="-1"></a>all_species_df<span class="sc">$</span>year_group[all_species_df<span class="sc">$</span>year_group <span class="sc">==</span> <span class="st">"2025-2029"</span>] <span class="ot">&lt;-</span> <span class="st">"2020-2025"</span></span>
-<span id="cb216-6"><a href="#cb216-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb216-7"><a href="#cb216-7" aria-hidden="true" tabindex="-1"></a>geometric_mean <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">exp</span>(<span class="fu">mean</span>(<span class="fu">log</span>(x[x <span class="sc">&gt;</span> <span class="dv">0</span>]), </span>
-<span id="cb216-8"><a href="#cb216-8" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb216-9"><a href="#cb216-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb216-10"><a href="#cb216-10" aria-hidden="true" tabindex="-1"></a>occu.plot <span class="ot">&lt;-</span> <span class="cf">function</span>(nomeSp){</span>
-<span id="cb216-11"><a href="#cb216-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb216-12"><a href="#cb216-12" aria-hidden="true" tabindex="-1"></a>plot1 <span class="ot">&lt;-</span> all_species_df <span class="sc">%&gt;%</span> </span>
-<span id="cb216-13"><a href="#cb216-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species<span class="sc">==</span>nomeSp) <span class="sc">%&gt;%</span> </span>
-<span id="cb216-14"><a href="#cb216-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(year, estimate)) <span class="sc">+</span></span>
-<span id="cb216-15"><a href="#cb216-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">col=</span><span class="st">'black'</span>, <span class="at">se=</span>F)<span class="sc">+</span></span>
-<span id="cb216-16"><a href="#cb216-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">col=</span>year_group),<span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
-<span id="cb216-17"><a href="#cb216-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_ribbon(aes(ymin = lower, ymax = upper), </span></span>
-<span id="cb216-18"><a href="#cb216-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">#              alpha = 0.2, fill = "forestgreen") +</span></span>
-<span id="cb216-19"><a href="#cb216-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb216-20"><a href="#cb216-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">Year"</span>,</span>
-<span id="cb216-21"><a href="#cb216-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Occupancy probability (ψ)</span><span class="sc">\n</span><span class="st">"</span>,</span>
-<span id="cb216-22"><a href="#cb216-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> nomeSp</span>
-<span id="cb216-23"><a href="#cb216-23" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb216-24"><a href="#cb216-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>,<span class="dv">1</span>)<span class="sc">+</span></span>
-<span id="cb216-25"><a href="#cb216-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>)<span class="sc">+</span></span>
-<span id="cb216-26"><a href="#cb216-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)<span class="sc">+</span></span>
-<span id="cb216-27"><a href="#cb216-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">'none'</span>,</span>
-<span id="cb216-28"><a href="#cb216-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">'italic'</span>))</span>
-<span id="cb216-29"><a href="#cb216-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb216-30"><a href="#cb216-30" aria-hidden="true" tabindex="-1"></a>plot5 <span class="ot">&lt;-</span> all_species_df <span class="sc">%&gt;%</span> </span>
-<span id="cb216-31"><a href="#cb216-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species<span class="sc">==</span>nomeSp) <span class="sc">%&gt;%</span> </span>
-<span id="cb216-32"><a href="#cb216-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year_group) <span class="sc">%&gt;%</span> </span>
-<span id="cb216-33"><a href="#cb216-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean.est=</span><span class="fu">geometric_mean</span>(estimate),</span>
-<span id="cb216-34"><a href="#cb216-34" aria-hidden="true" tabindex="-1"></a>            <span class="at">dev.est=</span><span class="fu">sd</span>(estimate),</span>
-<span id="cb216-35"><a href="#cb216-35" aria-hidden="true" tabindex="-1"></a>            <span class="at">lower=</span>mean.est<span class="sc">-</span>dev.est,</span>
-<span id="cb216-36"><a href="#cb216-36" aria-hidden="true" tabindex="-1"></a>            <span class="at">upper=</span>mean.est<span class="sc">+</span>dev.est) <span class="sc">%&gt;%</span> </span>
-<span id="cb216-37"><a href="#cb216-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="cf">if</span> (nomeSp <span class="sc">==</span> <span class="st">"Trithemis annulata"</span>) {</span>
-<span id="cb216-38"><a href="#cb216-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">2019</span>, <span class="dv">2025</span>)[<span class="fu">seq_len</span>(<span class="fu">n</span>())]</span>
-<span id="cb216-39"><a href="#cb216-39" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
-<span id="cb216-40"><a href="#cb216-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">2009</span>, <span class="dv">2014</span>, <span class="dv">2019</span>, <span class="dv">2025</span>)[<span class="fu">seq_len</span>(<span class="fu">n</span>())]</span>
-<span id="cb216-41"><a href="#cb216-41" aria-hidden="true" tabindex="-1"></a>  }) <span class="sc">%&gt;%</span></span>
-<span id="cb216-42"><a href="#cb216-42" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb216-43"><a href="#cb216-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(year, mean.est)) <span class="sc">+</span></span>
-<span id="cb216-44"><a href="#cb216-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">col=</span><span class="st">'black'</span>)<span class="sc">+</span></span>
-<span id="cb216-45"><a href="#cb216-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">col=</span>year_group),<span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
-<span id="cb216-46"><a href="#cb216-46" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_ribbon(aes(ymin = lower, ymax = upper), </span></span>
-<span id="cb216-47"><a href="#cb216-47" aria-hidden="true" tabindex="-1"></a>  <span class="co">#              alpha = 0.2, fill = "forestgreen") +</span></span>
-<span id="cb216-48"><a href="#cb216-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb216-49"><a href="#cb216-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">Year"</span></span>
-<span id="cb216-50"><a href="#cb216-50" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb216-51"><a href="#cb216-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>,<span class="dv">1</span>)<span class="sc">+</span></span>
-<span id="cb216-52"><a href="#cb216-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>)<span class="sc">+</span></span>
-<span id="cb216-53"><a href="#cb216-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)<span class="sc">+</span></span>
-<span id="cb216-54"><a href="#cb216-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">'none'</span>,</span>
-<span id="cb216-55"><a href="#cb216-55" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">'italic'</span>))</span>
-<span id="cb216-56"><a href="#cb216-56" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb216-57"><a href="#cb216-57" aria-hidden="true" tabindex="-1"></a>plot1<span class="sc">+</span>plot5</span>
-<span id="cb216-58"><a href="#cb216-58" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb216-59"><a href="#cb216-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb216-60"><a href="#cb216-60" aria-hidden="true" tabindex="-1"></a><span class="co">#nomeSp='Trithemis annulata'</span></span>
-<span id="cb216-61"><a href="#cb216-61" aria-hidden="true" tabindex="-1"></a><span class="co">#occu.plot(nomeSp)</span></span>
-<span id="cb216-62"><a href="#cb216-62" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(listaSpecie,occu.plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb184"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb184-1"><a href="#cb184-1" aria-hidden="true" tabindex="-1"></a>all_species_df <span class="ot">&lt;-</span> all_species_df <span class="sc">%&gt;%</span></span>
+<span id="cb184-2"><a href="#cb184-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year_group =</span> <span class="fu">paste0</span>(<span class="fu">floor</span>(year <span class="sc">/</span> <span class="dv">5</span>) <span class="sc">*</span> <span class="dv">5</span>, </span>
+<span id="cb184-3"><a href="#cb184-3" aria-hidden="true" tabindex="-1"></a>                             <span class="st">"-"</span>, <span class="fu">floor</span>(year <span class="sc">/</span> <span class="dv">5</span>) <span class="sc">*</span> <span class="dv">5</span> <span class="sc">+</span> <span class="dv">4</span>))</span>
+<span id="cb184-4"><a href="#cb184-4" aria-hidden="true" tabindex="-1"></a>all_species_df<span class="sc">$</span>year_group[all_species_df<span class="sc">$</span>year_group <span class="sc">==</span> <span class="st">"2020-2024"</span>] <span class="ot">&lt;-</span> <span class="st">"2020-2025"</span></span>
+<span id="cb184-5"><a href="#cb184-5" aria-hidden="true" tabindex="-1"></a>all_species_df<span class="sc">$</span>year_group[all_species_df<span class="sc">$</span>year_group <span class="sc">==</span> <span class="st">"2025-2029"</span>] <span class="ot">&lt;-</span> <span class="st">"2020-2025"</span></span>
+<span id="cb184-6"><a href="#cb184-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb184-7"><a href="#cb184-7" aria-hidden="true" tabindex="-1"></a>geometric_mean <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">exp</span>(<span class="fu">mean</span>(<span class="fu">log</span>(x[x <span class="sc">&gt;</span> <span class="dv">0</span>]), </span>
+<span id="cb184-8"><a href="#cb184-8" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb184-9"><a href="#cb184-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb184-10"><a href="#cb184-10" aria-hidden="true" tabindex="-1"></a>occu.plot <span class="ot">&lt;-</span> <span class="cf">function</span>(nomeSp){</span>
+<span id="cb184-11"><a href="#cb184-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb184-12"><a href="#cb184-12" aria-hidden="true" tabindex="-1"></a>plot1 <span class="ot">&lt;-</span> all_species_df <span class="sc">%&gt;%</span> </span>
+<span id="cb184-13"><a href="#cb184-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species<span class="sc">==</span>nomeSp) <span class="sc">%&gt;%</span> </span>
+<span id="cb184-14"><a href="#cb184-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(year, estimate)) <span class="sc">+</span></span>
+<span id="cb184-15"><a href="#cb184-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">col=</span><span class="st">'black'</span>, <span class="at">se=</span>F)<span class="sc">+</span></span>
+<span id="cb184-16"><a href="#cb184-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">col=</span>year_group),<span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb184-17"><a href="#cb184-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_ribbon(aes(ymin = lower, ymax = upper), </span></span>
+<span id="cb184-18"><a href="#cb184-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">#              alpha = 0.2, fill = "forestgreen") +</span></span>
+<span id="cb184-19"><a href="#cb184-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb184-20"><a href="#cb184-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">Year"</span>,</span>
+<span id="cb184-21"><a href="#cb184-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Occupancy probability (ψ)</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb184-22"><a href="#cb184-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> nomeSp</span>
+<span id="cb184-23"><a href="#cb184-23" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb184-24"><a href="#cb184-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>,<span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb184-25"><a href="#cb184-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb184-26"><a href="#cb184-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)<span class="sc">+</span></span>
+<span id="cb184-27"><a href="#cb184-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">'none'</span>,</span>
+<span id="cb184-28"><a href="#cb184-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">'italic'</span>))</span>
+<span id="cb184-29"><a href="#cb184-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb184-30"><a href="#cb184-30" aria-hidden="true" tabindex="-1"></a>plot5 <span class="ot">&lt;-</span> all_species_df <span class="sc">%&gt;%</span> </span>
+<span id="cb184-31"><a href="#cb184-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species<span class="sc">==</span>nomeSp) <span class="sc">%&gt;%</span> </span>
+<span id="cb184-32"><a href="#cb184-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year_group) <span class="sc">%&gt;%</span> </span>
+<span id="cb184-33"><a href="#cb184-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean.est=</span><span class="fu">geometric_mean</span>(estimate),</span>
+<span id="cb184-34"><a href="#cb184-34" aria-hidden="true" tabindex="-1"></a>            <span class="at">dev.est=</span><span class="fu">sd</span>(estimate),</span>
+<span id="cb184-35"><a href="#cb184-35" aria-hidden="true" tabindex="-1"></a>            <span class="at">lower=</span>mean.est<span class="sc">-</span>dev.est,</span>
+<span id="cb184-36"><a href="#cb184-36" aria-hidden="true" tabindex="-1"></a>            <span class="at">upper=</span>mean.est<span class="sc">+</span>dev.est) <span class="sc">%&gt;%</span> </span>
+<span id="cb184-37"><a href="#cb184-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="cf">if</span> (nomeSp <span class="sc">==</span> <span class="st">"Trithemis annulata"</span>) {</span>
+<span id="cb184-38"><a href="#cb184-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">2019</span>, <span class="dv">2025</span>)[<span class="fu">seq_len</span>(<span class="fu">n</span>())]</span>
+<span id="cb184-39"><a href="#cb184-39" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb184-40"><a href="#cb184-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="dv">2009</span>, <span class="dv">2014</span>, <span class="dv">2019</span>, <span class="dv">2025</span>)[<span class="fu">seq_len</span>(<span class="fu">n</span>())]</span>
+<span id="cb184-41"><a href="#cb184-41" aria-hidden="true" tabindex="-1"></a>  }) <span class="sc">%&gt;%</span></span>
+<span id="cb184-42"><a href="#cb184-42" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb184-43"><a href="#cb184-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(year, mean.est)) <span class="sc">+</span></span>
+<span id="cb184-44"><a href="#cb184-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">col=</span><span class="st">'black'</span>)<span class="sc">+</span></span>
+<span id="cb184-45"><a href="#cb184-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">col=</span>year_group),<span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb184-46"><a href="#cb184-46" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_ribbon(aes(ymin = lower, ymax = upper), </span></span>
+<span id="cb184-47"><a href="#cb184-47" aria-hidden="true" tabindex="-1"></a>  <span class="co">#              alpha = 0.2, fill = "forestgreen") +</span></span>
+<span id="cb184-48"><a href="#cb184-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb184-49"><a href="#cb184-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">Year"</span></span>
+<span id="cb184-50"><a href="#cb184-50" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb184-51"><a href="#cb184-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>,<span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb184-52"><a href="#cb184-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb184-53"><a href="#cb184-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)<span class="sc">+</span></span>
+<span id="cb184-54"><a href="#cb184-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">'none'</span>,</span>
+<span id="cb184-55"><a href="#cb184-55" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">'italic'</span>))</span>
+<span id="cb184-56"><a href="#cb184-56" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb184-57"><a href="#cb184-57" aria-hidden="true" tabindex="-1"></a>plot1<span class="sc">+</span>plot5</span>
+<span id="cb184-58"><a href="#cb184-58" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb184-59"><a href="#cb184-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb184-60"><a href="#cb184-60" aria-hidden="true" tabindex="-1"></a><span class="co">#nomeSp='Trithemis annulata'</span></span>
+<span id="cb184-61"><a href="#cb184-61" aria-hidden="true" tabindex="-1"></a><span class="co">#occu.plot(nomeSp)</span></span>
+<span id="cb184-62"><a href="#cb184-62" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(listaSpecie,occu.plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]</code></pre>
@@ -5058,17 +4685,6 @@ $ cellcode20      &lt;dbl&gt; 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39, 39
 <div>
 <figure class="figure">
 <p><img src="000.odonataOccupancy_files/figure-html/unmarked_plot-62.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[63]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy_files/figure-html/unmarked_plot-63.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
