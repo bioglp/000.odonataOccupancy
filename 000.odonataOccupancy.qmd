@@ -185,7 +185,8 @@ species_sites <- dfo %>%
   group_by(species, date_year) %>%
   summarise(n_sites = n_distinct(cellcode), .groups = "drop")
 
-listaSpecie <- dfo %>% distinct(species) %>% pull()
+listaSpecie <- dfo %>% distinct(species) %>% 
+  arrange(species) %>% pull() 
 sp <- listaSpecie[1]
 
 odoTrend <- function(sp) {
@@ -446,10 +447,10 @@ Il modello utilizzato `occu(~effort ~1, data = umf)` considera una p in funzione
 ```{r unmarked}
 library(unmarked)
 years <- 1999:2025
-nomeSp <- 'Aeshna affinis'
+#nomeSp <- 'Aeshna affinis'
 
 effort_vec <- effort_df %>% 
-  dplyr::select(n_sites_censiti) %>% pull()
+  pull(n_sites_censiti)
 
 occProb <- function(nomeSp) {
   #print(nomeSp)
@@ -457,6 +458,12 @@ occProb <- function(nomeSp) {
   filter(species==nomeSp) %>% 
   select(-n_occurrences,-species)
 
+  if (nomeSp == "Trithemis annulata") {
+    df_sp <- df_sp %>% filter(date_year > 2016)
+    effort_vec <- effort_vec[19:27]
+    years <- 2017:2025
+  }
+  
 detection_matrix <- df_sp %>%
   pivot_wider(names_from = date_year, 
               values_from = presence, 
@@ -506,7 +513,7 @@ return(data = pred_df)
 }
 
 # listaSpecie
-# occProb("Sympecma paedisca")
+# occProb("Trithemis annulata")
 results <- map(listaSpecie, occProb)
 all_species_df <- bind_rows(results) %>% select(-lower, -upper)
 ```
@@ -568,7 +575,12 @@ plot5 <- all_species_df %>%
             dev.est=sd(estimate),
             lower=mean.est-dev.est,
             upper=mean.est+dev.est) %>% 
-  mutate(year=c(1999,2004,2009,2014,2019,2025)) %>% 
+  mutate(year = if (nomeSp == "Trithemis annulata") {
+    c(2019, 2025)[seq_len(n())]
+  } else {
+    c(1999, 2004, 2009, 2014, 2019, 2025)[seq_len(n())]
+  }) %>%
+  
   ggplot(aes(year, mean.est)) +
   geom_smooth(col='black')+
   geom_point(aes(col=year_group),size = 4) +
