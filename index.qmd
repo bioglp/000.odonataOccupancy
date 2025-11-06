@@ -14,5 +14,8 @@ Serie dati raccolti in Piemonte e Lombardia nel periodo compreso tra il 1999 e i
 -   [output](https://bioglp.github.io/000.odonataOccupancy/000.odonataOccupancy.html)
 
 ## Daily log
+- 2025-11-06
+    - corretti i nomi delle specie
+    - raggruppati valori di occupancy per gruppi di 5 anni
 - 2025-11-05
     - modelli di occupancy con occu from unmarked
