@@ -1,5 +1,5 @@
 ---
-title: "occupancyOdonata"
+title: "occupancyOdonata10k"
 author: "Gianandrea La Porta"
 date: "2025-11-05"
 format: 
@@ -34,7 +34,7 @@ Campi del dataset di partenza filtrato per bioregione continentale:
 ```{r import data}
 dfo <- read.xlsx('input/datasetSegnalazioni_R20251106.xlsx')
 dfo <- dfo %>% rename_with(tolower)
-dfo <- dfo %>% filter(date_year>1998, 
+dfo <- dfo %>% filter(date_year>2004, 
                       date_year<2026, 
                       !is.null(cellcode20))
 dfo <- dfo %>% 
@@ -448,7 +448,7 @@ Il modello utilizzato `occu(~effort ~1, data = umf)` considera una p in funzione
 
 ```{r unmarked}
 library(unmarked)
-years <- 1999:2025
+years <- 2005:2025
 #nomeSp <- 'Aeshna affinis'
 
 effort_vec <- effort_df %>% 
@@ -580,7 +580,7 @@ plot5 <- all_species_df %>%
   mutate(year = if (nomeSp == "Trithemis annulata") {
     c(2019, 2025)[seq_len(n())]
   } else {
-    c(1999, 2004, 2009, 2014, 2019, 2025)[seq_len(n())]
+    c(2009, 2014, 2019, 2025)[seq_len(n())]
   }) %>%
   
   ggplot(aes(year, mean.est)) +
