@@ -38,7 +38,7 @@ dfo <- read.xlsx('input/datasetSegnalazioni_R20251106.xlsx')
 dfo <- dfo %>% rename_with(tolower)
 dfo <- dfo %>% filter(date_year>=year_start, 
                       date_year<2026, 
-                      !is.null(cellcode20))
+                      !is.na(cellcode20))
 dfo <- dfo %>% 
   rename(species=latin_taxon)
 glimpse(dfo)
@@ -52,9 +52,15 @@ dfo$species[dfo$species=='Calopteryx splendens caprai'] <- 'Calopteryx splendens
 dfo$species[dfo$species=='Calopteryx splendens splendens'] <- 'Calopteryx splendens'
 dfo$species[dfo$species=='Calopteryx virgo padana'] <- 'Calopteryx virgo'
 dfo$species[dfo$species=='Calopteryx virgo meridionalis'] <- 'Calopteryx virgo'
+dfo$species[dfo$species=='Calopteryx virgo virgo'] <- 'Calopteryx virgo'
 dfo$species[dfo$species=='Gomphus flavipes'] <- 'Stylurus flavipes'
 dfo$species[dfo$species=='Lestes virens vestalis'] <- 'Lestes virens'
 dfo$species[dfo$species=='Onychogomphus forcipatus unguiculatus'] <- 'Onychogomphus forcipatus'
+dfo$species[dfo$species=='Onychogomphus forcipatus forcipatus'] <- 'Onychogomphus forcipatus'
+dfo$species[dfo$species=='Oxygastra curtisi'] <- 'Oxygastra curtisii'
+dfo$species[dfo$species=='Cordulegaster bidentata bidentata'] <- 'Cordulegaster bidentata'
+dfo$species[dfo$species=='Orthetrum coerulescens coerulescens'] <- 'Orthetrum coerulescens'
+
 dfo <- dfo %>% filter(!str_detect(species, "sp\\.$|sp\\s|sp$"))
 dfo <- dfo %>% filter(species!='No odonata')
 ```
@@ -179,6 +185,18 @@ Extrapolated Species Richness in a Species Pool
 pool <- poolaccum(mat_num)
 #summary(pool, display = "chao")
 plot(pool)
+```
+
+
+```{r norare}
+# eliminazione dall'analisi delle specie con meno di 50 occorrenze totali.
+listaSpecie <- dfo %>% 
+  count(species) %>% 
+  filter(n>50) %>% 
+  pull(species)
+
+dfo <- dfo %>%
+  filter(species %in% listaSpecie)
 ```
 
 ## Linear trends
@@ -421,31 +439,6 @@ gt(results_df)%>%
 
 ## Modelli di occupancy
 
-```{r}
-df.occu <- dfo %>% 
-  select(date_year,species,cellcode) %>% as_tibble() %>% 
-    count(cellcode,species,date_year, name = 'n_occurrences')
-
-df_occ <- df.occu %>%
-  mutate(presence = ifelse(n_occurrences > 0, 1, 0)) %>%
-  complete(cellcode, species, date_year, 
-           fill = list(n_occurrences = 0, presence = 0))
-```
-
-```{r}
-# filtro delle specie con meno di 50 records totali
-# cfr. (Rapacciuolo et al. 2017)
-
-listaSpecie <- df_occ %>% 
-  group_by(species) %>% 
-  summarise(ntot=sum(n_occurrences)) %>% 
-  filter(ntot>=50) %>% 
-  distinct(species) %>% pull()
-
-df_occ50 <- df_occ %>% 
-  filter(species %in% listaSpecie)
-```
-
 ## unmarked
 
 Il modello utilizzato `occu(~effort ~1, data = umf)` considera una p in funzione dell'effort e una ψ costante (che però varia di anno in anno nella stima annuale).
@@ -458,64 +451,94 @@ years <- year_start:2025
 effort_vec <- effort_df %>% 
   pull(n_sites_censiti)
 
+  # celle visitate area di studio
+df.occuTot <- dfo %>% 
+  select(date_year,cellcode) %>% as_tibble() %>% 
+  count(cellcode,date_year, name = 'n_occurrences')
+
+# filtro delle specie con meno di 50 records totali
+# cfr. (Rapacciuolo et al. 2017)
+
+listaSpecie <- dfo %>% 
+  count(species) %>% 
+  filter(n>=50) %>% 
+  pull(species)
+
 occProb <- function(nomeSp) {
   #print(nomeSp)
-  df_sp <- df_occ50 %>% 
-  filter(species==nomeSp) %>% 
-  select(-n_occurrences,-species)
-
-  if (nomeSp == "Trithemis annulata") {
-    df_sp <- df_sp %>% filter(date_year > 2016)
-    effort_vec <- effort_vec[19:27]
-    years <- 2017:2025
+  
+  # celle delle specie
+  df.occu <- dfo %>% 
+    filter(species==nomeSp) %>% 
+    select(date_year,species,cellcode) %>% as_tibble() %>% 
+    count(cellcode,species,date_year, name = 'n_occurrences')
+  
+  # stima presenza/pseudo-assenza e celle non visitate
+  occupafun <- function(df.occu) {
+    df_occ <- df.occuTot %>% 
+      select(-n_occurrences) %>% 
+      left_join(df.occu, by = c("cellcode", "date_year"), ) %>%
+      mutate(presence = replace_na(n_occurrences, 0)) %>%
+      mutate(presence = ifelse(presence>0,1,0)) %>%
+      select(cellcode, date_year, presence) %>% 
+      complete(cellcode,date_year,
+               fill = list(presence=NA))
+    return(df_occ)
   }
   
-detection_matrix <- df_sp %>%
-  pivot_wider(names_from = date_year, 
-              values_from = presence, 
-              values_fill = 0) %>%
-  arrange(cellcode)
-# Conversione in oggetto umf
-y <- as.matrix(detection_matrix[,-1])
-effort_matrix <- matrix(rep(effort_vec, 
-                            each = nrow(y)), 
-                        nrow = nrow(y))
-rownames(y) <- detection_matrix$cellcode
-umf <- unmarkedFrameOccu(y = y, obsCovs = list(effort = effort_matrix))
-
-fm <- occu(~effort ~1, data = umf)
-#summary(fm)
-
-pred_list <- lapply(seq_len(ncol(y)), function(i) {
-  tryCatch({
-    umf_i <- unmarkedFrameOccu(
-      y = as.matrix(y[, i]),
-      obsCovs = list(effort = as.matrix(effort_matrix[, i]))
-    )
-    fm_i <- occu(~effort ~1, data = umf_i)
-    bt <- backTransform(fm_i, type = "state")
-    data.frame(
-      species = nomeSp,
-      year = years[i],
-      estimate = bt@estimate,
-      lower = confint(bt)[1],
-      upper = confint(bt)[2]
-    )
-  },
-  error = function(e) {
-    message(nomeSp, " nell’anno ", years[i], ": ", e$message)
-    data.frame(
-      species = nomeSp,
-      year = years[i],
-      estimate = NA,
-      lower = NA,
-      upper = NA
-    )
+  # if (nomeSp == "Trithemis annulata") {
+  #   df_sp <- df_sp %>% filter(date_year > 2016)
+  #   effort_vec <- effort_vec[13:21] # ATTENZIONE SE CAMBIA year_start
+  #   years <- 2017:2025
+  # }
+  df_sp <- occupafun(df.occu)
+  
+  detection_matrix <- df_sp %>%
+    pivot_wider(names_from = date_year, 
+                values_from = presence, 
+                values_fill = NA) %>%
+    arrange(cellcode)
+  # Conversione in oggetto umf
+  y <- as.matrix(detection_matrix[,-1])
+  effort_matrix <- matrix(rep(effort_vec, 
+                              each = nrow(y)), 
+                          nrow = nrow(y))
+  rownames(y) <- detection_matrix$cellcode
+  umf <- unmarkedFrameOccu(y = y, obsCovs = list(effort = effort_matrix))
+  
+  fm <- occu(~effort ~1, data = umf)
+  #summary(fm)
+  
+  pred_list <- lapply(seq_len(ncol(y)), function(i) {
+    tryCatch({
+      umf_i <- unmarkedFrameOccu(
+        y = as.matrix(y[, i]),
+        obsCovs = list(effort = as.matrix(effort_matrix[, i]))
+      )
+      fm_i <- occu(~effort ~1, data = umf_i)
+      bt <- backTransform(fm_i, type = "state")
+      data.frame(
+        species = nomeSp,
+        year = years[i],
+        estimate = bt@estimate,
+        lower = confint(bt)[1],
+        upper = confint(bt)[2]
+      )
+    },
+    error = function(e) {
+      message(nomeSp, " nell’anno ", years[i], ": ", e$message)
+      data.frame(
+        species = nomeSp,
+        year = years[i],
+        estimate = NA,
+        lower = NA,
+        upper = NA
+      )
+    })
   })
-})
-
-pred_df <- do.call(rbind, pred_list)
-return(data = pred_df)
+  
+  pred_df <- do.call(rbind, pred_list)
+  return(data = pred_df)
 }
 
 # listaSpecie

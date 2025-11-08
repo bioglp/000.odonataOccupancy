@@ -1,13 +1,12 @@
 ---
-output:
-  html_document:
-    css: css/bujo01.css
-  pdf_document: default
+title: "000.odonataOccupancy"
+format: html
+css: css/bujo01.css
 ---
 
-# Progetto Odonata Occupancy
+## Progetto Odonata Occupancy
 
-Serie dati raccolti in Piemonte e Lombardia nel periodo compreso tra il 1999 e il 2025 con piattaforma Ornitho e Atlante preliminare. Analisi della regione biogeografica Continentale.
+Serie dati raccolti in Piemonte e Lombardia nel periodo compreso tra il 1999 e il 2025 con piattaforma Ornitho e Atlante preliminare. Analisi della regione biogeografica Continentale (estesa ai margini con celle 10k e 20k).
 
 ## Output elaborazioni
 
@@ -20,5 +19,48 @@ Serie dati raccolti in Piemonte e Lombardia nel periodo compreso tra il 1999 e i
     - corretti i nomi delle specie
     - raggruppati valori di occupancy per gruppi di 5 anni
     - elaborazioni anche su griglia 20k
+    - test con year_start=2005
 - 2025-11-05
     - modelli di occupancy con occu from unmarked
+    
+- 2025-10-28
+    - [x] richiesta estrazione dati a Lardelli
+    - elaborazioni
+        * run su dataset Ornitho.it (eventualmente integrato da iNat)
+        * maglia 10 km e 20 km
+        * date per gruppi di 5 anni
+        * modelli di Occupancy
+            - leggere vignette
+            - **covariate da considerare**
+                * guild per famiglia
+                * temperature index (Termaat, 2019)
+                * Habitat specificity (Golfieri et al., 2016)
+                * IAS (P. clarkii)
+
+- 2025-02-04
+    - [x] calcolare una curva di accumulazione per l'area nel tempo
+    
+* 2025-01-08 Occupancy models in R
+    - [colext](https://cran.r-project.org/web/packages/unmarked/vignettes/colext.html)
+    - [camtrapr5](https://cran.r-project.org/web/packages/camtrapR/vignettes/camtrapr5.html)
+
+* 2025-01-03
+    - [x] preparazione dataset per avvio elaborazioni con rtrim riferimento temporale 1999-2024
+    - [x] possibile raggruppamento per classi di 5 anni
+    
+* 2024-12-11
+    - [ ] paper su diffusione nel tempo delle specie aliene nell’area
+    - [ ] Rappresentazione presenza P.clarkii
+    - [x] estrazione dati per lombardia e piemonte area continentale (celle > 50%)
+
+* 2024-11-27
+    - Presentazione di rtrim package: discussion paper
+    - Preparazione dataset per le elaborazioni: site, year, count, …, weight
+    
+## Notes
+
+A binomial generalized linear model, or logistic regression, is the customary statistical model for occurrence. In this model, we treat occurrence 𝑦 as a binomial random variable with trial size 1 and success probability 𝑝, or, equivalently, a Bernoulli trial with 𝑝. “Success” means occurrence, so 𝑝 is the occurrence probability. It can be modeled as a linear or other function of covariates via a suitable link function, e.g., the logit link.
+From: [colext](https://cran.r-project.org/web/packages/unmarked/vignettes/colext.html)
+
+### MM
+Dall'elaborazione sono state rimosse le specie con una occorrenza inferiore a 50.
