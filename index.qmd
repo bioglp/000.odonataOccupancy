@@ -1,6 +1,10 @@
 ---
 title: "000.odonataOccupancy"
-format: html
+author: Gianandrea La Porta
+date: 2025-11-08
+format: 
+    html:
+        theme: cosmo
 css: css/bujo01.css
 ---
 

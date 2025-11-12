@@ -661,3 +661,97 @@ map(listaSpecie,occu.plot)
 
 ### Modello pcount
 
+```{r abundance}
+glimpse(dfo)
+dfp <- dfo |> 
+  group_by(date_year,species,cellcode20) |> 
+  select(total_count) |> 
+  summarise(total_count=sum(total_count, na.rm=T)) |> 
+  arrange(species,date_year,cellcode20) |>
+  ungroup()
+```
+
+
+```{r pcount}
+df_sp <- dfp %>% filter(species == "Aeshna affinis")
+df_sp
+y_wide <- df_sp %>%
+  select(-species) |>  
+  pivot_wider(id_cols = cellcode20, 
+  names_from = date_year, values_from = total_count)
+
+y <- as.matrix(y_wide[,-1])
+rownames(y) <- y_wide$cellcode20
+
+library(unmarked)
+# Creo l'oggetto unmarkedFramePCount
+umf <- unmarkedFramePCount(y = y) 
+years <- as.numeric(colnames(y))
+
+obs_year <- matrix(rep(years, each = nrow(y)), nrow = nrow(y))
+
+umf <- unmarkedFramePCount(
+  y = y,
+  obsCovs = list(year = obs_year)
+)
+
+# pcount
+fm1 <- pcount(~ year ~ 1, data = umf, mixture = "P", K=100)
+summary(fm1)
+
+newdat <- data.frame(year = years)
+
+pred <- predict(
+  fm1,
+  type = "state",     # abbondanza stimata
+  newdata = newdat
+)
+
+pred_df <- data.frame(
+  year = years,
+  estimate = pred$Predicted,
+  lower = pred$lower,
+  upper = pred$upper
+)
+
+ggplot(pred_df, aes(x = year, y = estimate)) +
+  geom_line(color = "#2c7bb6", linewidth = 1) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2, fill = "#2c7bb6") +
+  labs(
+    title = paste("Trend di abbondanza stimata –", sp),
+    x = "Anno",
+    y = "Abbondanza stimata (± IC 95%)"
+  ) +
+  theme_minimal(base_size = 14)
+
+
+umf <- unmarkedFramePCount(
+  y = as.matrix(df_sp$total_count),
+  siteCovs = data.frame(year = df_sp$date_year, cell = df_sp$cellcode20)
+)
+
+fm2 <- pcount(~1 ~ year, data = umf, mixture = "P", K = max(df_sp$total_count) + 20)
+summary(fm2)
+
+newdat <- data.frame(year = seq(min(df_sp$date_year), max(df_sp$date_year)))
+pred <- predict(fm2, type = "state", newdata = newdat)
+
+pred_df <- data.frame(
+  year = newdat$year,
+  estimate = pred$Predicted,
+  lower = pred$lower,
+  upper = pred$upper
+)
+
+library(ggplot2)
+ggplot(pred_df, aes(x = year, y = estimate)) +
+  geom_line(color = "#2c7bb6", linewidth = 1) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "#2c7bb6", alpha = 0.2) +
+  labs(
+    title = "Trend stimato di abbondanza – Luscinia megarhynchos",
+    x = "Anno",
+    y = "Abbondanza stimata (± IC 95%)"
+  ) +
+  theme_minimal(base_size = 14)
+
+```
