@@ -215,8 +215,6 @@ species_sites <- dfo %>%
   group_by(species, date_year) %>%
   summarise(n_sites = n_distinct(cellcode20), .groups = "drop")
 
-listaSpecie <- dfo %>% distinct(species) %>% 
-  arrange(species) %>% pull() 
 sp <- listaSpecie[1]
 
 odoTrend <- function(sp) {

@@ -410,27 +410,25 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species, date_year) <span class="sc">%&gt;%</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n_sites =</span> <span class="fu">n_distinct</span>(cellcode20), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>listaSpecie <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(species) <span class="sc">%&gt;%</span> </span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(species) <span class="sc">%&gt;%</span> <span class="fu">pull</span>() </span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>sp <span class="ot">&lt;-</span> listaSpecie[<span class="dv">1</span>]</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>odoTrend <span class="ot">&lt;-</span> <span class="cf">function</span>(sp) {</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  species_sites <span class="sc">%&gt;%</span> </span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(species<span class="sc">==</span>sp) <span class="sc">%&gt;%</span> </span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date_year, <span class="at">y =</span> n_sites)) <span class="sc">+</span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">'lm'</span>,<span class="at">col=</span><span class="st">'forestgreen'</span>)<span class="sc">+</span></span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_regline_equation</span>()<span class="sc">+</span></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, </span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"No. sites"</span>,</span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> sp)<span class="sc">+</span></span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">'italic'</span>))</span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="co">#filename &lt;- paste0("trend/lm_", gsub(" ", "_", sp), ".pdf")</span></span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  <span class="co">#ggsave(filename, width = 7, height = 5)</span></span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(listaSpecie, odoTrend)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>sp <span class="ot">&lt;-</span> listaSpecie[<span class="dv">1</span>]</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>odoTrend <span class="ot">&lt;-</span> <span class="cf">function</span>(sp) {</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  species_sites <span class="sc">%&gt;%</span> </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(species<span class="sc">==</span>sp) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date_year, <span class="at">y =</span> n_sites)) <span class="sc">+</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">'lm'</span>,<span class="at">col=</span><span class="st">'forestgreen'</span>)<span class="sc">+</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_regline_equation</span>()<span class="sc">+</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, </span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"No. sites"</span>,</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> sp)<span class="sc">+</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">'italic'</span>))</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  <span class="co">#filename &lt;- paste0("trend/lm_", gsub(" ", "_", sp), ".pdf")</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  <span class="co">#ggsave(filename, width = 7, height = 5)</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(listaSpecie, odoTrend)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]</code></pre>
@@ -2157,23 +2155,23 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <span id="cb125-7"><a href="#cb125-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="mlrxhceidl" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#mlrxhceidl table {
+<div id="efwqagkbbu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#efwqagkbbu table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#mlrxhceidl thead, #mlrxhceidl tbody, #mlrxhceidl tfoot, #mlrxhceidl tr, #mlrxhceidl td, #mlrxhceidl th {
+#efwqagkbbu thead, #efwqagkbbu tbody, #efwqagkbbu tfoot, #efwqagkbbu tr, #efwqagkbbu td, #efwqagkbbu th {
   border-style: none;
 }
 
-#mlrxhceidl p {
+#efwqagkbbu p {
   margin: 0;
   padding: 0;
 }
 
-#mlrxhceidl .gt_table {
+#efwqagkbbu .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -2199,12 +2197,12 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   border-left-color: #D3D3D3;
 }
 
-#mlrxhceidl .gt_caption {
+#efwqagkbbu .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#mlrxhceidl .gt_title {
+#efwqagkbbu .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2216,7 +2214,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   border-bottom-width: 0;
 }
 
-#mlrxhceidl .gt_subtitle {
+#efwqagkbbu .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2228,7 +2226,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   border-top-width: 0;
 }
 
-#mlrxhceidl .gt_heading {
+#efwqagkbbu .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2240,13 +2238,13 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   border-right-color: #D3D3D3;
 }
 
-#mlrxhceidl .gt_bottom_border {
+#efwqagkbbu .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#mlrxhceidl .gt_col_headings {
+#efwqagkbbu .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2261,7 +2259,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   border-right-color: #D3D3D3;
 }
 
-#mlrxhceidl .gt_col_heading {
+#efwqagkbbu .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2281,7 +2279,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   overflow-x: hidden;
 }
 
-#mlrxhceidl .gt_column_spanner_outer {
+#efwqagkbbu .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2293,15 +2291,15 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   padding-right: 4px;
 }
 
-#mlrxhceidl .gt_column_spanner_outer:first-child {
+#efwqagkbbu .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#mlrxhceidl .gt_column_spanner_outer:last-child {
+#efwqagkbbu .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#mlrxhceidl .gt_column_spanner {
+#efwqagkbbu .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2313,11 +2311,11 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   width: 100%;
 }
 
-#mlrxhceidl .gt_spanner_row {
+#efwqagkbbu .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#mlrxhceidl .gt_group_heading {
+#efwqagkbbu .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2343,7 +2341,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   text-align: left;
 }
 
-#mlrxhceidl .gt_empty_group_heading {
+#efwqagkbbu .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2358,15 +2356,15 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   vertical-align: middle;
 }
 
-#mlrxhceidl .gt_from_md > :first-child {
+#efwqagkbbu .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#mlrxhceidl .gt_from_md > :last-child {
+#efwqagkbbu .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#mlrxhceidl .gt_row {
+#efwqagkbbu .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2385,7 +2383,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   overflow-x: hidden;
 }
 
-#mlrxhceidl .gt_stub {
+#efwqagkbbu .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2398,7 +2396,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   padding-right: 5px;
 }
 
-#mlrxhceidl .gt_stub_row_group {
+#efwqagkbbu .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2412,15 +2410,15 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   vertical-align: top;
 }
 
-#mlrxhceidl .gt_row_group_first td {
+#efwqagkbbu .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#mlrxhceidl .gt_row_group_first th {
+#efwqagkbbu .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#mlrxhceidl .gt_summary_row {
+#efwqagkbbu .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2430,16 +2428,16 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   padding-right: 5px;
 }
 
-#mlrxhceidl .gt_first_summary_row {
+#efwqagkbbu .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#mlrxhceidl .gt_first_summary_row.thick {
+#efwqagkbbu .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#mlrxhceidl .gt_last_summary_row {
+#efwqagkbbu .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2449,7 +2447,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   border-bottom-color: #D3D3D3;
 }
 
-#mlrxhceidl .gt_grand_summary_row {
+#efwqagkbbu .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2459,7 +2457,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   padding-right: 5px;
 }
 
-#mlrxhceidl .gt_first_grand_summary_row {
+#efwqagkbbu .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2469,7 +2467,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   border-top-color: #D3D3D3;
 }
 
-#mlrxhceidl .gt_last_grand_summary_row_top {
+#efwqagkbbu .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2479,11 +2477,11 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   border-bottom-color: #D3D3D3;
 }
 
-#mlrxhceidl .gt_striped {
+#efwqagkbbu .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#mlrxhceidl .gt_table_body {
+#efwqagkbbu .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2492,7 +2490,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   border-bottom-color: #D3D3D3;
 }
 
-#mlrxhceidl .gt_footnotes {
+#efwqagkbbu .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2506,7 +2504,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   border-right-color: #D3D3D3;
 }
 
-#mlrxhceidl .gt_footnote {
+#efwqagkbbu .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2515,7 +2513,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   padding-right: 5px;
 }
 
-#mlrxhceidl .gt_sourcenotes {
+#efwqagkbbu .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2529,7 +2527,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   border-right-color: #D3D3D3;
 }
 
-#mlrxhceidl .gt_sourcenote {
+#efwqagkbbu .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2537,72 +2535,72 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   padding-right: 5px;
 }
 
-#mlrxhceidl .gt_left {
+#efwqagkbbu .gt_left {
   text-align: left;
 }
 
-#mlrxhceidl .gt_center {
+#efwqagkbbu .gt_center {
   text-align: center;
 }
 
-#mlrxhceidl .gt_right {
+#efwqagkbbu .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#mlrxhceidl .gt_font_normal {
+#efwqagkbbu .gt_font_normal {
   font-weight: normal;
 }
 
-#mlrxhceidl .gt_font_bold {
+#efwqagkbbu .gt_font_bold {
   font-weight: bold;
 }
 
-#mlrxhceidl .gt_font_italic {
+#efwqagkbbu .gt_font_italic {
   font-style: italic;
 }
 
-#mlrxhceidl .gt_super {
+#efwqagkbbu .gt_super {
   font-size: 65%;
 }
 
-#mlrxhceidl .gt_footnote_marks {
+#efwqagkbbu .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#mlrxhceidl .gt_asterisk {
+#efwqagkbbu .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#mlrxhceidl .gt_indent_1 {
+#efwqagkbbu .gt_indent_1 {
   text-indent: 5px;
 }
 
-#mlrxhceidl .gt_indent_2 {
+#efwqagkbbu .gt_indent_2 {
   text-indent: 10px;
 }
 
-#mlrxhceidl .gt_indent_3 {
+#efwqagkbbu .gt_indent_3 {
   text-indent: 15px;
 }
 
-#mlrxhceidl .gt_indent_4 {
+#efwqagkbbu .gt_indent_4 {
   text-indent: 20px;
 }
 
-#mlrxhceidl .gt_indent_5 {
+#efwqagkbbu .gt_indent_5 {
   text-indent: 25px;
 }
 
-#mlrxhceidl .katex-display {
+#efwqagkbbu .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#mlrxhceidl div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#efwqagkbbu div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
