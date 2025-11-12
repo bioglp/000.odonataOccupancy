@@ -38,10 +38,11 @@ dfo <- read.xlsx('input/datasetSegnalazioni_R20251106.xlsx')
 dfo <- dfo %>% rename_with(tolower)
 dfo <- dfo %>% filter(date_year>=year_start, 
                       date_year<2026, 
+                      code=='Continental',
                       !is.na(cellcode20))
 dfo <- dfo %>% 
   rename(species=latin_taxon)
-glimpse(dfo)
+glimpse(dfo)#View(dfo)
 ```
 
 ```{r nomiSpecie}
@@ -385,7 +386,7 @@ lapply(listaSpecie, odoTrendE)
 
 ## Uso di TRIM
 
-Applicazione della funzione TRIM senza correzioni. La serie temporale di molte specie non può essere elaborata per dati insufficienti. Il dato utilizzato per la modellistica è il numero di occorrenze per cella per ciascun anno.
+Il dato utilizzato per la modellistica è il numero di occorrenze per cella per ciascun anno.
 
 ```{r TRIM}
 odoTrim <- function(nomeSp) {
@@ -394,7 +395,9 @@ odoTrim <- function(nomeSp) {
   df.test <- dfo %>% 
     filter(species == nomeSp) %>% 
     group_by(date_year, cellcode20) %>% 
-    count(name = "count")
+    count(name = 'count') #occorrenze
+  #  summarise(count=sum(total_count), #abbondanze
+  #    .groups = 'drop')
   
   # Check: at least 3 years
   if (n_distinct(df.test$date_year) < 3) {
@@ -445,9 +448,9 @@ gt(results_df)%>%
 #write.csv(results_df,'trim/trimResults.csv')
 ```
 
-## Modelli di occupancy
+## Modelli di occupancy con unmarked
 
-## unmarked
+### Modello colext
 
 Il modello utilizzato è del tipo Dynamic occupancy models [colext](https://cran.r-project.org/web/packages/unmarked/vignettes/colext.html). La formula impiegata è `colext(~1, ~1, ~1, ~effort, umf2` e considera una p in funzione dell'effort e una ψ (probabilità di occupazione), gamma (probabilità di colonizzazione - in blu), epsilon (probabilità di estinzione in rosso) costanti.
 
@@ -671,8 +674,7 @@ dfp <- dfo |>
   ungroup()
 ```
 
-
-```{r pcount}
+```{r pcount, include=FALSE, echo=F}
 df_sp <- dfp %>% filter(species == "Aeshna affinis")
 df_sp
 y_wide <- df_sp %>%
@@ -716,7 +718,8 @@ pred_df <- data.frame(
 
 ggplot(pred_df, aes(x = year, y = estimate)) +
   geom_line(color = "#2c7bb6", linewidth = 1) +
-  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2, fill = "#2c7bb6") +
+  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2, 
+              fill = "#2c7bb6") +
   labs(
     title = paste("Trend di abbondanza stimata –", sp),
     x = "Anno",
