@@ -1,7 +1,7 @@
 ---
 title: "occupancyOdonata20k"
 author: "Gianandrea La Porta"
-date: "2025-11-05"
+date: "2025-12-02"
 format: 
   html:
     theme: cosmo
@@ -710,4 +710,8 @@ odoPCount <- function(name) {
 }
 
 map(listaSpecie,odoPCount)
+
+
+?occu
 ```
+
