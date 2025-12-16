@@ -251,7 +251,7 @@ negative_trends
 
 ## Sampling effort
 
-Per tenere conto anche del differente sforzo di copertura delle celle del territorio nel corso degli anni, il modello lm è stato modificato in glm con una correzione derivante dall'utilizzo di un offset pari al log(n_sites_censiti) per ciascun anno. Il modello normalizza i conteggi per lo sforzo, così che la pendenza stimata per `date_year` rifletta la vera tendenza di espansione o contrazione e non solo la variazione derivante dal differnte sforzo di campionamento.
+Per tenere conto anche del differente sforzo di copertura delle celle del territorio nel corso degli anni, il modello lm è stato modificato in glm con una correzione derivante dall'utilizzo di un offset pari al log(n_sites_censiti) per ciascun anno. Il modello normalizza i conteggi per lo sforzo, così che la pendenza stimata per `date_year` rifletta la vera tendenza di espansione o contrazione e non solo la variazione derivante dal differente sforzo di campionamento.
 
 ```{r glm_offset}
 # n_sites occupati da ciascuna specie per anno
@@ -384,7 +384,7 @@ lapply(listaSpecie, odoTrendE)
 
 ## Uso di TRIM
 
-Il dato utilizzato per la modellistica è il numero di occorrenze per cella per ciascun anno. Utilizzato il Model 2 con Trend lineare.
+Il dato utilizzato per la modellistica è il numero di occorrenze per cella per ciascun anno.
 
 ```{r TRIM}
 odoTrim <- function(nomeSp) {
@@ -411,7 +411,7 @@ odoTrim <- function(nomeSp) {
   res <- tryCatch({
     m3 <- trim(count ~ cellcode20 + date_year, 
                data = df.test, 
-               model = 2)
+               model = 3)
     out <- overall(m3)
     out$slope$species=nomeSp
     # Filename
@@ -447,15 +447,16 @@ gt(results_df)%>%
 ```
 
 ## Modelli di occupancy con unmarked
+[vignette](https://cran.r-project.org/web/packages/unmarked/vignettes/unmarked.html)
 
-### Modello colext
+### Modello occu
 
 Il modello utilizzato è del tipo Dynamic occupancy models [colext](https://cran.r-project.org/web/packages/unmarked/vignettes/colext.html). La formula impiegata è `colext(~1, ~1, ~1, ~effort, umf2` e considera una p in funzione dell'effort e una ψ (probabilità di occupazione), gamma (probabilità di colonizzazione - in blu), epsilon (probabilità di estinzione in rosso) costanti.
 
 ```{r unmarked}
 library(unmarked)
 years <- year_start:2025
-#nomeSp <- 'Aeshna affinis'
+#nomeSp <- 'Ischnura elegans'
 
 effort_vec <- effort_df %>% 
   pull(n_sites_censiti)
@@ -507,81 +508,19 @@ occProb <- function(nomeSp) {
                 values_from = presence, 
                 values_fill = NA) %>%
     arrange(cellcode20)
+  
   # Conversione in oggetto umf
   y <- as.matrix(detection_matrix[,-1])
   effort_matrix <- matrix(rep(effort_vec, 
                               each = nrow(y)), 
                           nrow = nrow(y))
   rownames(y) <- detection_matrix$cellcode20
-  umf <- unmarkedFrameOccu(y = y, obsCovs = list(effort = effort_matrix))
+  umf <- unmarkedFrameOccu(y = y, 
+                           obsCovs = list(effort = effort_matrix))
   fm <- occu(~effort ~1, data = umf)
   
-  years_vec <- factor(year_start:2025)
-  years <- matrix(years_vec, 
-                  nrow(effort_matrix), 
-                  21, 
-                  byrow=TRUE)
-  umf2 <- unmarkedMultFrame(y=y,
-                            yearlySiteCovs=list(year=years),
-                            obsCovs=list(effort = effort_matrix),
-                            numPrimary=21)
-  fm2 <- colext(~1, ~1, ~1, ~effort, umf2)
-  #summary(fm2)
-  
-  make_umf_3years <- function(y, effort, start_index) {
-    idx <- start_index:(start_index + 2)  # 3 anni
-    
-    y_sub <- y[, idx]
-    eff_sub <- effort[, idx]
-    
-    unmarkedMultFrame(
-      y = y_sub,
-      obsCovs = list(effort = eff_sub),
-      numPrimary = 3
-    )
-  }
-  
-  results_3yr <- lapply(1:(ncol(y) - 2), function(i) {
-    
-    umf_i <- make_umf_3years(y, effort_matrix, i)
-    
-    fm_i <- try(
-      colext(
-        psiformula   = ~1,
-        gammaformula = ~1,
-        epsilonformula = ~1,
-        pformula     = ~effort,
-        data = umf_i
-      ),
-      silent = TRUE
-    )
-    
-    # se modello fallisce
-    if (inherits(fm_i, "try-error")) {
-      return(data.frame(
-        window_start = years_vec[i],
-        window_end   = years_vec[i + 2],
-        psi = NA,
-        gamma = NA,
-        epsilon = NA
-      ))
-    }
-    
-    # estrai stime
-    data.frame(
-      species = nomeSp,
-      window_start = years_vec[i],
-      window_end   = years_vec[i + 2],
-      psi     = backTransform(fm_i, "psi")@estimate,
-      gamma   = backTransform(fm_i, "col")@estimate,
-      epsilon = backTransform(fm_i, "ext")@estimate
-    )
-  })
-  
-  dyn3 <- do.call(rbind, results_3yr)
-  dyn3
-  
-  return(data = dyn3)
+  # calcola una previsione di occupancy per ogni anno
+  predict(fm, 'det')
 }
 
 # listaSpecie
@@ -609,12 +548,12 @@ occu.plot <- function(nomeSp){
     ggplot(aes(year, psi, group = 1, col=year_group)) +
     geom_smooth(col='black')+
     geom_point(size = 4) +
-    # geom_line(aes(y=gamma), col='steelblue', 
-    #           size = 1, 
-    #           alpha=0.4) +
-    # geom_line(aes(y=epsilon), col='red', 
-    #           size = 1, 
-    #           alpha=0.4) +
+    geom_line(aes(y=gamma), col='steelblue', 
+              size = 1, 
+              alpha=0.4) +
+    geom_line(aes(y=epsilon), col='red', 
+              size = 1, 
+              alpha=0.4) +
     labs(
       title=nomeSp,
       x = ""
@@ -636,12 +575,12 @@ occu.plot <- function(nomeSp){
     ggplot(aes(year, mean.psi, group = 1, col=year_group)) +
     geom_smooth(col='black')+
     geom_point(size = 4) +
-    # geom_line(aes(y=mean.gamma), col='steelblue', 
-    #           size = 1, 
-    #           alpha=0.4) +
-    # geom_line(aes(y=mean.eps), col='red', 
-    #           size = 1, 
-    #           alpha=0.4) +
+    geom_line(aes(y=mean.gamma), col='steelblue', 
+              size = 1, 
+              alpha=0.4) +
+    geom_line(aes(y=mean.eps), col='red', 
+              size = 1, 
+              alpha=0.4) +
     labs(
       title='geometric mean',
       x = ""
@@ -659,3 +598,59 @@ occu.plot <- function(nomeSp){
 #occu.plot(nomeSp)
 map(listaSpecie,occu.plot)
 ```
+
+### Modello pcount
+
+```{r abundance}
+glimpse(dfo)
+dfp <- dfo |> 
+  group_by(date_year,species,cellcode20) |> 
+  select(total_count) |> 
+  summarise(total_count=sum(total_count, na.rm=T)) |> 
+  arrange(species,date_year,cellcode20) |>
+  ungroup()
+```
+
+```{r pcount, include=TRUE, echo=F}
+#name <- "Aeshna cyanea"
+odoPCount <- function(name) {
+  df_sp <- dfp %>% 
+    filter(species == name)
+  
+  df_sp <- df_sp %>%
+    mutate(site = paste(cellcode20, date_year, sep = "_"))
+  
+  y <- matrix(df_sp$total_count, ncol = 1)
+  rownames(y) <- df_sp$site
+  
+  siteCovs <- data.frame(year = df_sp$date_year)
+  
+  umf <- unmarkedFramePCount(y = y, siteCovs = siteCovs)
+  
+  fm <- pcount(~ 1 ~ year, data = umf)
+  summary(fm)
+  
+  newdat <- data.frame(year = sort(unique(df_sp$date_year)))
+  
+  pred <- predict(fm, type = "state", newdata = newdat)
+  pred <- cbind(newdat,pred)
+  
+  pred %>% 
+    ggplot(aes(x = year, y = Predicted)) +
+    geom_line(size = 1.2, color = "darkgreen") +
+    # geom_ribbon(aes(ymin = lower, ymax = upper), 
+    #             fill = "darkgreen", alpha = 0.25) +
+    labs(
+      x = "",
+      y = "Abundance (λ)",
+      title = paste("Trend for",name)
+    )
+  
+}
+
+map(listaSpecie,odoPCount)
+
+
+?occu
+```
+

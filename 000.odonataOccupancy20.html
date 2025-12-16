@@ -95,7 +95,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#modelli-di-occupancy-con-unmarked" id="toc-modelli-di-occupancy-con-unmarked" class="nav-link" data-scroll-target="#modelli-di-occupancy-con-unmarked">Modelli di occupancy con unmarked</a>
   <ul class="collapse">
   <li><a href="#modello-colext" id="toc-modello-colext" class="nav-link" data-scroll-target="#modello-colext">Modello colext</a></li>
-  <li><a href="#modello-pcount" id="toc-modello-pcount" class="nav-link" data-scroll-target="#modello-pcount">Modello pcount</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -1776,7 +1775,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 </section>
 <section id="uso-di-trim" class="level2">
 <h2 class="anchored" data-anchor-id="uso-di-trim">Uso di TRIM</h2>
-<p>Il dato utilizzato per la modellistica è il numero di occorrenze per cella per ciascun anno.</p>
+<p>Il dato utilizzato per la modellistica è il numero di occorrenze per cella per ciascun anno. Utilizzato il Model 2 con Trend lineare.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1804,7 +1803,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <span id="cb124-22"><a href="#cb124-22" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
 <span id="cb124-23"><a href="#cb124-23" aria-hidden="true" tabindex="-1"></a>    m3 <span class="ot">&lt;-</span> <span class="fu">trim</span>(count <span class="sc">~</span> cellcode20 <span class="sc">+</span> date_year, </span>
 <span id="cb124-24"><a href="#cb124-24" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> df.test, </span>
-<span id="cb124-25"><a href="#cb124-25" aria-hidden="true" tabindex="-1"></a>               <span class="at">model =</span> <span class="dv">3</span>)</span>
+<span id="cb124-25"><a href="#cb124-25" aria-hidden="true" tabindex="-1"></a>               <span class="at">model =</span> <span class="dv">2</span>)</span>
 <span id="cb124-26"><a href="#cb124-26" aria-hidden="true" tabindex="-1"></a>    out <span class="ot">&lt;-</span> <span class="fu">overall</span>(m3)</span>
 <span id="cb124-27"><a href="#cb124-27" aria-hidden="true" tabindex="-1"></a>    out<span class="sc">$</span>slope<span class="sc">$</span>species<span class="ot">=</span>nomeSp</span>
 <span id="cb124-28"><a href="#cb124-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Filename</span></span>
@@ -2142,6 +2141,13 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 </figure>
 </div>
 </div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy20_files/figure-html/TRIM-46.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 <div class="cell">
 <details class="code-fold">
@@ -2155,23 +2161,23 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <span id="cb125-7"><a href="#cb125-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="qscjtolvbl" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#qscjtolvbl table {
+<div id="pudxgxaymg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#pudxgxaymg table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#qscjtolvbl thead, #qscjtolvbl tbody, #qscjtolvbl tfoot, #qscjtolvbl tr, #qscjtolvbl td, #qscjtolvbl th {
+#pudxgxaymg thead, #pudxgxaymg tbody, #pudxgxaymg tfoot, #pudxgxaymg tr, #pudxgxaymg td, #pudxgxaymg th {
   border-style: none;
 }
 
-#qscjtolvbl p {
+#pudxgxaymg p {
   margin: 0;
   padding: 0;
 }
 
-#qscjtolvbl .gt_table {
+#pudxgxaymg .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -2197,12 +2203,12 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   border-left-color: #D3D3D3;
 }
 
-#qscjtolvbl .gt_caption {
+#pudxgxaymg .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#qscjtolvbl .gt_title {
+#pudxgxaymg .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2214,7 +2220,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   border-bottom-width: 0;
 }
 
-#qscjtolvbl .gt_subtitle {
+#pudxgxaymg .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2226,7 +2232,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   border-top-width: 0;
 }
 
-#qscjtolvbl .gt_heading {
+#pudxgxaymg .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2238,13 +2244,13 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   border-right-color: #D3D3D3;
 }
 
-#qscjtolvbl .gt_bottom_border {
+#pudxgxaymg .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#qscjtolvbl .gt_col_headings {
+#pudxgxaymg .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2259,7 +2265,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   border-right-color: #D3D3D3;
 }
 
-#qscjtolvbl .gt_col_heading {
+#pudxgxaymg .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2279,7 +2285,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   overflow-x: hidden;
 }
 
-#qscjtolvbl .gt_column_spanner_outer {
+#pudxgxaymg .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2291,15 +2297,15 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   padding-right: 4px;
 }
 
-#qscjtolvbl .gt_column_spanner_outer:first-child {
+#pudxgxaymg .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#qscjtolvbl .gt_column_spanner_outer:last-child {
+#pudxgxaymg .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#qscjtolvbl .gt_column_spanner {
+#pudxgxaymg .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2311,11 +2317,11 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   width: 100%;
 }
 
-#qscjtolvbl .gt_spanner_row {
+#pudxgxaymg .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#qscjtolvbl .gt_group_heading {
+#pudxgxaymg .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2341,7 +2347,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   text-align: left;
 }
 
-#qscjtolvbl .gt_empty_group_heading {
+#pudxgxaymg .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2356,15 +2362,15 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   vertical-align: middle;
 }
 
-#qscjtolvbl .gt_from_md > :first-child {
+#pudxgxaymg .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#qscjtolvbl .gt_from_md > :last-child {
+#pudxgxaymg .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#qscjtolvbl .gt_row {
+#pudxgxaymg .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2383,7 +2389,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   overflow-x: hidden;
 }
 
-#qscjtolvbl .gt_stub {
+#pudxgxaymg .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2396,7 +2402,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   padding-right: 5px;
 }
 
-#qscjtolvbl .gt_stub_row_group {
+#pudxgxaymg .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2410,15 +2416,15 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   vertical-align: top;
 }
 
-#qscjtolvbl .gt_row_group_first td {
+#pudxgxaymg .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#qscjtolvbl .gt_row_group_first th {
+#pudxgxaymg .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#qscjtolvbl .gt_summary_row {
+#pudxgxaymg .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2428,16 +2434,16 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   padding-right: 5px;
 }
 
-#qscjtolvbl .gt_first_summary_row {
+#pudxgxaymg .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#qscjtolvbl .gt_first_summary_row.thick {
+#pudxgxaymg .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#qscjtolvbl .gt_last_summary_row {
+#pudxgxaymg .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2447,7 +2453,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   border-bottom-color: #D3D3D3;
 }
 
-#qscjtolvbl .gt_grand_summary_row {
+#pudxgxaymg .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2457,7 +2463,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   padding-right: 5px;
 }
 
-#qscjtolvbl .gt_first_grand_summary_row {
+#pudxgxaymg .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2467,7 +2473,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   border-top-color: #D3D3D3;
 }
 
-#qscjtolvbl .gt_last_grand_summary_row_top {
+#pudxgxaymg .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2477,11 +2483,11 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   border-bottom-color: #D3D3D3;
 }
 
-#qscjtolvbl .gt_striped {
+#pudxgxaymg .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#qscjtolvbl .gt_table_body {
+#pudxgxaymg .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2490,7 +2496,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   border-bottom-color: #D3D3D3;
 }
 
-#qscjtolvbl .gt_footnotes {
+#pudxgxaymg .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2504,7 +2510,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   border-right-color: #D3D3D3;
 }
 
-#qscjtolvbl .gt_footnote {
+#pudxgxaymg .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2513,7 +2519,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   padding-right: 5px;
 }
 
-#qscjtolvbl .gt_sourcenotes {
+#pudxgxaymg .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2527,7 +2533,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   border-right-color: #D3D3D3;
 }
 
-#qscjtolvbl .gt_sourcenote {
+#pudxgxaymg .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2535,72 +2541,72 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
   padding-right: 5px;
 }
 
-#qscjtolvbl .gt_left {
+#pudxgxaymg .gt_left {
   text-align: left;
 }
 
-#qscjtolvbl .gt_center {
+#pudxgxaymg .gt_center {
   text-align: center;
 }
 
-#qscjtolvbl .gt_right {
+#pudxgxaymg .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#qscjtolvbl .gt_font_normal {
+#pudxgxaymg .gt_font_normal {
   font-weight: normal;
 }
 
-#qscjtolvbl .gt_font_bold {
+#pudxgxaymg .gt_font_bold {
   font-weight: bold;
 }
 
-#qscjtolvbl .gt_font_italic {
+#pudxgxaymg .gt_font_italic {
   font-style: italic;
 }
 
-#qscjtolvbl .gt_super {
+#pudxgxaymg .gt_super {
   font-size: 65%;
 }
 
-#qscjtolvbl .gt_footnote_marks {
+#pudxgxaymg .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#qscjtolvbl .gt_asterisk {
+#pudxgxaymg .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#qscjtolvbl .gt_indent_1 {
+#pudxgxaymg .gt_indent_1 {
   text-indent: 5px;
 }
 
-#qscjtolvbl .gt_indent_2 {
+#pudxgxaymg .gt_indent_2 {
   text-indent: 10px;
 }
 
-#qscjtolvbl .gt_indent_3 {
+#pudxgxaymg .gt_indent_3 {
   text-indent: 15px;
 }
 
-#qscjtolvbl .gt_indent_4 {
+#pudxgxaymg .gt_indent_4 {
   text-indent: 20px;
 }
 
-#qscjtolvbl .gt_indent_5 {
+#pudxgxaymg .gt_indent_5 {
   text-indent: 25px;
 }
 
-#qscjtolvbl .katex-display {
+#pudxgxaymg .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#qscjtolvbl div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#pudxgxaymg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -2623,12 +2629,12 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <tr class="odd">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">−0.02</td>
-<td class="gt_row gt_right" headers="se_add">0.03</td>
-<td class="gt_row gt_right" headers="mul">0.98</td>
-<td class="gt_row gt_right" headers="se_mul">0.03</td>
-<td class="gt_row gt_right" headers="p">0.54</td>
-<td class="gt_row gt_left" headers="meaning">Uncertain</td>
+<td class="gt_row gt_right" headers="add">−0.04</td>
+<td class="gt_row gt_right" headers="se_add">0.01</td>
+<td class="gt_row gt_right" headers="mul">0.96</td>
+<td class="gt_row gt_right" headers="se_mul">0.01</td>
+<td class="gt_row gt_right" headers="p">0.01</td>
+<td class="gt_row gt_left" headers="meaning">Moderate decrease (p&lt;0.05)</td>
 <td class="gt_row gt_left" headers="species">Aeshna affinis</td>
 </tr>
 <tr class="even">
@@ -2646,10 +2652,10 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <td class="gt_row gt_right" headers="from">2,006.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">−0.01</td>
-<td class="gt_row gt_right" headers="se_add">0.02</td>
+<td class="gt_row gt_right" headers="se_add">0.01</td>
 <td class="gt_row gt_right" headers="mul">0.99</td>
-<td class="gt_row gt_right" headers="se_mul">0.02</td>
-<td class="gt_row gt_right" headers="p">0.55</td>
+<td class="gt_row gt_right" headers="se_mul">0.01</td>
+<td class="gt_row gt_right" headers="p">0.58</td>
 <td class="gt_row gt_left" headers="meaning">Stable</td>
 <td class="gt_row gt_left" headers="species">Aeshna isoceles</td>
 </tr>
@@ -2660,16 +2666,16 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <td class="gt_row gt_right" headers="se_add">0.01</td>
 <td class="gt_row gt_right" headers="mul">1.02</td>
 <td class="gt_row gt_right" headers="se_mul">0.01</td>
-<td class="gt_row gt_right" headers="p">0.02</td>
+<td class="gt_row gt_right" headers="p">0.00</td>
 <td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.05)</td>
 <td class="gt_row gt_left" headers="species">Aeshna mixta</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="from">2,007.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.06</td>
+<td class="gt_row gt_right" headers="add">0.05</td>
 <td class="gt_row gt_right" headers="se_add">0.01</td>
-<td class="gt_row gt_right" headers="mul">1.06</td>
+<td class="gt_row gt_right" headers="mul">1.05</td>
 <td class="gt_row gt_right" headers="se_mul">0.01</td>
 <td class="gt_row gt_right" headers="p">0.00</td>
 <td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
@@ -2678,10 +2684,10 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <tr class="even">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.06</td>
-<td class="gt_row gt_right" headers="se_add">0.01</td>
-<td class="gt_row gt_right" headers="mul">1.06</td>
-<td class="gt_row gt_right" headers="se_mul">0.01</td>
+<td class="gt_row gt_right" headers="add">0.04</td>
+<td class="gt_row gt_right" headers="se_add">0.00</td>
+<td class="gt_row gt_right" headers="mul">1.04</td>
+<td class="gt_row gt_right" headers="se_mul">0.00</td>
 <td class="gt_row gt_right" headers="p">0.00</td>
 <td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
 <td class="gt_row gt_left" headers="species">Anax imperator</td>
@@ -2689,9 +2695,9 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <tr class="odd">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.04</td>
-<td class="gt_row gt_right" headers="se_add">0.01</td>
-<td class="gt_row gt_right" headers="mul">1.04</td>
+<td class="gt_row gt_right" headers="add">0.03</td>
+<td class="gt_row gt_right" headers="se_add">0.00</td>
+<td class="gt_row gt_right" headers="mul">1.03</td>
 <td class="gt_row gt_right" headers="se_mul">0.01</td>
 <td class="gt_row gt_right" headers="p">0.00</td>
 <td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
@@ -2700,70 +2706,81 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <tr class="even">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.06</td>
+<td class="gt_row gt_right" headers="add">0.00</td>
+<td class="gt_row gt_right" headers="se_add">0.02</td>
+<td class="gt_row gt_right" headers="mul">1.00</td>
+<td class="gt_row gt_right" headers="se_mul">0.02</td>
+<td class="gt_row gt_right" headers="p">0.96</td>
+<td class="gt_row gt_left" headers="meaning">Stable</td>
+<td class="gt_row gt_left" headers="species">Boyeria irene</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="from">2,005.00</td>
+<td class="gt_row gt_right" headers="upto">2,025.00</td>
+<td class="gt_row gt_right" headers="add">0.05</td>
 <td class="gt_row gt_right" headers="se_add">0.00</td>
 <td class="gt_row gt_right" headers="mul">1.06</td>
 <td class="gt_row gt_right" headers="se_mul">0.00</td>
 <td class="gt_row gt_right" headers="p">0.00</td>
-<td class="gt_row gt_left" headers="meaning">Strong increase (p&lt;0.05)</td>
+<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
 <td class="gt_row gt_left" headers="species">Calopteryx splendens</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.02</td>
-<td class="gt_row gt_right" headers="se_add">0.01</td>
+<td class="gt_row gt_right" headers="se_add">0.00</td>
 <td class="gt_row gt_right" headers="mul">1.02</td>
-<td class="gt_row gt_right" headers="se_mul">0.01</td>
+<td class="gt_row gt_right" headers="se_mul">0.00</td>
 <td class="gt_row gt_right" headers="p">0.00</td>
 <td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.05)</td>
 <td class="gt_row gt_left" headers="species">Calopteryx virgo</td>
 </tr>
-<tr class="even">
-<td class="gt_row gt_right" headers="from">2,006.00</td>
-<td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.01</td>
-<td class="gt_row gt_right" headers="se_add">0.02</td>
-<td class="gt_row gt_right" headers="mul">1.01</td>
-<td class="gt_row gt_right" headers="se_mul">0.02</td>
-<td class="gt_row gt_right" headers="p">0.70</td>
-<td class="gt_row gt_left" headers="meaning">Stable</td>
-<td class="gt_row gt_left" headers="species">Ceriagrion tenellum</td>
-</tr>
 <tr class="odd">
-<td class="gt_row gt_right" headers="from">2,005.00</td>
+<td class="gt_row gt_right" headers="from">2,006.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.00</td>
 <td class="gt_row gt_right" headers="se_add">0.01</td>
 <td class="gt_row gt_right" headers="mul">1.00</td>
 <td class="gt_row gt_right" headers="se_mul">0.01</td>
-<td class="gt_row gt_right" headers="p">0.62</td>
+<td class="gt_row gt_right" headers="p">0.87</td>
 <td class="gt_row gt_left" headers="meaning">Stable</td>
-<td class="gt_row gt_left" headers="species">Chalcolestes viridis</td>
+<td class="gt_row gt_left" headers="species">Ceriagrion tenellum</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.03</td>
+<td class="gt_row gt_right" headers="add">−0.01</td>
 <td class="gt_row gt_right" headers="se_add">0.01</td>
-<td class="gt_row gt_right" headers="mul">1.03</td>
+<td class="gt_row gt_right" headers="mul">0.99</td>
 <td class="gt_row gt_right" headers="se_mul">0.01</td>
-<td class="gt_row gt_right" headers="p">0.00</td>
-<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
-<td class="gt_row gt_left" headers="species">Coenagrion puella</td>
+<td class="gt_row gt_right" headers="p">0.31</td>
+<td class="gt_row gt_left" headers="meaning">Stable</td>
+<td class="gt_row gt_left" headers="species">Chalcolestes viridis</td>
 </tr>
 <tr class="odd">
+<td class="gt_row gt_right" headers="from">2,005.00</td>
+<td class="gt_row gt_right" headers="upto">2,025.00</td>
+<td class="gt_row gt_right" headers="add">0.01</td>
+<td class="gt_row gt_right" headers="se_add">0.00</td>
+<td class="gt_row gt_right" headers="mul">1.01</td>
+<td class="gt_row gt_right" headers="se_mul">0.00</td>
+<td class="gt_row gt_right" headers="p">0.01</td>
+<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.05)</td>
+<td class="gt_row gt_left" headers="species">Coenagrion puella</td>
+</tr>
+<tr class="even">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.01</td>
 <td class="gt_row gt_right" headers="se_add">0.01</td>
 <td class="gt_row gt_right" headers="mul">1.01</td>
 <td class="gt_row gt_right" headers="se_mul">0.01</td>
-<td class="gt_row gt_right" headers="p">0.46</td>
+<td class="gt_row gt_right" headers="p">0.58</td>
 <td class="gt_row gt_left" headers="meaning">Stable</td>
 <td class="gt_row gt_left" headers="species">Cordulegaster boltonii</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.05</td>
@@ -2774,40 +2791,18 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
 <td class="gt_row gt_left" headers="species">Crocothemis erythraea</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.02</td>
-<td class="gt_row gt_right" headers="se_add">0.02</td>
-<td class="gt_row gt_right" headers="mul">1.02</td>
-<td class="gt_row gt_right" headers="se_mul">0.02</td>
-<td class="gt_row gt_right" headers="p">0.14</td>
-<td class="gt_row gt_left" headers="meaning">Uncertain</td>
+<td class="gt_row gt_right" headers="add">−0.01</td>
+<td class="gt_row gt_right" headers="se_add">0.01</td>
+<td class="gt_row gt_right" headers="mul">0.99</td>
+<td class="gt_row gt_right" headers="se_mul">0.01</td>
+<td class="gt_row gt_right" headers="p">0.24</td>
+<td class="gt_row gt_left" headers="meaning">Stable</td>
 <td class="gt_row gt_left" headers="species">Enallagma cyathigerum</td>
 </tr>
-<tr class="even">
-<td class="gt_row gt_right" headers="from">2,005.00</td>
-<td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.05</td>
-<td class="gt_row gt_right" headers="se_add">0.02</td>
-<td class="gt_row gt_right" headers="mul">1.05</td>
-<td class="gt_row gt_right" headers="se_mul">0.02</td>
-<td class="gt_row gt_right" headers="p">0.01</td>
-<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.05)</td>
-<td class="gt_row gt_left" headers="species">Erythromma lindenii</td>
-</tr>
 <tr class="odd">
-<td class="gt_row gt_right" headers="from">2,006.00</td>
-<td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">−0.02</td>
-<td class="gt_row gt_right" headers="se_add">0.02</td>
-<td class="gt_row gt_right" headers="mul">0.98</td>
-<td class="gt_row gt_right" headers="se_mul">0.02</td>
-<td class="gt_row gt_right" headers="p">0.33</td>
-<td class="gt_row gt_left" headers="meaning">Uncertain</td>
-<td class="gt_row gt_left" headers="species">Erythromma viridulum</td>
-</tr>
-<tr class="even">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.03</td>
@@ -2816,9 +2811,31 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <td class="gt_row gt_right" headers="se_mul">0.01</td>
 <td class="gt_row gt_right" headers="p">0.00</td>
 <td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.05)</td>
-<td class="gt_row gt_left" headers="species">Gomphus vulgatissimus</td>
+<td class="gt_row gt_left" headers="species">Erythromma lindenii</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="from">2,006.00</td>
+<td class="gt_row gt_right" headers="upto">2,025.00</td>
+<td class="gt_row gt_right" headers="add">−0.03</td>
+<td class="gt_row gt_right" headers="se_add">0.01</td>
+<td class="gt_row gt_right" headers="mul">0.97</td>
+<td class="gt_row gt_right" headers="se_mul">0.01</td>
+<td class="gt_row gt_right" headers="p">0.04</td>
+<td class="gt_row gt_left" headers="meaning">Moderate decrease (p&lt;0.05)</td>
+<td class="gt_row gt_left" headers="species">Erythromma viridulum</td>
 </tr>
 <tr class="odd">
+<td class="gt_row gt_right" headers="from">2,005.00</td>
+<td class="gt_row gt_right" headers="upto">2,025.00</td>
+<td class="gt_row gt_right" headers="add">0.01</td>
+<td class="gt_row gt_right" headers="se_add">0.01</td>
+<td class="gt_row gt_right" headers="mul">1.01</td>
+<td class="gt_row gt_right" headers="se_mul">0.01</td>
+<td class="gt_row gt_right" headers="p">0.04</td>
+<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.05)</td>
+<td class="gt_row gt_left" headers="species">Gomphus vulgatissimus</td>
+</tr>
+<tr class="even">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.04</td>
@@ -2829,203 +2846,60 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
 <td class="gt_row gt_left" headers="species">Ischnura elegans</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.01</td>
+<td class="gt_row gt_right" headers="add">−0.01</td>
 <td class="gt_row gt_right" headers="se_add">0.01</td>
-<td class="gt_row gt_right" headers="mul">1.01</td>
+<td class="gt_row gt_right" headers="mul">0.99</td>
 <td class="gt_row gt_right" headers="se_mul">0.01</td>
-<td class="gt_row gt_right" headers="p">0.21</td>
+<td class="gt_row gt_right" headers="p">0.33</td>
 <td class="gt_row gt_left" headers="meaning">Stable</td>
 <td class="gt_row gt_left" headers="species">Ischnura pumilio</td>
 </tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="from">2,005.00</td>
+<td class="gt_row gt_right" headers="upto">2,025.00</td>
+<td class="gt_row gt_right" headers="add">−0.01</td>
+<td class="gt_row gt_right" headers="se_add">0.01</td>
+<td class="gt_row gt_right" headers="mul">0.99</td>
+<td class="gt_row gt_right" headers="se_mul">0.01</td>
+<td class="gt_row gt_right" headers="p">0.16</td>
+<td class="gt_row gt_left" headers="meaning">Stable</td>
+<td class="gt_row gt_left" headers="species">Lestes sponsa</td>
+</tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.00</td>
-<td class="gt_row gt_right" headers="se_add">0.01</td>
-<td class="gt_row gt_right" headers="mul">1.00</td>
-<td class="gt_row gt_right" headers="se_mul">0.01</td>
-<td class="gt_row gt_right" headers="p">0.96</td>
-<td class="gt_row gt_left" headers="meaning">Stable</td>
-<td class="gt_row gt_left" headers="species">Lestes sponsa</td>
+<td class="gt_row gt_right" headers="add">0.04</td>
+<td class="gt_row gt_right" headers="se_add">0.02</td>
+<td class="gt_row gt_right" headers="mul">1.04</td>
+<td class="gt_row gt_right" headers="se_mul">0.02</td>
+<td class="gt_row gt_right" headers="p">0.01</td>
+<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.05)</td>
+<td class="gt_row gt_left" headers="species">Lestes virens</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.04</td>
-<td class="gt_row gt_right" headers="se_add">0.03</td>
-<td class="gt_row gt_right" headers="mul">1.04</td>
-<td class="gt_row gt_right" headers="se_mul">0.03</td>
-<td class="gt_row gt_right" headers="p">0.14</td>
-<td class="gt_row gt_left" headers="meaning">Uncertain</td>
-<td class="gt_row gt_left" headers="species">Lestes virens</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_right" headers="from">2,005.00</td>
-<td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.04</td>
-<td class="gt_row gt_right" headers="se_add">0.01</td>
-<td class="gt_row gt_right" headers="mul">1.04</td>
-<td class="gt_row gt_right" headers="se_mul">0.01</td>
+<td class="gt_row gt_right" headers="add">0.03</td>
+<td class="gt_row gt_right" headers="se_add">0.00</td>
+<td class="gt_row gt_right" headers="mul">1.03</td>
+<td class="gt_row gt_right" headers="se_mul">0.00</td>
 <td class="gt_row gt_right" headers="p">0.00</td>
 <td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
 <td class="gt_row gt_left" headers="species">Libellula depressa</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.05</td>
+<td class="gt_row gt_right" headers="add">0.04</td>
 <td class="gt_row gt_right" headers="se_add">0.01</td>
-<td class="gt_row gt_right" headers="mul">1.06</td>
+<td class="gt_row gt_right" headers="mul">1.04</td>
 <td class="gt_row gt_right" headers="se_mul">0.01</td>
 <td class="gt_row gt_right" headers="p">0.00</td>
 <td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
 <td class="gt_row gt_left" headers="species">Libellula fulva</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_right" headers="from">2,005.00</td>
-<td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.02</td>
-<td class="gt_row gt_right" headers="se_add">0.02</td>
-<td class="gt_row gt_right" headers="mul">1.02</td>
-<td class="gt_row gt_right" headers="se_mul">0.02</td>
-<td class="gt_row gt_right" headers="p">0.30</td>
-<td class="gt_row gt_left" headers="meaning">Uncertain</td>
-<td class="gt_row gt_left" headers="species">Libellula quadrimaculata</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_right" headers="from">2,005.00</td>
-<td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.06</td>
-<td class="gt_row gt_right" headers="se_add">0.01</td>
-<td class="gt_row gt_right" headers="mul">1.06</td>
-<td class="gt_row gt_right" headers="se_mul">0.01</td>
-<td class="gt_row gt_right" headers="p">0.00</td>
-<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
-<td class="gt_row gt_left" headers="species">Onychogomphus forcipatus</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_right" headers="from">2,005.00</td>
-<td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.06</td>
-<td class="gt_row gt_right" headers="se_add">0.02</td>
-<td class="gt_row gt_right" headers="mul">1.06</td>
-<td class="gt_row gt_right" headers="se_mul">0.02</td>
-<td class="gt_row gt_right" headers="p">0.01</td>
-<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.05)</td>
-<td class="gt_row gt_left" headers="species">Onychogomphus uncatus</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_right" headers="from">2,006.00</td>
-<td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">−0.07</td>
-<td class="gt_row gt_right" headers="se_add">0.02</td>
-<td class="gt_row gt_right" headers="mul">0.93</td>
-<td class="gt_row gt_right" headers="se_mul">0.02</td>
-<td class="gt_row gt_right" headers="p">0.00</td>
-<td class="gt_row gt_left" headers="meaning">Moderate decrease (p&lt;0.05)</td>
-<td class="gt_row gt_left" headers="species">Ophiogomphus cecilia</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_right" headers="from">2,005.00</td>
-<td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.01</td>
-<td class="gt_row gt_right" headers="se_add">0.00</td>
-<td class="gt_row gt_right" headers="mul">1.01</td>
-<td class="gt_row gt_right" headers="se_mul">0.00</td>
-<td class="gt_row gt_right" headers="p">0.00</td>
-<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
-<td class="gt_row gt_left" headers="species">Orthetrum albistylum</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_right" headers="from">2,005.00</td>
-<td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.04</td>
-<td class="gt_row gt_right" headers="se_add">0.01</td>
-<td class="gt_row gt_right" headers="mul">1.04</td>
-<td class="gt_row gt_right" headers="se_mul">0.01</td>
-<td class="gt_row gt_right" headers="p">0.00</td>
-<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
-<td class="gt_row gt_left" headers="species">Orthetrum brunneum</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_right" headers="from">2,005.00</td>
-<td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.04</td>
-<td class="gt_row gt_right" headers="se_add">0.00</td>
-<td class="gt_row gt_right" headers="mul">1.04</td>
-<td class="gt_row gt_right" headers="se_mul">0.00</td>
-<td class="gt_row gt_right" headers="p">0.00</td>
-<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
-<td class="gt_row gt_left" headers="species">Orthetrum cancellatum</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_right" headers="from">2,005.00</td>
-<td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.06</td>
-<td class="gt_row gt_right" headers="se_add">0.01</td>
-<td class="gt_row gt_right" headers="mul">1.06</td>
-<td class="gt_row gt_right" headers="se_mul">0.01</td>
-<td class="gt_row gt_right" headers="p">0.00</td>
-<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
-<td class="gt_row gt_left" headers="species">Orthetrum coerulescens</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_right" headers="from">2,006.00</td>
-<td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.10</td>
-<td class="gt_row gt_right" headers="se_add">0.02</td>
-<td class="gt_row gt_right" headers="mul">1.11</td>
-<td class="gt_row gt_right" headers="se_mul">0.02</td>
-<td class="gt_row gt_right" headers="p">0.00</td>
-<td class="gt_row gt_left" headers="meaning">Strong increase (p&lt;0.05)</td>
-<td class="gt_row gt_left" headers="species">Oxygastra curtisii</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_right" headers="from">2,005.00</td>
-<td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.05</td>
-<td class="gt_row gt_right" headers="se_add">0.00</td>
-<td class="gt_row gt_right" headers="mul">1.05</td>
-<td class="gt_row gt_right" headers="se_mul">0.00</td>
-<td class="gt_row gt_right" headers="p">0.00</td>
-<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
-<td class="gt_row gt_left" headers="species">Platycnemis pennipes</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_right" headers="from">2,005.00</td>
-<td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.00</td>
-<td class="gt_row gt_right" headers="se_add">0.01</td>
-<td class="gt_row gt_right" headers="mul">1.00</td>
-<td class="gt_row gt_right" headers="se_mul">0.01</td>
-<td class="gt_row gt_right" headers="p">0.85</td>
-<td class="gt_row gt_left" headers="meaning">Stable</td>
-<td class="gt_row gt_left" headers="species">Pyrrhosoma nymphula</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_right" headers="from">2,006.00</td>
-<td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">−0.01</td>
-<td class="gt_row gt_right" headers="se_add">0.02</td>
-<td class="gt_row gt_right" headers="mul">0.99</td>
-<td class="gt_row gt_right" headers="se_mul">0.02</td>
-<td class="gt_row gt_right" headers="p">0.62</td>
-<td class="gt_row gt_left" headers="meaning">Uncertain</td>
-<td class="gt_row gt_left" headers="species">Somatochlora flavomaculata</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_right" headers="from">2,005.00</td>
-<td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">−0.02</td>
-<td class="gt_row gt_right" headers="se_add">0.01</td>
-<td class="gt_row gt_right" headers="mul">0.98</td>
-<td class="gt_row gt_right" headers="se_mul">0.01</td>
-<td class="gt_row gt_right" headers="p">0.00</td>
-<td class="gt_row gt_left" headers="meaning">Moderate decrease (p&lt;0.05)</td>
-<td class="gt_row gt_left" headers="species">Somatochlora metallica</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
@@ -3036,29 +2910,51 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <td class="gt_row gt_right" headers="se_mul">0.01</td>
 <td class="gt_row gt_right" headers="p">0.51</td>
 <td class="gt_row gt_left" headers="meaning">Stable</td>
-<td class="gt_row gt_left" headers="species">Stylurus flavipes</td>
+<td class="gt_row gt_left" headers="species">Libellula quadrimaculata</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.01</td>
-<td class="gt_row gt_right" headers="se_add">0.01</td>
-<td class="gt_row gt_right" headers="mul">1.01</td>
-<td class="gt_row gt_right" headers="se_mul">0.01</td>
-<td class="gt_row gt_right" headers="p">0.56</td>
-<td class="gt_row gt_left" headers="meaning">Stable</td>
-<td class="gt_row gt_left" headers="species">Sympecma fusca</td>
+<td class="gt_row gt_right" headers="add">0.05</td>
+<td class="gt_row gt_right" headers="se_add">0.00</td>
+<td class="gt_row gt_right" headers="mul">1.05</td>
+<td class="gt_row gt_right" headers="se_mul">0.00</td>
+<td class="gt_row gt_right" headers="p">0.00</td>
+<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
+<td class="gt_row gt_left" headers="species">Onychogomphus forcipatus</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_right" headers="from">2,006.00</td>
+<td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.04</td>
+<td class="gt_row gt_right" headers="add">0.05</td>
 <td class="gt_row gt_right" headers="se_add">0.01</td>
-<td class="gt_row gt_right" headers="mul">1.04</td>
+<td class="gt_row gt_right" headers="mul">1.05</td>
 <td class="gt_row gt_right" headers="se_mul">0.01</td>
 <td class="gt_row gt_right" headers="p">0.00</td>
-<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.05)</td>
-<td class="gt_row gt_left" headers="species">Sympetrum depressiusculum</td>
+<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
+<td class="gt_row gt_left" headers="species">Onychogomphus uncatus</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="from">2,006.00</td>
+<td class="gt_row gt_right" headers="upto">2,025.00</td>
+<td class="gt_row gt_right" headers="add">−0.09</td>
+<td class="gt_row gt_right" headers="se_add">0.01</td>
+<td class="gt_row gt_right" headers="mul">0.92</td>
+<td class="gt_row gt_right" headers="se_mul">0.01</td>
+<td class="gt_row gt_right" headers="p">0.00</td>
+<td class="gt_row gt_left" headers="meaning">Strong decrease (p&lt;0.05)</td>
+<td class="gt_row gt_left" headers="species">Ophiogomphus cecilia</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="from">2,005.00</td>
+<td class="gt_row gt_right" headers="upto">2,025.00</td>
+<td class="gt_row gt_right" headers="add">0.02</td>
+<td class="gt_row gt_right" headers="se_add">0.00</td>
+<td class="gt_row gt_right" headers="mul">1.02</td>
+<td class="gt_row gt_right" headers="se_mul">0.00</td>
+<td class="gt_row gt_right" headers="p">0.00</td>
+<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
+<td class="gt_row gt_left" headers="species">Orthetrum albistylum</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
@@ -3069,50 +2965,171 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <td class="gt_row gt_right" headers="se_mul">0.01</td>
 <td class="gt_row gt_right" headers="p">0.00</td>
 <td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
-<td class="gt_row gt_left" headers="species">Sympetrum fonscolombii</td>
+<td class="gt_row gt_left" headers="species">Orthetrum brunneum</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="from">2,005.00</td>
+<td class="gt_row gt_right" headers="upto">2,025.00</td>
+<td class="gt_row gt_right" headers="add">0.04</td>
+<td class="gt_row gt_right" headers="se_add">0.00</td>
+<td class="gt_row gt_right" headers="mul">1.04</td>
+<td class="gt_row gt_right" headers="se_mul">0.00</td>
+<td class="gt_row gt_right" headers="p">0.00</td>
+<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
+<td class="gt_row gt_left" headers="species">Orthetrum cancellatum</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="from">2,005.00</td>
+<td class="gt_row gt_right" headers="upto">2,025.00</td>
+<td class="gt_row gt_right" headers="add">0.04</td>
+<td class="gt_row gt_right" headers="se_add">0.00</td>
+<td class="gt_row gt_right" headers="mul">1.04</td>
+<td class="gt_row gt_right" headers="se_mul">0.00</td>
+<td class="gt_row gt_right" headers="p">0.00</td>
+<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
+<td class="gt_row gt_left" headers="species">Orthetrum coerulescens</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="from">2,006.00</td>
+<td class="gt_row gt_right" headers="upto">2,025.00</td>
+<td class="gt_row gt_right" headers="add">0.09</td>
+<td class="gt_row gt_right" headers="se_add">0.01</td>
+<td class="gt_row gt_right" headers="mul">1.09</td>
+<td class="gt_row gt_right" headers="se_mul">0.01</td>
+<td class="gt_row gt_right" headers="p">0.00</td>
+<td class="gt_row gt_left" headers="meaning">Strong increase (p&lt;0.05)</td>
+<td class="gt_row gt_left" headers="species">Oxygastra curtisii</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="from">2,005.00</td>
+<td class="gt_row gt_right" headers="upto">2,025.00</td>
+<td class="gt_row gt_right" headers="add">0.05</td>
+<td class="gt_row gt_right" headers="se_add">0.00</td>
+<td class="gt_row gt_right" headers="mul">1.05</td>
+<td class="gt_row gt_right" headers="se_mul">0.00</td>
+<td class="gt_row gt_right" headers="p">0.00</td>
+<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
+<td class="gt_row gt_left" headers="species">Platycnemis pennipes</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="from">2,005.00</td>
+<td class="gt_row gt_right" headers="upto">2,025.00</td>
+<td class="gt_row gt_right" headers="add">−0.02</td>
+<td class="gt_row gt_right" headers="se_add">0.01</td>
+<td class="gt_row gt_right" headers="mul">0.98</td>
+<td class="gt_row gt_right" headers="se_mul">0.01</td>
+<td class="gt_row gt_right" headers="p">0.10</td>
+<td class="gt_row gt_left" headers="meaning">Stable</td>
+<td class="gt_row gt_left" headers="species">Pyrrhosoma nymphula</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="from">2,006.00</td>
+<td class="gt_row gt_right" headers="upto">2,025.00</td>
+<td class="gt_row gt_right" headers="add">−0.03</td>
+<td class="gt_row gt_right" headers="se_add">0.01</td>
+<td class="gt_row gt_right" headers="mul">0.97</td>
+<td class="gt_row gt_right" headers="se_mul">0.01</td>
+<td class="gt_row gt_right" headers="p">0.05</td>
+<td class="gt_row gt_left" headers="meaning">Moderate decrease (p&lt;0.05)</td>
+<td class="gt_row gt_left" headers="species">Somatochlora flavomaculata</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="from">2,005.00</td>
+<td class="gt_row gt_right" headers="upto">2,025.00</td>
+<td class="gt_row gt_right" headers="add">−0.02</td>
+<td class="gt_row gt_right" headers="se_add">0.01</td>
+<td class="gt_row gt_right" headers="mul">0.98</td>
+<td class="gt_row gt_right" headers="se_mul">0.01</td>
+<td class="gt_row gt_right" headers="p">0.00</td>
+<td class="gt_row gt_left" headers="meaning">Moderate decrease (p&lt;0.05)</td>
+<td class="gt_row gt_left" headers="species">Somatochlora metallica</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="from">2,005.00</td>
+<td class="gt_row gt_right" headers="upto">2,025.00</td>
+<td class="gt_row gt_right" headers="add">−0.03</td>
+<td class="gt_row gt_right" headers="se_add">0.01</td>
+<td class="gt_row gt_right" headers="mul">0.97</td>
+<td class="gt_row gt_right" headers="se_mul">0.01</td>
+<td class="gt_row gt_right" headers="p">0.00</td>
+<td class="gt_row gt_left" headers="meaning">Moderate decrease (p&lt;0.05)</td>
+<td class="gt_row gt_left" headers="species">Stylurus flavipes</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_right" headers="from">2,005.00</td>
+<td class="gt_row gt_right" headers="upto">2,025.00</td>
+<td class="gt_row gt_right" headers="add">0.00</td>
+<td class="gt_row gt_right" headers="se_add">0.01</td>
+<td class="gt_row gt_right" headers="mul">1.00</td>
+<td class="gt_row gt_right" headers="se_mul">0.01</td>
+<td class="gt_row gt_right" headers="p">0.73</td>
+<td class="gt_row gt_left" headers="meaning">Stable</td>
+<td class="gt_row gt_left" headers="species">Sympecma fusca</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_right" headers="from">2,006.00</td>
+<td class="gt_row gt_right" headers="upto">2,025.00</td>
+<td class="gt_row gt_right" headers="add">0.03</td>
+<td class="gt_row gt_right" headers="se_add">0.01</td>
+<td class="gt_row gt_right" headers="mul">1.03</td>
+<td class="gt_row gt_right" headers="se_mul">0.01</td>
+<td class="gt_row gt_right" headers="p">0.00</td>
+<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.05)</td>
+<td class="gt_row gt_left" headers="species">Sympetrum depressiusculum</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.02</td>
-<td class="gt_row gt_right" headers="se_add">0.01</td>
+<td class="gt_row gt_right" headers="se_add">0.00</td>
 <td class="gt_row gt_right" headers="mul">1.02</td>
-<td class="gt_row gt_right" headers="se_mul">0.01</td>
+<td class="gt_row gt_right" headers="se_mul">0.00</td>
 <td class="gt_row gt_right" headers="p">0.00</td>
-<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.05)</td>
-<td class="gt_row gt_left" headers="species">Sympetrum pedemontanum</td>
+<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
+<td class="gt_row gt_left" headers="species">Sympetrum fonscolombii</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
 <td class="gt_row gt_right" headers="add">0.01</td>
-<td class="gt_row gt_right" headers="se_add">0.01</td>
+<td class="gt_row gt_right" headers="se_add">0.00</td>
 <td class="gt_row gt_right" headers="mul">1.01</td>
-<td class="gt_row gt_right" headers="se_mul">0.01</td>
-<td class="gt_row gt_right" headers="p">0.26</td>
-<td class="gt_row gt_left" headers="meaning">Stable</td>
-<td class="gt_row gt_left" headers="species">Sympetrum sanguineum</td>
+<td class="gt_row gt_right" headers="se_mul">0.00</td>
+<td class="gt_row gt_right" headers="p">0.01</td>
+<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.05)</td>
+<td class="gt_row gt_left" headers="species">Sympetrum pedemontanum</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_right" headers="from">2,005.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.05</td>
+<td class="gt_row gt_right" headers="add">0.00</td>
 <td class="gt_row gt_right" headers="se_add">0.01</td>
-<td class="gt_row gt_right" headers="mul">1.06</td>
+<td class="gt_row gt_right" headers="mul">1.00</td>
 <td class="gt_row gt_right" headers="se_mul">0.01</td>
-<td class="gt_row gt_right" headers="p">0.00</td>
-<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.05)</td>
-<td class="gt_row gt_left" headers="species">Sympetrum striolatum</td>
+<td class="gt_row gt_right" headers="p">0.86</td>
+<td class="gt_row gt_left" headers="meaning">Stable</td>
+<td class="gt_row gt_left" headers="species">Sympetrum sanguineum</td>
 </tr>
 <tr class="odd">
+<td class="gt_row gt_right" headers="from">2,005.00</td>
+<td class="gt_row gt_right" headers="upto">2,025.00</td>
+<td class="gt_row gt_right" headers="add">0.04</td>
+<td class="gt_row gt_right" headers="se_add">0.00</td>
+<td class="gt_row gt_right" headers="mul">1.04</td>
+<td class="gt_row gt_right" headers="se_mul">0.01</td>
+<td class="gt_row gt_right" headers="p">0.00</td>
+<td class="gt_row gt_left" headers="meaning">Moderate increase (p&lt;0.01)</td>
+<td class="gt_row gt_left" headers="species">Sympetrum striolatum</td>
+</tr>
+<tr class="even">
 <td class="gt_row gt_right" headers="from">2,017.00</td>
 <td class="gt_row gt_right" headers="upto">2,025.00</td>
-<td class="gt_row gt_right" headers="add">0.23</td>
-<td class="gt_row gt_right" headers="se_add">0.07</td>
-<td class="gt_row gt_right" headers="mul">1.26</td>
-<td class="gt_row gt_right" headers="se_mul">0.09</td>
-<td class="gt_row gt_right" headers="p">0.01</td>
-<td class="gt_row gt_left" headers="meaning">Strong increase (p&lt;0.05)</td>
+<td class="gt_row gt_right" headers="add">0.01</td>
+<td class="gt_row gt_right" headers="se_add">0.02</td>
+<td class="gt_row gt_right" headers="mul">1.01</td>
+<td class="gt_row gt_right" headers="se_mul">0.02</td>
+<td class="gt_row gt_right" headers="p">0.53</td>
+<td class="gt_row gt_left" headers="meaning">Uncertain</td>
 <td class="gt_row gt_left" headers="species">Trithemis annulata</td>
 </tr>
 </tbody>
@@ -3294,12 +3311,12 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <span id="cb129-5"><a href="#cb129-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(year, psi, <span class="at">group =</span> <span class="dv">1</span>, <span class="at">col=</span>year_group)) <span class="sc">+</span></span>
 <span id="cb129-6"><a href="#cb129-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">col=</span><span class="st">'black'</span>)<span class="sc">+</span></span>
 <span id="cb129-7"><a href="#cb129-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
-<span id="cb129-8"><a href="#cb129-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>gamma), <span class="at">col=</span><span class="st">'steelblue'</span>, </span>
-<span id="cb129-9"><a href="#cb129-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">size =</span> <span class="dv">1</span>, </span>
-<span id="cb129-10"><a href="#cb129-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha=</span><span class="fl">0.4</span>) <span class="sc">+</span></span>
-<span id="cb129-11"><a href="#cb129-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>epsilon), <span class="at">col=</span><span class="st">'red'</span>, </span>
-<span id="cb129-12"><a href="#cb129-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">size =</span> <span class="dv">1</span>, </span>
-<span id="cb129-13"><a href="#cb129-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha=</span><span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb129-8"><a href="#cb129-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># geom_line(aes(y=gamma), col='steelblue', </span></span>
+<span id="cb129-9"><a href="#cb129-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">#           size = 1, </span></span>
+<span id="cb129-10"><a href="#cb129-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">#           alpha=0.4) +</span></span>
+<span id="cb129-11"><a href="#cb129-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># geom_line(aes(y=epsilon), col='red', </span></span>
+<span id="cb129-12"><a href="#cb129-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">#           size = 1, </span></span>
+<span id="cb129-13"><a href="#cb129-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">#           alpha=0.4) +</span></span>
 <span id="cb129-14"><a href="#cb129-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
 <span id="cb129-15"><a href="#cb129-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">title=</span>nomeSp,</span>
 <span id="cb129-16"><a href="#cb129-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="st">""</span></span>
@@ -3321,12 +3338,12 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <span id="cb129-32"><a href="#cb129-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(year, mean.psi, <span class="at">group =</span> <span class="dv">1</span>, <span class="at">col=</span>year_group)) <span class="sc">+</span></span>
 <span id="cb129-33"><a href="#cb129-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">col=</span><span class="st">'black'</span>)<span class="sc">+</span></span>
 <span id="cb129-34"><a href="#cb129-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
-<span id="cb129-35"><a href="#cb129-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>mean.gamma), <span class="at">col=</span><span class="st">'steelblue'</span>, </span>
-<span id="cb129-36"><a href="#cb129-36" aria-hidden="true" tabindex="-1"></a>              <span class="at">size =</span> <span class="dv">1</span>, </span>
-<span id="cb129-37"><a href="#cb129-37" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha=</span><span class="fl">0.4</span>) <span class="sc">+</span></span>
-<span id="cb129-38"><a href="#cb129-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>mean.eps), <span class="at">col=</span><span class="st">'red'</span>, </span>
-<span id="cb129-39"><a href="#cb129-39" aria-hidden="true" tabindex="-1"></a>              <span class="at">size =</span> <span class="dv">1</span>, </span>
-<span id="cb129-40"><a href="#cb129-40" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha=</span><span class="fl">0.4</span>) <span class="sc">+</span></span>
+<span id="cb129-35"><a href="#cb129-35" aria-hidden="true" tabindex="-1"></a>    <span class="co"># geom_line(aes(y=mean.gamma), col='steelblue', </span></span>
+<span id="cb129-36"><a href="#cb129-36" aria-hidden="true" tabindex="-1"></a>    <span class="co">#           size = 1, </span></span>
+<span id="cb129-37"><a href="#cb129-37" aria-hidden="true" tabindex="-1"></a>    <span class="co">#           alpha=0.4) +</span></span>
+<span id="cb129-38"><a href="#cb129-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># geom_line(aes(y=mean.eps), col='red', </span></span>
+<span id="cb129-39"><a href="#cb129-39" aria-hidden="true" tabindex="-1"></a>    <span class="co">#           size = 1, </span></span>
+<span id="cb129-40"><a href="#cb129-40" aria-hidden="true" tabindex="-1"></a>    <span class="co">#           alpha=0.4) +</span></span>
 <span id="cb129-41"><a href="#cb129-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
 <span id="cb129-42"><a href="#cb129-42" aria-hidden="true" tabindex="-1"></a>      <span class="at">title=</span><span class="st">'geometric mean'</span>,</span>
 <span id="cb129-43"><a href="#cb129-43" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="st">""</span></span>
@@ -3923,1590 +3940,6 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <div>
 <figure class="figure">
 <p><img src="000.odonataOccupancy20_files/figure-html/unmarked_plot-53.png" class="img-fluid figure-img" width="1152"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="modello-pcount" class="level3">
-<h3 class="anchored" data-anchor-id="modello-pcount">Modello pcount</h3>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb183"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb183-1"><a href="#cb183-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(dfo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Rows: 85,515
-Columns: 29
-$ id              &lt;dbl&gt; 34223, 34224, 36402, 36403, 36404, 29429, 29430, 29431…
-$ fid             &lt;dbl&gt; 34223, 34224, 36402, 36403, 36404, 29429, 29430, 29431…
-$ id_sighting     &lt;chr&gt; NA, "9790306", "9623207", "9623208", "9623209", "23869…
-$ date_year       &lt;dbl&gt; 2008, 2016, 2016, 2016, 2016, 2023, 2023, 2023, 2023, …
-$ date_month      &lt;dbl&gt; 9, 8, 7, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 8, 8, 8, 8, 8, …
-$ date_day        &lt;dbl&gt; 9, 27, 10, 10, 10, 14, 14, 14, 14, 14, 30, 30, 30, 9, …
-$ id_observer     &lt;chr&gt; NA, "4214", "4898", "4898", "4898", "91", "91", "91", …
-$ observer_name   &lt;chr&gt; "CRISTIANO L., EVANGELISTA M.", "Stefano Ghiano", "Rob…
-$ species         &lt;chr&gt; "Sympetrum striolatum", "Anax imperator", "Calopteryx …
-$ place           &lt;chr&gt; "Filogera, Torr. Chisone, ponte nuovo", "San Secondo d…
-$ precision       &lt;chr&gt; "GPS", "Localizzazione precisa", "Quadrato chilometric…
-$ behaviour       &lt;chr&gt; "NA; NA", NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-$ total_count     &lt;dbl&gt; NA, 1, 1, 2, 2, 8, 5, 1, 2, 1, 2, 1, 1, 1, NA, NA, NA,…
-$ estimation_code &lt;chr&gt; "Non rilevato", NA, NA, NA, "&gt;", "&gt;", "&gt;", NA, NA, NA,…
-$ detail          &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
-$ comment         &lt;chr&gt; NA, NA, NA, NA, NA, "in massima parte M", NA, NA, NA, …
-$ source          &lt;chr&gt; "rimappato", "ornitho", "ornitho", "ornitho", "ornitho…
-$ cellcode        &lt;chr&gt; "10kmE410N242", "10kmE410N242", "10kmE410N243", "10kmE…
-$ eoforigin       &lt;dbl&gt; 4100000, 4100000, 4100000, 4100000, 4100000, 4100000, …
-$ noforigin       &lt;dbl&gt; 2420000, 2420000, 2430000, 2430000, 2430000, 2400000, …
-$ umbria          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
-$ bioreg          &lt;chr&gt; "CON", "CON", "CON", "CON", "CON", "CON", "CON", "CON"…
-$ pk_uid          &lt;dbl&gt; 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, …
-$ short_name      &lt;chr&gt; "continental", "continental", "continental", "continen…
-$ pre_2012        &lt;chr&gt; "CON", "CON", "CON", "CON", "CON", "CON", "CON", "CON"…
-$ code            &lt;chr&gt; "Continental", "Continental", "Continental", "Continen…
-$ name            &lt;chr&gt; "Continental Bio-geographical Region", "Continental Bi…
-$ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41, 41…
-$ year_group      &lt;chr&gt; "2005-2009", "2015-2019", "2015-2019", "2015-2019", "2…</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb185"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb185-1"><a href="#cb185-1" aria-hidden="true" tabindex="-1"></a>dfp <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span> </span>
-<span id="cb185-2"><a href="#cb185-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date_year,species,cellcode20) <span class="sc">|&gt;</span> </span>
-<span id="cb185-3"><a href="#cb185-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(total_count) <span class="sc">|&gt;</span> </span>
-<span id="cb185-4"><a href="#cb185-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total_count=</span><span class="fu">sum</span>(total_count, <span class="at">na.rm=</span>T)) <span class="sc">|&gt;</span> </span>
-<span id="cb185-5"><a href="#cb185-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(species,date_year,cellcode20) <span class="sc">|&gt;</span></span>
-<span id="cb185-6"><a href="#cb185-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)
-
-Abundance (log-scale):
-             Estimate      SE      z P(&gt;|z|)
-(Intercept)  2.206282 7.25274  0.304   0.761
-year        -0.000312 0.00197 -0.159   0.874
-
-Detection (logit-scale):
- Estimate    SE    z P(&gt;|z|)
-     1.02 0.553 1.85   0.064
-
-AIC: 1466.602 
-Number of sites: 138</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate  SE   z P(&gt;|z|)
-(Intercept)  2.03505 NaN NaN     NaN
-year        -0.00016 NaN NaN     NaN
-
-Detection (logit-scale):
- Estimate    SE    z  P(&gt;|z|)
-    0.938 0.163 5.77 8.06e-09
-
-AIC: 5054.66 
-Number of sites: 499</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)
-
-Abundance (log-scale):
-            Estimate       SE     z P(&gt;|z|)
-(Intercept)  1.02649 2.324470 0.442   0.659
-year         0.00045 0.000545 0.825   0.409
-
-Detection (logit-scale):
- Estimate SE     z P(&gt;|z|)
-    0.453  3 0.151    0.88
-
-AIC: 1736.386 
-Number of sites: 153</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)
-
-Abundance (log-scale):
-             Estimate       SE     z P(&gt;|z|)
-(Intercept)  3.254115 2.590368  1.26   0.209
-year        -0.000484 0.000702 -0.69   0.490
-
-Detection (logit-scale):
- Estimate    SE   z  P(&gt;|z|)
-      1.4 0.153 9.2 3.65e-20
-
-AIC: 7812.913 
-Number of sites: 410</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate    SE   z P(&gt;|z|)
-(Intercept)  1.33275 0.493 2.7  0.0069
-year         0.00106   NaN NaN     NaN
-
-Detection (logit-scale):
- Estimate   SE     z P(&gt;|z|)
-    0.227 1.11 0.204   0.838
-
-AIC: 29857.36 
-Number of sites: 295</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)
-
-Abundance (log-scale):
-            Estimate       SE       z   P(&gt;|z|)
-(Intercept)  0.01457 2.94e-01  0.0495  9.60e-01
-year         0.00147 4.39e-05 33.5187 2.58e-246
-
-Detection (logit-scale):
- Estimate    SE      z P(&gt;|z|)
-  0.00722 0.493 0.0146   0.988
-
-AIC: 17635.04 
-Number of sites: 719</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)
-
-Abundance (log-scale):
-            Estimate       SE     z   P(&gt;|z|)
-(Intercept) 0.524129 1.45e-01  3.61  3.01e-04
-year        0.000882 3.85e-05 22.89 6.09e-116
-
-Detection (logit-scale):
- Estimate     SE    z P(&gt;|z|)
-    0.262 0.0688 3.81 0.00014
-
-AIC: 9818.411 
-Number of sites: 550</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)
-
-Abundance (log-scale):
-            Estimate       SE      z  P(&gt;|z|)
-(Intercept) 0.189301 8.32e-01  0.228 8.20e-01
-year        0.000857 6.24e-05 13.742 5.67e-43
-
-Detection (logit-scale):
- Estimate   SE      z P(&gt;|z|)
-   0.0945 1.67 0.0565   0.955
-
-AIC: 484.573 
-Number of sites: 70</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate  SE    z P(&gt;|z|)
-(Intercept)  0.19137 0.1 1.91  0.0563
-year         0.00209 NaN  NaN     NaN
-
-Detection (logit-scale):
- Estimate    SE     z P(&gt;|z|)
-   0.0956 0.211 0.454    0.65
-
-AIC: 169347.5 
-Number of sites: 959</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate       SE     z P(&gt;|z|)
-(Intercept) 3.367682      NaN   NaN     NaN
-year        0.000718 1.45e-08 49510       0
-
-Detection (logit-scale):
- Estimate    SE    z P(&gt;|z|)
-     -1.7 0.014 -122       0
-
-AIC: 28705.42 
-Number of sites: 576</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)
-
-Abundance (log-scale):
-            Estimate       SE     z P(&gt;|z|)
-(Intercept)  4.84211 9.75e-02  49.7       0
-year        -0.00143 2.65e-05 -54.1       0
-
-Detection (logit-scale):
- Estimate    SE    z  P(&gt;|z|)
-     2.42 0.139 17.4 1.64e-67
-
-AIC: 6674.868 
-Number of sites: 197</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)
-
-Abundance (log-scale):
-             Estimate       SE     z P(&gt;|z|)
-(Intercept)  3.950351 4.10e-02  96.3       0
-year        -0.000755 1.16e-05 -64.9       0</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Detection (logit-scale):
- Estimate  SE   z P(&gt;|z|)
-     7.22 NaN NaN     NaN
-
-AIC: 20492.02 
-Number of sites: 426</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate  SE   z P(&gt;|z|)
-(Intercept) 1.711464 NaN NaN     NaN
-year        0.000748 NaN NaN     NaN</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Detection (logit-scale):
- Estimate  SE   z P(&gt;|z|)
-     3.59 NaN NaN     NaN
-
-AIC: 37414.08 
-Number of sites: 516</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)
-
-Abundance (log-scale):
-             Estimate       SE      z P(&gt;|z|)
-(Intercept)  2.51e+00 1.534053  1.635   0.102
-year        -6.04e-05 0.000416 -0.145   0.884
-
-Detection (logit-scale):
- Estimate    SE    z P(&gt;|z|)
-      1.1 0.481 2.29  0.0223
-
-AIC: 1611.723 
-Number of sites: 61</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate  SE   z P(&gt;|z|)
-(Intercept) 1.550756 NaN NaN     NaN
-year        0.000596 NaN NaN     NaN
-
-Detection (logit-scale):
- Estimate   SE    z P(&gt;|z|)
-     3.67 1.87 1.96    0.05
-
-AIC: 3221.081 
-Number of sites: 82</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)
-
-Abundance (log-scale):
-            Estimate       SE      z  P(&gt;|z|)
-(Intercept) 0.025782 0.461893 0.0558 9.55e-01
-year        0.000918 0.000094 9.7714 1.49e-22
-
-Detection (logit-scale):
- Estimate    SE      z P(&gt;|z|)
-   0.0129 0.611 0.0211   0.983
-
-AIC: 1908.602 
-Number of sites: 267</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)
-
-Abundance (log-scale):
-             Estimate     SE      z P(&gt;|z|)
-(Intercept)  2.132513 8.8566  0.241   0.810
-year        -0.000288 0.0024 -0.120   0.905
-
-Detection (logit-scale):
- Estimate    SE    z P(&gt;|z|)
-    0.598 0.242 2.47  0.0134
-
-AIC: 610.6926 
-Number of sites: 70</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate    SE      z P(&gt;|z|)
-(Intercept) -0.01092 0.101 -0.108   0.914
-year         0.00186   NaN    NaN     NaN
-
-Detection (logit-scale):
- Estimate    SE    z P(&gt;|z|)
-    0.776 0.322 2.41   0.016
-
-AIC: 80054.36 
-Number of sites: 847</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate  SE   z P(&gt;|z|)
-(Intercept) 4.658654 NaN NaN     NaN
-year        0.000559 NaN NaN     NaN
-
-Detection (logit-scale):
- Estimate     SE    z P(&gt;|z|)
-    -2.88 0.0182 -158       0
-
-AIC: 14208.26 
-Number of sites: 210</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate     SE   z  P(&gt;|z|)
-(Intercept)   0.4545 0.0668 6.8 1.04e-11
-year          0.0014    NaN NaN      NaN
-
-Detection (logit-scale):
- Estimate   SE    z P(&gt;|z|)
-     3.67 2.73 1.34    0.18
-
-AIC: 23909.03 
-Number of sites: 264</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate    SE    z   P(&gt;|z|)
-(Intercept) 2.661073 0.121 22.1 8.77e-108
-year        0.000859   NaN  NaN       NaN
-
-Detection (logit-scale):
- Estimate    SE     z  P(&gt;|z|)
-    -1.41 0.157 -8.94 3.76e-19
-
-AIC: 18796.6 
-Number of sites: 279</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate       SE     z P(&gt;|z|)
-(Intercept)  5.73278      NaN   NaN     NaN
-year        -0.00173 2.79e-05 -62.2       0</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Detection (logit-scale):
- Estimate  SE   z P(&gt;|z|)
-     2.86 NaN NaN     NaN
-
-AIC: 6954.051 
-Number of sites: 285</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate     SE    z   P(&gt;|z|)
-(Intercept)  1.57986 0.0706 22.4 4.65e-111
-year         0.00134    NaN  NaN       NaN
-
-Detection (logit-scale):
- Estimate    SE     z P(&gt;|z|)
-    0.101 0.149 0.681   0.496
-
-AIC: 115493.6 
-Number of sites: 933</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)
-
-Abundance (log-scale):
-            Estimate       SE     z  P(&gt;|z|)
-(Intercept) 2.291638 1.15e-01  19.9 3.62e-88
-year        0.000707 6.65e-06 106.3 0.00e+00
-
-Detection (logit-scale):
- Estimate    SE     z  P(&gt;|z|)
-     -1.2 0.145 -8.27 1.29e-16
-
-AIC: 14795.08 
-Number of sites: 403</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate       SE     z P(&gt;|z|)
-(Intercept) -5.63622      NaN   NaN     NaN
-year         0.00536 9.38e-08 57136       0
-
-Detection (logit-scale):
- Estimate     SE     z P(&gt;|z|)
-     -2.8 0.0617 -45.4       0
-
-AIC: 4782.298 
-Number of sites: 50</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate       SE    z   P(&gt;|z|)
-(Intercept) 9.02e-07      NaN  NaN       NaN
-year        1.30e-03 3.52e-05 36.9 1.63e-298</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Detection (logit-scale):
- Estimate  SE   z P(&gt;|z|)
- 4.51e-07 NaN NaN     NaN
-
-AIC: 5098.002 
-Number of sites: 194</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate    SE     z P(&gt;|z|)
-(Intercept)  0.13137 0.363 0.361   0.718
-year         0.00169   NaN   NaN     NaN
-
-Detection (logit-scale):
- Estimate    SE      z P(&gt;|z|)
-   0.0655 0.808 0.0811   0.935
-
-AIC: 7349.957 
-Number of sites: 93</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)
-
-Abundance (log-scale):
-            Estimate       SE     z   P(&gt;|z|)
-(Intercept) 0.988227 5.09e-01  1.94  5.22e-02
-year        0.000739 2.81e-05 26.31 1.33e-152
-
-Detection (logit-scale):
- Estimate   SE     z P(&gt;|z|)
-    0.379 1.23 0.309   0.757
-
-AIC: 10124.71 
-Number of sites: 547</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate  SE   z P(&gt;|z|)
-(Intercept)  0.88642 NaN NaN     NaN
-year         0.00116 NaN NaN     NaN</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Detection (logit-scale):
- Estimate  SE   z P(&gt;|z|)
-    0.443 NaN NaN     NaN
-
-AIC: 15986.64 
-Number of sites: 371</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate       SE    z P(&gt;|z|)
-(Intercept) 7.30e-07      NaN  NaN     NaN
-year        1.28e-03 2.18e-05 58.7       0</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Detection (logit-scale):
- Estimate  SE   z P(&gt;|z|)
- 3.65e-07 NaN NaN     NaN
-
-AIC: 2371.594 
-Number of sites: 149</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate   SE      z P(&gt;|z|)
-(Intercept)  0.02243 1.13 0.0198   0.984
-year         0.00167  NaN    NaN     NaN
-
-Detection (logit-scale):
- Estimate  SE       z P(&gt;|z|)
-   0.0111 2.3 0.00483   0.996
-
-AIC: 25191.64 
-Number of sites: 592</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate       SE    z P(&gt;|z|)
-(Intercept)  0.16001      NaN  NaN     NaN
-year         0.00137 1.79e-05 76.5       0</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Detection (logit-scale):
- Estimate  SE   z P(&gt;|z|)
-     0.08 NaN NaN     NaN
-
-AIC: 2670.294 
-Number of sites: 115</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)
-
-Abundance (log-scale):
-            Estimate      SE      z  P(&gt;|z|)
-(Intercept) 2.072515 9.73421  0.213 8.31e-01
-year        0.000421 0.00002 21.080 1.22e-98
-
-Detection (logit-scale):
- Estimate   SE       z P(&gt;|z|)
-    -1.01 13.2 -0.0761   0.939
-
-AIC: 3710.761 
-Number of sites: 128</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-             Estimate     SE   z P(&gt;|z|)
-(Intercept)  5.302700 0.0289 184       0
-year        -0.000927    NaN NaN     NaN
-
-Detection (logit-scale):
- Estimate     SE    z  P(&gt;|z|)
-    0.722 0.0952 7.59 3.32e-14
-
-AIC: 51799.36 
-Number of sites: 814</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate       SE   z P(&gt;|z|)
-(Intercept)  0.19418      NaN NaN     NaN
-year         0.00141 1.74e-05  81       0</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Detection (logit-scale):
- Estimate  SE   z P(&gt;|z|)
-   0.0966 NaN NaN     NaN
-
-AIC: 16238.76 
-Number of sites: 547</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate    SE   z  P(&gt;|z|)
-(Intercept) 3.464446 0.266  13 6.71e-39
-year        0.000244   NaN NaN      NaN
-
-Detection (logit-scale):
- Estimate   SE    z P(&gt;|z|)
-   -0.516 0.43 -1.2    0.23
-
-AIC: 39033.64 
-Number of sites: 731</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)
-
-Abundance (log-scale):
-            Estimate       SE     z P(&gt;|z|)
-(Intercept) 4.025638 9.86e-02  40.8       0
-year        0.000878 3.02e-06 291.2       0
-
-Detection (logit-scale):
- Estimate    SE     z   P(&gt;|z|)
-    -2.85 0.104 -27.4 1.66e-165
-
-AIC: 40476.07 
-Number of sites: 617</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)
-
-Abundance (log-scale):
-            Estimate      SE      z P(&gt;|z|)
-(Intercept)  0.11360 0.36084  0.315   0.753
-year         0.00138 0.00002 68.917   0.000
-
-Detection (logit-scale):
- Estimate    SE      z P(&gt;|z|)
-   0.0564 0.724 0.0779   0.938
-
-AIC: 2924.618 
-Number of sites: 131</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate  SE   z P(&gt;|z|)
-(Intercept)  0.67517 NaN NaN     NaN
-year         0.00175 NaN NaN     NaN</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Detection (logit-scale):
- Estimate  SE   z P(&gt;|z|)
-    0.338 NaN NaN     NaN
-
-AIC: 138009.4 
-Number of sites: 866</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)
-
-Abundance (log-scale):
-            Estimate       SE     z P(&gt;|z|)
-(Intercept)  8.27796 1.29e-01  64.1       0
-year        -0.00297 3.42e-05 -86.9       0
-
-Detection (logit-scale):
- Estimate  SE    z P(&gt;|z|)
-     3.96 1.6 2.47  0.0134
-
-AIC: 8427.744 
-Number of sites: 266</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)
-
-Abundance (log-scale):
-            Estimate       SE      z P(&gt;|z|)
-(Intercept)  0.28144 4.27e-01   0.66   0.509
-year         0.00174 1.71e-05 101.42   0.000
-
-Detection (logit-scale):
- Estimate   SE     z P(&gt;|z|)
-    0.137 1.21 0.113    0.91
-
-AIC: 2137.567 
-Number of sites: 15</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)
-
-Abundance (log-scale):
-            Estimate       SE      z P(&gt;|z|)
-(Intercept)  0.61113 2.63e+00  0.233   0.816
-year         0.00103 2.21e-05 46.719   0.000
-
-Detection (logit-scale):
- Estimate   SE      z P(&gt;|z|)
-    0.306 6.19 0.0494   0.961
-
-AIC: 1653.956 
-Number of sites: 99</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate       SE    z  P(&gt;|z|)
-(Intercept) 8.11e-07      NaN  NaN      NaN
-year        1.06e-03 5.23e-05 20.2 3.64e-91</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Detection (logit-scale):
- Estimate  SE   z P(&gt;|z|)
- 4.05e-07 NaN NaN     NaN
-
-AIC: 3536.387 
-Number of sites: 305</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)
-
-Abundance (log-scale):
-            Estimate       SE     z P(&gt;|z|)
-(Intercept)  5.57581 1.45e-01  38.6       0
-year        -0.00159 3.91e-05 -40.7       0
-
-Detection (logit-scale):
- Estimate    SE    z  P(&gt;|z|)
-     2.64 0.222 11.9 1.33e-32
-
-AIC: 6197.149 
-Number of sites: 197</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate       SE    z   P(&gt;|z|)
-(Intercept) 8.27e-07      NaN  NaN       NaN
-year        1.21e-03 3.14e-05 38.4 6.92e-323</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Detection (logit-scale):
- Estimate  SE   z P(&gt;|z|)
- 4.14e-07 NaN NaN     NaN
-
-AIC: 3875.767 
-Number of sites: 209</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate    SE        z P(&gt;|z|)
-(Intercept) 1.27e-06 0.698 1.83e-06       1
-year        2.26e-03   NaN      NaN     NaN
-
-Detection (logit-scale):
- Estimate  SE        z P(&gt;|z|)
- 6.37e-07 1.4 4.56e-07       1
-
-AIC: 14065.92 
-Number of sites: 88</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate  SE   z P(&gt;|z|)
-(Intercept)  1.66538 NaN NaN     NaN
-year         0.00107 NaN NaN     NaN</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Detection (logit-scale):
- Estimate  SE   z P(&gt;|z|)
-    -0.15 NaN NaN     NaN
-
-AIC: 21448.37 
-Number of sites: 254</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate  SE   z P(&gt;|z|)
-(Intercept)  2.24769 NaN NaN     NaN
-year         0.00115 NaN NaN     NaN</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Detection (logit-scale):
- Estimate  SE   z P(&gt;|z|)
-   -0.879 NaN NaN     NaN
-
-AIC: 93368.36 
-Number of sites: 807</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate  SE   z P(&gt;|z|)
-(Intercept) 1.75e+00 NaN NaN     NaN
-year        5.14e-05 NaN NaN     NaN
-
-Detection (logit-scale):
- Estimate   SE    z  P(&gt;|z|)
-    0.876 0.23 3.81 0.000141
-
-AIC: 1766.445 
-Number of sites: 89</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate    SE     z P(&gt;|z|)
-(Intercept)  0.05718 0.248 0.231   0.817
-year         0.00184   NaN   NaN     NaN
-
-Detection (logit-scale):
- Estimate    SE      z P(&gt;|z|)
-   0.0286 0.503 0.0568   0.955
-
-AIC: 43705.11 
-Number of sites: 472</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate       SE    z P(&gt;|z|)
-(Intercept) 1.214726      NaN  NaN     NaN
-year        0.000845 1.44e-05 58.7       0</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Detection (logit-scale):
- Estimate  SE   z P(&gt;|z|)
-    0.239 NaN NaN     NaN
-
-AIC: 18208.62 
-Number of sites: 445</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate  SE   z P(&gt;|z|)
-(Intercept) 1.02e-06 NaN NaN     NaN
-year        1.80e-03 NaN NaN     NaN</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Detection (logit-scale):
- Estimate  SE   z P(&gt;|z|)
- 5.12e-07 NaN NaN     NaN
-
-AIC: 28646.58 
-Number of sites: 524</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-pcount(formula = ~1 ~ year, data = umf)</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Abundance (log-scale):
-            Estimate   SE     z P(&gt;|z|)
-(Intercept)  0.72711 1.55 0.468    0.64
-year         0.00161  NaN   NaN     NaN
-
-Detection (logit-scale):
- Estimate   SE      z P(&gt;|z|)
-    0.347 3.75 0.0926   0.926
-
-AIC: 25256.79 
-Number of sites: 172</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[[1]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[2]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[3]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-3.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[4]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-4.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[5]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-5.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[6]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-6.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[7]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-7.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[8]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-8.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[9]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-9.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[10]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-10.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[11]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-11.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[12]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-12.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[13]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-13.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[14]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-14.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[15]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-15.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[16]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-16.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[17]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-17.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[18]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-18.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[19]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-19.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[20]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-20.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[21]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-21.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[22]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-22.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[23]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-23.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[24]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-24.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[25]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-25.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[26]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-26.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[27]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-27.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[28]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-28.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[29]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-29.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[30]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-30.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[31]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-31.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[32]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-32.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[33]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-33.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[34]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-34.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[35]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-35.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[36]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-36.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[37]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-37.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[38]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-38.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[39]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-39.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[40]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-40.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[41]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-41.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[42]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-42.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[43]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-43.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[44]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-44.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[45]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-45.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[46]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-46.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[47]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-47.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[48]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-48.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[49]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-49.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[50]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-50.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[51]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-51.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[52]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-52.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-[[53]]</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="000.odonataOccupancy20_files/figure-html/pcount-53.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
