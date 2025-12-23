@@ -1,7 +1,7 @@
 ---
 title: "occupancyOdonata20k"
 author: "Gianandrea La Porta"
-date: "2025-12-20"
+date: "2025-12-23"
 format: 
   html:
     theme: cosmo
@@ -507,7 +507,8 @@ listaSpecie <- dfo |>
   pull(species)
 
 
-nomeSp <- listaSpecie[8]
+nomeSp <- listaSpecie[45]
+
 
 occProb <- function(nomeSp) {
   #print(nomeSp)
@@ -517,16 +518,27 @@ occProb <- function(nomeSp) {
     filter(species==nomeSp) |> 
     select(date_year,species,cellcode20) |> as_tibble() |> 
     count(cellcode20,species,date_year, name = 'n_occurrences')
-  
+
+  df_occu |> 
+    group_by(date_year) |> 
+    summarise(totOccurrences=sum(n_occurrences))
+
   # lista delle celle idonee
   df_suit <- df_occu |> distinct(cellcode20) |> pull()
-
+  
   #filtro sulle celle totali
   df_occuTot <- df_occuTot |> filter(cellcode20 %in% df_suit)
+  # df_occuTot |> 
+  #   group_by(date_year) |> 
+  #   summarise(totOccurrences=sum(n_occurrences)) |>
+  #   print(n=30) 
+
   effort_vec <- df_occuTot |> 
-    group_by(date_year) |> 
-    distinct(cellcode20) |> 
-    count(date_year) |> pull(n)
+    group_by(date_year) |>
+    summarise(n=sum(n_occurrences)) |> 
+    # distinct(cellcode20) |> 
+    # count(date_year) |> 
+    pull(n)
 
   # stima presenza/pseudo-assenza e celle non visitate
   occupafun <- function(df.occu) {
@@ -548,7 +560,10 @@ occProb <- function(nomeSp) {
   # }
 
   df_sp <- occupafun(df_occu)
-  
+  df_sp |> 
+    group_by(date_year) |> 
+    count(presence)
+
   detection_matrix <- df_sp |>
     pivot_wider(names_from = date_year, 
                 values_from = presence, 
@@ -556,7 +571,7 @@ occProb <- function(nomeSp) {
     arrange(cellcode20)
   # Conversione in oggetto umf
   y <- as.matrix(detection_matrix[,-1])
-  effort_matrix <- matrix(rep(effort_vec, 
+  effort_matrix <- matrix(rep(1/effort_vec, 
                               each = nrow(y)), 
                           nrow = nrow(y))
   rownames(y) <- detection_matrix$cellcode20
@@ -584,11 +599,12 @@ occProb <- function(nomeSp) {
   occ_values <- fm2@projected.mean["occupied",,drop=F]
   rownames(occ_values) <- nomeSp
   colnames(occ_values) <- years_vec
-  return(data = occ_values)
+
+return(data = occ_values)
 }
 
 # listaSpecie
-# occProb("Trithemis annulata")
+# occProb("Sympetrum depressiusculum")
 results <- map(listaSpecie, occProb)
 all_species_df <- map_df(results, ~ as.data.frame(.x) %>% rownames_to_column("species"))
 ```
@@ -626,8 +642,10 @@ occu.plot <- function(nomeSp){
   
   plot1
 }
+listaSpecie
 
-#nomeSp='Trithemis annulata'
-#occu.plot(nomeSp)
+nomeSp='Aeshna isoceles'
+occu.plot(nomeSp)
+
 map(listaSpecie,occu.plot)
 ```

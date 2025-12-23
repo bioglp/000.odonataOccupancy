@@ -19,6 +19,9 @@ Serie dati raccolti in Piemonte e Lombardia nel periodo compreso tra il 1999 e i
 -   [output20k](https://bioglp.github.io/000.odonataOccupancy/000.odonataOccupancy20.html)
 
 ## Daily log
+- 2025-12-23
+    - 
+
 - 2025-12-16
     - gambero sembra difficile inserirlo come covariata (matrice tutto 1)
     - utilizzo di TRIM con peso per compensare il differente sforzo di campionamento nel tempo
