@@ -1,0 +1,61 @@
+M <- 250 # Number of sites
+J <- 2 # num secondary sample periods
+T <- 5 # num primary sample periods
+psi <- rep(NA, T) # Occupancy probability
+muZ <- z <- array(dim = c(M, T)) # Expected and realized occurrence
+y <- array(NA, dim = c(M, J, T)) # Detection histories
+set.seed(13973) 
+psi[1] <- 0.6 # Initial occupancy probability
+p <- c(0.3,0.1,0.5,0.5,0.1) 
+phi <- runif(n=T-1, min=0.5, max=0.7) # Survival probability (1-epsilon)
+
+gamma <- runif(n=T-1, min=0.1, max=0.2) # Colonization probability 
+# Generate latent states of occurrence 
+# First year 
+z[,1] <- rbinom(M, 1, psi[1])
+# Initial occupancy state
+# Later years 
+for(i in 1:M){
+# Loop over sites
+for(k in 2:T){
+  # Loop over years
+  muZ[k] <- z[i, k-1]*phi[k-1] + (1-z[i, k-1])*gamma[k-1] 
+  z[i,k] <- rbinom(1, 1, muZ[k])
+} }
+# Generate detection/non-detection data 
+for(i in 1:M){ for(k in 1:T){ prob <- z[i,k] * p[k] 
+for(j in 1:J){ y[i,j,k] <- rbinom(1, 1, prob)
+} } }
+# Compute annual population occupancy 
+for (k in 2:T){ psi[k] <- psi[k-1]*phi[k-1] + (1-psi[k-1])*gamma[k-1] }
+
+yy <- matrix(y, M, J*T)
+
+year <- matrix(c(' 01' ,' 02' ,' 03' ,' 04' ,' 05'), nrow(yy), T, byrow=TRUE)
+
+head(yy)
+
+simUMF <- unmarkedMultFrame( y = yy, 
+                           yearlySiteCovs = list(year = year), 
+                           numPrimary=5)
+summary(simUMF)
+
+# Model with all constant parameters 
+m0 <- colext(psiformula= ~1, 
+           gammaformula = ~ 1, 
+           epsilonformula = ~ 1, 
+           pformula = ~ 1, 
+           data = simUMF, method="BFGS")
+summary(m0)
+
+backTransform(m0, type="psi")
+
+# derived parameters
+backTransform(m0, type="ext")
+
+m0@projected.mean
+
+# confidence intervals for projected occupancy
+
+m0 <- nonparboot(m0, B = 10)
+cbind(projected=projected(m0)[2,], SE=m0@projected.mean.bsse[2,])

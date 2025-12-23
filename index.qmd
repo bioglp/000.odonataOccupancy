@@ -20,7 +20,9 @@ Serie dati raccolti in Piemonte e Lombardia nel periodo compreso tra il 1999 e i
 
 ## Daily log
 - 2025-12-16
-    - rielaborazione con occu()
+    - gambero sembra difficile inserirlo come covariata (matrice tutto 1)
+    - utilizzo di TRIM con peso per compensare il differente sforzo di campionamento nel tempo
+    - rivedere glm per avere il calcolo delle occorrenze per anno per cella
 
 - 2025-12-02
     - PCount
