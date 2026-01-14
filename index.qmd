@@ -19,68 +19,72 @@ Serie dati raccolti in Piemonte e Lombardia nel periodo compreso tra il 1999 e i
 -   [output20k](https://bioglp.github.io/000.odonataOccupancy/000.odonataOccupancy20.html)
 
 ## Daily log
-- 2025-12-23
-    - 
 
-- 2025-12-16
-    - gambero sembra difficile inserirlo come covariata (matrice tutto 1)
-    - utilizzo di TRIM con peso per compensare il differente sforzo di campionamento nel tempo
-    - rivedere glm per avere il calcolo delle occorrenze per anno per cella
-
-- 2025-12-02
-    - PCount
-    - modelli di occupancy con *occu* from unmarked
-
-- 2025-11-12
-    - inclusi solo i dati di aree continentale stretta
-    - 
-
-- 2025-11-06
-    - corretti i nomi delle specie
-    - raggruppati valori di occupancy per gruppi di 5 anni
-    - elaborazioni anche su griglia 20k
-    - test con year_start=2005
-- 2025-11-05
-    - modelli di occupancy con *occu* from unmarked
+-   2026-01-13
+    - produzione di un codice con modello Bayesiano
+        - vantaggi
+        - ulteriori sviluppi per capire se ci sono casi di declino
+            `decline_prob <- mean(samples[, 'beta_year_psi'] < 0)`
     
-- 2025-10-28
-    - [x] richiesta estrazione dati a Lardelli
-    - elaborazioni
-        * run su dataset Ornitho.it (eventualmente integrato da iNat)
-        * maglia 10 km e 20 km
-        * date per gruppi di 5 anni
-        * modelli di Occupancy
-            - leggere vignette
-            - **covariate da considerare**
-                * guild per famiglia
-                * temperature index (Termaat, 2019)
-                * Habitat specificity (Golfieri et al., 2016)
-                * IAS (P. clarkii)
+-   2026-01-05
+    -   lettura paper su ponderazione dei dati
+        -   (Lauret et al. 2021) utile per i metodi su single-visit
+            -   da osservare l'importanza di includere delle covariate nel modello
+            -   nel nostro caso si potrebbe usare DTM e Corine (le celle sono cmq molto grandi)
+        -   (Kelleher et al. 2025) review su dynamic occupancy models (DOMs)
+            -   il paper sottolinea l'importanza di utilizzare delle covariate
+-   2025-12-23
+    -   riflessione sul fattore ponderale da usare e come calcolarlo
+-   2025-12-16
+    -   gambero sembra difficile inserirlo come covariata (matrice tutto 1)
+    -   utilizzo di TRIM con peso per compensare il differente sforzo di campionamento nel tempo
+    -   rivedere glm per avere il calcolo delle occorrenze per anno per cella
+-   2025-12-02
+    -   PCount
+    -   modelli di occupancy con *occu* from unmarked
+-   2025-11-12
+    -   inclusi solo i dati di aree continentale stretta
+    -   
+-   2025-11-06
+    -   corretti i nomi delle specie
+    -   raggruppati valori di occupancy per gruppi di 5 anni
+    -   elaborazioni anche su griglia 20k
+    -   test con year_start=2005
+-   2025-11-05
+    -   modelli di occupancy con *occu* from unmarked
+-   2025-10-28
+    -   [x] richiesta estrazione dati a Lardelli
+    -   elaborazioni
+        -   run su dataset Ornitho.it (eventualmente integrato da iNat)
+        -   maglia 10 km e 20 km
+        -   date per gruppi di 5 anni
+        -   modelli di Occupancy
+            -   leggere vignette
+            -   **covariate da considerare**
+                -   guild per famiglia
+                -   temperature index (Termaat, 2019)
+                -   Habitat specificity (Golfieri et al., 2016)
+                -   IAS (P. clarkii)
+-   2025-02-04
+    -   [x] calcolare una curva di accumulazione per l'area nel tempo
+-   2025-01-08 Occupancy models in R
+    -   [colext](https://cran.r-project.org/web/packages/unmarked/vignettes/colext.html)
+    -   [camtrapr5](https://cran.r-project.org/web/packages/camtrapR/vignettes/camtrapr5.html)
+-   2025-01-03
+    -   [x] preparazione dataset per avvio elaborazioni con rtrim riferimento temporale 1999-2024
+    -   [x] possibile raggruppamento per classi di 5 anni
+-   2024-12-11
+    -   [ ] paper su diffusione nel tempo delle specie aliene nell’area
+    -   [ ] Rappresentazione presenza P.clarkii
+    -   [x] estrazione dati per lombardia e piemonte area continentale (celle \> 50%)
+-   2024-11-27
+    -   Presentazione di rtrim package: discussion paper
+    -   Preparazione dataset per le elaborazioni: site, year, count, …, weight
 
-- 2025-02-04
-    - [x] calcolare una curva di accumulazione per l'area nel tempo
-    
-* 2025-01-08 Occupancy models in R
-    - [colext](https://cran.r-project.org/web/packages/unmarked/vignettes/colext.html)
-    - [camtrapr5](https://cran.r-project.org/web/packages/camtrapR/vignettes/camtrapr5.html)
-
-* 2025-01-03
-    - [x] preparazione dataset per avvio elaborazioni con rtrim riferimento temporale 1999-2024
-    - [x] possibile raggruppamento per classi di 5 anni
-    
-* 2024-12-11
-    - [ ] paper su diffusione nel tempo delle specie aliene nell’area
-    - [ ] Rappresentazione presenza P.clarkii
-    - [x] estrazione dati per lombardia e piemonte area continentale (celle > 50%)
-
-* 2024-11-27
-    - Presentazione di rtrim package: discussion paper
-    - Preparazione dataset per le elaborazioni: site, year, count, …, weight
-    
 ## Notes
 
-A binomial generalized linear model, or logistic regression, is the customary statistical model for occurrence. In this model, we treat occurrence 𝑦 as a binomial random variable with trial size 1 and success probability 𝑝, or, equivalently, a Bernoulli trial with 𝑝. “Success” means occurrence, so 𝑝 is the occurrence probability. It can be modeled as a linear or other function of covariates via a suitable link function, e.g., the logit link.
-From: [colext](https://cran.r-project.org/web/packages/unmarked/vignettes/colext.html)
+A binomial generalized linear model, or logistic regression, is the customary statistical model for occurrence. In this model, we treat occurrence 𝑦 as a binomial random variable with trial size 1 and success probability 𝑝, or, equivalently, a Bernoulli trial with 𝑝. “Success” means occurrence, so 𝑝 is the occurrence probability. It can be modeled as a linear or other function of covariates via a suitable link function, e.g., the logit link. From: [colext](https://cran.r-project.org/web/packages/unmarked/vignettes/colext.html)
 
 ### MM
+
 Dall'elaborazione sono state rimosse le specie con una occorrenza inferiore a 50.

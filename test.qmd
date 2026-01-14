@@ -1,0 +1,18 @@
+---
+title: "Untitled"
+format: html
+---
+
+
+```{dot}
+graph G{
+    layout=neato
+    specie -- B;
+    B -- C;
+    specie -- C
+    B -- D;
+    specie -- D
+    D -- C
+}
+
+```

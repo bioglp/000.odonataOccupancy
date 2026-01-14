@@ -1,7 +1,7 @@
 ---
 title: "occupancyOdonata20k"
 author: "Gianandrea La Porta"
-date: "2025-12-23"
+date: "2025-01-13"
 format: 
   html:
     theme: cosmo
@@ -10,6 +10,7 @@ format:
     toc: true
 execute:
   warning: false
+  echo: fenced
 editor: source
 editor_options: 
   chunk_output_type: console
@@ -24,8 +25,7 @@ dir.create('input', showWarnings = FALSE)
 dir.create('R-script', showWarnings = FALSE)
 library(rtrim)
 library(pacman)
-p_load(tidyverse,gt,skimr,ggpubr,
-       rstatix,openxlsx,scales, patchwork)
+p_load(tidyverse, gt, skimr, ggpubr, rstatix, openxlsx, scales, patchwork)
 theme_set(theme_bw(base_size = 14))
 ```
 
@@ -36,34 +36,51 @@ year_start <- 2005
 
 dfo <- read.xlsx('input/datasetSegnalazioni_R20251106.xlsx')
 dfo <- dfo |> rename_with(tolower)
-dfo <- dfo |> filter(date_year>=year_start, 
-                      date_year<2026, 
-                      code=='Continental',
-                      !is.na(cellcode20))
-dfo <- dfo |> 
-  rename(species=latin_taxon)
-glimpse(dfo)#View(dfo)
+dfo <- dfo |>
+  filter(
+    date_year >= year_start,
+    date_year < 2026,
+    code == 'Continental',
+    !is.na(cellcode20)
+  )
+dfo <- dfo |>
+  rename(species = latin_taxon)
+glimpse(dfo) #View(dfo)
 ```
 
 ```{r nomiSpecie}
 # rinominare specie
 # dfo |> distinct(species) |> arrange() |> pull()
-dfo$species[dfo$species=='Sympetrum fonscolombei'] <- 'Sympetrum fonscolombii'
-dfo$species[dfo$species=='Calopteryx splendens caprai'] <- 'Calopteryx splendens'
-dfo$species[dfo$species=='Calopteryx splendens splendens'] <- 'Calopteryx splendens'
-dfo$species[dfo$species=='Calopteryx virgo padana'] <- 'Calopteryx virgo'
-dfo$species[dfo$species=='Calopteryx virgo meridionalis'] <- 'Calopteryx virgo'
-dfo$species[dfo$species=='Calopteryx virgo virgo'] <- 'Calopteryx virgo'
-dfo$species[dfo$species=='Gomphus flavipes'] <- 'Stylurus flavipes'
-dfo$species[dfo$species=='Lestes virens vestalis'] <- 'Lestes virens'
-dfo$species[dfo$species=='Onychogomphus forcipatus unguiculatus'] <- 'Onychogomphus forcipatus'
-dfo$species[dfo$species=='Onychogomphus forcipatus forcipatus'] <- 'Onychogomphus forcipatus'
-dfo$species[dfo$species=='Oxygastra curtisi'] <- 'Oxygastra curtisii'
-dfo$species[dfo$species=='Cordulegaster bidentata bidentata'] <- 'Cordulegaster bidentata'
-dfo$species[dfo$species=='Orthetrum coerulescens coerulescens'] <- 'Orthetrum coerulescens'
+dfo$species[dfo$species == 'Sympetrum fonscolombei'] <- 'Sympetrum fonscolombii'
+dfo$species[
+  dfo$species == 'Calopteryx splendens caprai'
+] <- 'Calopteryx splendens'
+dfo$species[
+  dfo$species == 'Calopteryx splendens splendens'
+] <- 'Calopteryx splendens'
+dfo$species[dfo$species == 'Calopteryx virgo padana'] <- 'Calopteryx virgo'
+dfo$species[
+  dfo$species == 'Calopteryx virgo meridionalis'
+] <- 'Calopteryx virgo'
+dfo$species[dfo$species == 'Calopteryx virgo virgo'] <- 'Calopteryx virgo'
+dfo$species[dfo$species == 'Gomphus flavipes'] <- 'Stylurus flavipes'
+dfo$species[dfo$species == 'Lestes virens vestalis'] <- 'Lestes virens'
+dfo$species[
+  dfo$species == 'Onychogomphus forcipatus unguiculatus'
+] <- 'Onychogomphus forcipatus'
+dfo$species[
+  dfo$species == 'Onychogomphus forcipatus forcipatus'
+] <- 'Onychogomphus forcipatus'
+dfo$species[dfo$species == 'Oxygastra curtisi'] <- 'Oxygastra curtisii'
+dfo$species[
+  dfo$species == 'Cordulegaster bidentata bidentata'
+] <- 'Cordulegaster bidentata'
+dfo$species[
+  dfo$species == 'Orthetrum coerulescens coerulescens'
+] <- 'Orthetrum coerulescens'
 
 dfo <- dfo |> filter(!str_detect(species, "sp\\.$|sp\\s|sp$"))
-dfo <- dfo |> filter(species!='No odonata')
+dfo <- dfo |> filter(species != 'No odonata')
 ```
 
 La serie dati va dal `r min(dfo$date_year)` al `r max(dfo$date_year)`.
@@ -74,21 +91,24 @@ Percentuale di celle visitate ogni anno con almeno 1 segnalazione sul totale com
 
 ```{r 'sampling_effort'}
 # totale celle
-ncell <- dfo |> 
-  distinct(cellcode20) |> 
-  count() |> pull()
+ncell <- dfo |>
+  distinct(cellcode20) |>
+  count() |>
+  pull()
+
+
 
 # celle monitorate x anno
-cells <- dfo |> 
-  group_by(date_year) |> 
+cells <- dfo |>
+  group_by(date_year) |>
   distinct(cellcode20)
 
-cells |> 
-  count(date_year) |> 
-  mutate(p=n/ncell) |> 
-  ggplot(aes(date_year,p))+
-  geom_area(fill='forestgreen', alpha=0.6)+
-  labs(y='no. cells\n', x='')+
+cells |>
+  count(date_year) |>
+  mutate(p = n / ncell) |>
+  ggplot(aes(date_year, p)) +
+  geom_area(fill = 'forestgreen', alpha = 0.6) +
+  labs(y = 'no. cells\n', x = '') +
   scale_y_continuous(labels = percent_format())
 ```
 
@@ -98,10 +118,8 @@ cells |>
 mat <- dfo |>
   group_by(cellcode20, species) |>
   summarise(count = n(), .groups = "drop") |>
-  pivot_wider(names_from = species, 
-              values_from = count, 
-              values_fill = 0) |>
-  mutate(cellcode20=paste0('cellcode',cellcode20)) |> 
+  pivot_wider(names_from = species, values_from = count, values_fill = 0) |>
+  mutate(cellcode20 = paste0('cellcode', cellcode20)) |>
   column_to_rownames('cellcode20')
 mat_num <- as.matrix(mat)
 
@@ -110,9 +128,7 @@ library(vegan)
 accum <- specaccum(mat_num, method = "random")
 
 # Plot
-plot(accum, 
-     xlab = "Sites", 
-     ylab = "No. of species")
+plot(accum, xlab = "Sites", ylab = "No. of species")
 ```
 
 ### Accumulation by year (groups of 5 years)
@@ -122,17 +138,21 @@ plot(accum,
 make_matrix <- function(df_year) {
   df_year |>
     group_by(cellcode20, species) |>
-    summarise(count = n(), .groups = "drop") |>  # conteggio osservazioni
-    pivot_wider(names_from = species, 
-                values_from = count, values_fill = 0) |>
+    summarise(count = n(), .groups = "drop") |> # conteggio osservazioni
+    pivot_wider(names_from = species, values_from = count, values_fill = 0) |>
     column_to_rownames("cellcode20") |>
     as.matrix()
 }
 
 # Lista degli anni
 dfo <- dfo |>
-  mutate(year_group = paste0(floor(date_year / 5) * 5, 
-                             "-", floor(date_year / 5) * 5 + 4))
+  mutate(
+    year_group = paste0(
+      floor(date_year / 5) * 5,
+      "-",
+      floor(date_year / 5) * 5 + 4
+    )
+  )
 dfo$year_group[dfo$year_group == "2020-2024"] <- "2020-2025"
 dfo$year_group[dfo$year_group == "2025-2029"] <- "2020-2025"
 
@@ -142,10 +162,8 @@ make_matrix <- function(df_group) {
   df_group |>
     group_by(cellcode20, species) |>
     summarise(count = n(), .groups = "drop") |>
-    pivot_wider(names_from = species, 
-                values_from = count, 
-                values_fill = 0) |>
-    mutate(cellcode20=paste0('cellcode',cellcode20)) |> 
+    pivot_wider(names_from = species, values_from = count, values_fill = 0) |>
+    mutate(cellcode20 = paste0('cellcode', cellcode20)) |>
     column_to_rownames("cellcode20") |>
     as.matrix()
 }
@@ -160,30 +178,34 @@ for (grp in groups) {
 }
 
 # Preparare dati per ggplot
-plot_data <- bind_rows(lapply(names(accum_list), 
-                              function(grp) {
-                                data.frame(
-                                  sites = accum_list[[grp]]$sites,
-                                  species = accum_list[[grp]]$richness,
-                                  se = accum_list[[grp]]$sd,
-                                  year_group = grp
-                                )
-                              }), .id = NULL)
+plot_data <- bind_rows(
+  lapply(names(accum_list), function(grp) {
+    data.frame(
+      sites = accum_list[[grp]]$sites,
+      species = accum_list[[grp]]$richness,
+      se = accum_list[[grp]]$sd,
+      year_group = grp
+    )
+  }),
+  .id = NULL
+)
 
 # Plot con ggplot
-ggplot(plot_data, aes(x = sites, 
-                      y = species, 
-                      color = factor(year_group))) +
+ggplot(plot_data, aes(x = sites, y = species, color = factor(year_group))) +
   geom_line(linewidth = 1) +
-  geom_ribbon(aes(ymin = species - se, 
-                  ymax = species + se, 
-                  fill = factor(year_group)),
-              alpha = 0.2, color = NA) +
-  labs(x = "\nNo. cells", y = "No. of species\n",
-       color = "Years", fill = "Years",
-       title = "")+
-  theme(legend.position = 'top', 
-        legend.direction = 'horizontal')
+  geom_ribbon(
+    aes(ymin = species - se, ymax = species + se, fill = factor(year_group)),
+    alpha = 0.2,
+    color = NA
+  ) +
+  labs(
+    x = "\nNo. cells",
+    y = "No. of species\n",
+    color = "Years",
+    fill = "Years",
+    title = ""
+  ) +
+  theme(legend.position = 'top', legend.direction = 'horizontal')
 ```
 
 Extrapolated Species Richness in a Species Pool
@@ -196,9 +218,9 @@ plot(pool)
 
 ```{r norare}
 # eliminazione dall'analisi delle specie con meno di 50 occorrenze totali.
-listaSpecie <- dfo |> 
-  count(species) |> 
-  filter(n>50) |> 
+listaSpecie <- dfo |>
+  count(species) |>
+  filter(n > 50) |>
   pull(species)
 
 dfo <- dfo |>
@@ -218,16 +240,14 @@ species_sites <- dfo |>
 sp <- listaSpecie[1]
 
 odoTrend <- function(sp) {
-  species_sites |> 
-    filter(species==sp) |> 
+  species_sites |>
+    filter(species == sp) |>
     ggplot(aes(x = date_year, y = n_sites)) +
-    geom_smooth(method='lm',col='forestgreen')+
-    stat_regline_equation()+
-    geom_line(size = 1) +
+    geom_smooth(method = 'lm', col = 'forestgreen') +
+    stat_regline_equation() +
+    geom_line(linewidth = 1) +
     geom_point() +
-    labs(x = "", 
-         y = "No. sites",
-         title = sp)+
+    labs(x = "", y = "No. sites", title = sp) +
     theme(plot.title = element_text(face = 'italic'))
   #filename <- paste0("trend/lm_", gsub(" ", "_", sp), ".pdf")
   #ggsave(filename, width = 7, height = 5)
@@ -243,12 +263,12 @@ species_trends <- species_sites |>
 
 # Seleziona solo le righe relative a date_year e con pendenza negativa
 negative_trends <- species_trends |>
-  filter(term == "date_year", estimate < 0) |>
+  filter(term == "date_year", 
+  estimate < 0) |>
   select(species, estimate, std.error, statistic, p.value)
 
 negative_trends
 ```
-
 ## Sampling effort
 
 Per tenere conto anche del differente sforzo di copertura delle celle del territorio nel corso degli anni, il modello lm è stato modificato in glm con una correzione derivante dall'utilizzo di un offset pari al log(n_sites_censiti) per ciascun anno. Il modello normalizza i conteggi per lo sforzo, così che la pendenza stimata per `date_year` rifletta la vera tendenza di espansione o contrazione e non solo la variazione derivante dal differente sforzo di campionamento.
@@ -260,9 +280,9 @@ species_sites <- dfo |>
   summarise(n_sites = n_distinct(cellcode20), .groups = "drop")
 
 # n_sites monitorati per anno totali
-effort_df <- dfo |> 
+effort_df <- dfo |>
   group_by(date_year) |>
-  distinct(cellcode20) |> 
+  distinct(cellcode20) |>
   count(date_year, name = 'n_sites_censiti')
 
 species_sites <- species_sites |>
@@ -271,19 +291,25 @@ species_sites <- species_sites |>
 results <- species_sites |>
   group_by(species) |>
   do({
-    mod <- glm(n_sites ~ date_year, family = quasipoisson,
-               offset = log(n_sites_censiti), data = .)
-    tidy(mod)  # restituisce coefficienti, SE, p-value
+    mod <- glm(
+      n_sites ~ date_year,
+      family = quasipoisson,
+      offset = log(n_sites_censiti),
+      data = .
+    )
+    tidy(mod) # restituisce coefficienti, SE, p-value
   }) |>
   ungroup()
 
 species_trends <- results |>
   filter(term == "date_year") |>
-  mutate(trend = case_when(
-    estimate > 0 ~ "increase",
-    estimate < 0 ~ "decrease",
-    TRUE ~ "stable"
-  ))
+  mutate(
+    trend = case_when(
+      estimate > 0 ~ "increase",
+      estimate < 0 ~ "decrease",
+      TRUE ~ "stable"
+    )
+  )
 ```
 
 Le specie che mostrano trend negativi significativi nei loro range sono:
@@ -291,7 +317,7 @@ Le specie che mostrano trend negativi significativi nei loro range sono:
 ```{r negative-trends}
 # Seleziona solo le righe con pendenza negativa
 negative_trends <- species_trends |>
-  filter(term == "date_year", estimate < 0, p.value<0.05) |>
+  filter(term == "date_year", estimate < 0, p.value < 0.05) |>
   select(species, estimate, std.error, statistic, p.value, trend)
 
 print(negative_trends, n = 20)
@@ -302,23 +328,25 @@ Grafico dei trend significativi
 ```{r trends, fig.height=12, fig.width=7}
 # Grafico a barre con specie ordinate per stima significativa
 # Le altre specie sono stabili
-species_trends |> 
-  filter(!is.na(estimate), p.value<0.05) |> 
-  ggplot(aes(x = reorder(species, estimate), 
-             y = estimate, fill = trend)) +
+species_trends |>
+  filter(!is.na(estimate), p.value < 0.05) |>
+  ggplot(aes(x = reorder(species, estimate), y = estimate, fill = trend)) +
   geom_col() +
-  coord_flip() +  # barre orizzontali per leggibilità
+  coord_flip() + # barre orizzontali per leggibilità
   labs(
     x = "",
     y = "glm slope",
     fill = "Trend",
     title = ""
   ) +
-  scale_fill_manual(values = c("increase" = "forestgreen",
-                               "stable" = "gray70",
-                               "decrease" = "red"))+
-  theme(legend.position = 'top',
-        axis.text.y = element_text(face='italic'))
+  scale_fill_manual(
+    values = c(
+      "increase" = "forestgreen",
+      "stable" = "gray70",
+      "decrease" = "red"
+    )
+  ) +
+  theme(legend.position = 'top', axis.text.y = element_text(face = 'italic'))
 ```
 
 Modello glm(family=quasipoisson) per la stima del numero di celle attese per ciascun anno e analisi degli scarti. I punti rappresentano i valori osservati.
@@ -326,52 +354,64 @@ Modello glm(family=quasipoisson) per la stima del numero di celle attese per cia
 ```{r glm_pred, fig.width=12, fig.height=5}
 # Generare valori predetti per ciascuna specie
 # single species
-sp_tmp <- species_sites |> 
-  dplyr::filter(species==listaSpecie[2])
-# mod1 <- glm.nb(n_sites ~ date_year + offset(log(n_sites_censiti)), 
-#                      data = sp_tmp)  
-mod2 <- glm(n_sites ~ date_year, family = poisson,
-            offset = log(n_sites_censiti), data = sp_tmp)
-mod3 <- glm(n_sites ~ date_year, family = quasipoisson,
-            offset = log(n_sites_censiti), data = sp_tmp)
+sp_tmp <- species_sites |>
+  dplyr::filter(species == listaSpecie[2])
+# mod1 <- glm.nb(n_sites ~ date_year + offset(log(n_sites_censiti)),
+#                      data = sp_tmp)
+mod2 <- glm(
+  n_sites ~ date_year,
+  family = poisson,
+  offset = log(n_sites_censiti),
+  data = sp_tmp
+)
+mod3 <- glm(
+  n_sites ~ date_year,
+  family = quasipoisson,
+  offset = log(n_sites_censiti),
+  data = sp_tmp
+)
 #mod2;mod3
 
 predicted_sites <- species_sites |>
-  drop_na(n_sites, n_sites_censiti, date_year) |> 
+  drop_na(n_sites, n_sites_censiti, date_year) |>
   group_by(species) |>
   do({
-    mod <- glm(n_sites ~ date_year, family = quasipoisson,
-               offset = log(n_sites_censiti), data = .)
-    data.frame(date_year = .$date_year,
-               pred = predict(mod, type = "response"))
+    mod <- glm(
+      n_sites ~ date_year,
+      family = quasipoisson,
+      offset = log(n_sites_censiti),
+      data = .
+    )
+    data.frame(date_year = .$date_year, pred = predict(mod, type = "response"))
   }) |>
   ungroup()
 
-predicted_sites <- predicted_sites|> 
+predicted_sites <- predicted_sites |>
   left_join(species_sites)
 
 # Grafici aree-linee per specie
 odoTrendE <- function(sp) {
-  P <- predicted_sites |> 
+  P <- predicted_sites |>
     filter(species == sp) |>
-    mutate(res=n_sites-pred) |> 
+    mutate(res = n_sites - pred) |>
     ggplot(aes(x = date_year, y = pred)) +
-    geom_area(fill = 'forestgreen', alpha = 0.7)+
+    geom_area(fill = 'forestgreen', alpha = 0.7) +
     geom_segment(
       aes(x = date_year, xend = date_year, y = n_sites, yend = pred),
-      linetype = "dashed", col='forestgreen'
+      linetype = "dashed",
+      col = 'forestgreen'
     ) +
     geom_point(aes(y = n_sites), size = 2) +
     labs(x = "", y = "No. sites", title = sp) +
     theme(plot.title = element_text(face = 'italic'))
-  R <- predicted_sites |> 
+  R <- predicted_sites |>
     filter(species == sp) |>
-    mutate(res=n_sites-pred) |> 
+    mutate(res = n_sites - pred) |>
     ggplot(aes(x = date_year, y = res)) +
-    geom_smooth(col='black')+
-    geom_line(col = 'forestgreen', size=1.5)+
-    labs(x = "", title = "Residuals", y='') +
-    theme(plot.title = element_text(face = 'italic')) 
+    geom_smooth(col = 'black') +
+    geom_line(col = 'forestgreen', size = 1.5) +
+    labs(x = "", title = "Residuals", y = '') +
+    theme(plot.title = element_text(face = 'italic'))
   P + R
   # filename <- paste0("trend/glm_", gsub(" ", "_", sp), ".pdf")
   # ggsave(filename, width = 13, height = 5)
@@ -390,75 +430,83 @@ Il dato utilizzato per la modellistica è il numero di occorrenze per cella per 
 nomeSp <- listaSpecie[5]
 
 odoTrim <- function(nomeSp) {
-  
-# celle per specie (by year)
-  df_occu <- dfo |> 
-    filter(species == nomeSp) |> 
-    group_by(date_year, cellcode20, species) |> 
+  # celle per specie (by year)
+  df_occu <- dfo |>
+    filter(species == nomeSp) |>
+    group_by(date_year, cellcode20, species) |>
     count(name = 'count') #occorrenze
-  
+
   # celle visitate area di studio (by year)
-  df_occuTot <- dfo |> 
-    as_tibble() |> 
-    count(date_year,cellcode20, name = 'n_segnalazioni') |> 
-    mutate(effort=1/(n_segnalazioni))
+  df_occuTot <- dfo |>
+    as_tibble() |>
+    count(date_year, cellcode20, name = 'n_segnalazioni') |>
+    mutate(effort = 1 / (n_segnalazioni))
 
   # stima presenza/pseudo-assenza e celle non visitate
-  df_occu <- df_occu |> 
-    #select(-nTot_occurrences) |> 
-    left_join(df_occuTot, by = c("cellcode20", "date_year"), ) |>
-    mutate(count=replace_na(count, 0))
-    # complete(cellcode20,date_year,
-    #            fill = list(presence=NA))
+  df_occu <- df_occu |>
+    #select(-nTot_occurrences) |>
+    left_join(df_occuTot, by = c("cellcode20", "date_year")) |>
+    mutate(count = replace_na(count, 0))
+  # complete(cellcode20,date_year,
+  #            fill = list(presence=NA))
 
   # Check: at least 3 years
   if (n_distinct(df_occu$date_year) < 3) {
-    message("Not enough years for ", 
-            nomeSp, " — skipped")
+    message("Not enough years for ", nomeSp, " — skipped")
     return(NULL)
   }
   # Check: at least 3 sites
   if (n_distinct(df_occu$cellcode20) < 3) {
-    message("Not enough sites for ", 
-              nomeSp, " — skipped")
+    message("Not enough sites for ", nomeSp, " — skipped")
     return(NULL)
   }
   # Try to fit TRIM
-  res <- tryCatch({
-    
-    # effort / bilanciate rispetto al numero di celle visitate per l'anno
-  m1 <- trim(count ~ cellcode20 + date_year, 
-               data = df_occu, stepwise= T,
-               model = 2, changepoints="all",
-               serialcor=F, overdisp=TRUE)
+  res <- tryCatch(
+    {
+      # effort / bilanciate rispetto al numero di celle visitate per l'anno
+      m1 <- trim(
+        count ~ cellcode20 + date_year,
+        data = df_occu,
+        stepwise = T,
+        model = 2,
+        changepoints = "all",
+        serialcor = F,
+        overdisp = TRUE
+      )
 
-  m2 <- trim(count ~ cellcode20 + date_year, 
-               data = df_occu, stepwise= T,
-               weights = 'effort',
-               model = 2, changepoints="all",
-               serialcor=F, overdisp=TRUE)
-  summary(m1)
-  out <- overall(m2)
+      m2 <- trim(
+        count ~ cellcode20 + date_year,
+        data = df_occu,
+        stepwise = T,
+        weights = 'effort',
+        model = 2,
+        changepoints = "all",
+        serialcor = F,
+        overdisp = TRUE
+      )
+      summary(m1)
+      out <- overall(m2)
 
+      out$slope$species = nomeSp
+      # Filename
+      filename <- paste0("trim/trim_", gsub(" ", "_", nomeSp), ".pdf")
+      # Save PDF
+      #pdf(filename, width = 7, height = 5)
+      layout(matrix(c(1, 2), 1, 2))
+      plot(overall(m1), main = paste0(overall(m1)$slope$meaning))
+      plot(overall(m2), main = paste0("w: ", overall(m2)$slope$meaning))
+      title(nomeSp, line = -1, outer = TRUE)
 
-  out$slope$species=nomeSp
-    # Filename
-  filename <- paste0("trim/trim_", gsub(" ", "_", nomeSp), ".pdf")
-    # Save PDF
-    #pdf(filename, width = 7, height = 5)
-  layout(matrix(c(1, 2), 1, 2))
-  plot(overall(m1), main = paste0(overall(m1)$slope$meaning))
-  plot(overall(m2), main = paste0("w: ", overall(m2)$slope$meaning))
-  title(nomeSp, line = -1, outer = TRUE)
-
-    #plot(overall(m3), main = paste0(nomeSp,' - ',overall(m3)$slope$meaning))
-    #dev.off()
-    #message("Completed: ", nomeSp)
-    return(out)
-  }, error = function(e) {
-    message("Error for ", nomeSp, ": ", e$message)
-    return(NULL)
-  })
+      #plot(overall(m3), main = paste0(nomeSp,' - ',overall(m3)$slope$meaning))
+      #dev.off()
+      #message("Completed: ", nomeSp)
+      return(out)
+    },
+    error = function(e) {
+      message("Error for ", nomeSp, ": ", e$message)
+      return(NULL)
+    }
+  )
   return(res)
 }
 
@@ -471,7 +519,7 @@ results <- lapply(listaSpecie, odoTrim)
 ```{r trim_tab}
 # Tabella con tutte le specie e relativi plot
 results_df <- do.call(bind_rows, lapply(results, function(x) x$slope))
-gt(results_df)|>
+gt(results_df) |> 
   fmt_number(
     columns = where(is.numeric),
     decimals = 2
@@ -486,24 +534,27 @@ gt(results_df)|>
 Il modello utilizzato è del tipo Dynamic occupancy models [colext](https://cran.r-project.org/web/packages/unmarked/vignettes/colext.html). La formula impiegata è `colext(~1, ~1, ~1, ~effort, umf2` e considera una p in funzione dell'effort e una ψ (probabilità di occupazione), gamma (probabilità di colonizzazione - in blu), epsilon (probabilità di estinzione in rosso) costanti.
 
 ```{r unmarked}
+#| eval: false
+#| include: false
 library(unmarked)
 # years <- year_start:2025
 #nomeSp <- 'Aeshna affinis'
 
-# effort_vec <- effort_df |> 
+# effort_vec <- effort_df |>
 #   pull(n_sites_censiti)
 
 # celle visitate area di studio
-df_occuTot <- dfo |> 
-  select(date_year,cellcode20) |> as_tibble() |> 
-  count(cellcode20,date_year, name = 'n_occurrences')
+df_occuTot <- dfo |>
+  select(date_year, cellcode20) |>
+  as_tibble() |>
+  count(cellcode20, date_year, name = 'n_occurrences')
 
 # filtro delle specie con meno di 50 records totali
 # cfr. (Rapacciuolo et al. 2017)
 
-listaSpecie <- dfo |> 
-  count(species) |> 
-  filter(n>=50) |> 
+listaSpecie <- dfo |>
+  count(species) |>
+  filter(n >= 50) |>
   pull(species)
 
 
@@ -512,47 +563,47 @@ nomeSp <- listaSpecie[45]
 
 occProb <- function(nomeSp) {
   #print(nomeSp)
-  
-  # celle delle specie
-  df_occu <- dfo |> 
-    filter(species==nomeSp) |> 
-    select(date_year,species,cellcode20) |> as_tibble() |> 
-    count(cellcode20,species,date_year, name = 'n_occurrences')
 
-  df_occu |> 
-    group_by(date_year) |> 
-    summarise(totOccurrences=sum(n_occurrences))
+  # celle delle specie
+  df_occu <- dfo |>
+    filter(species == nomeSp) |>
+    select(date_year, species, cellcode20) |>
+    as_tibble() |>
+    count(cellcode20, species, date_year, name = 'n_occurrences')
+
+  df_occu |>
+    group_by(date_year) |>
+    summarise(totOccurrences = sum(n_occurrences))
 
   # lista delle celle idonee
   df_suit <- df_occu |> distinct(cellcode20) |> pull()
-  
-  #filtro sulle celle totali
-  df_occuTot <- df_occuTot |> filter(cellcode20 %in% df_suit)
-  # df_occuTot |> 
-  #   group_by(date_year) |> 
-  #   summarise(totOccurrences=sum(n_occurrences)) |>
-  #   print(n=30) 
 
-  effort_vec <- df_occuTot |> 
+  #filtro sulle celle totali
+  df_occuTot_sp <- df_occuTot |> filter(cellcode20 %in% df_suit)
+  # df_occuTot |>
+  #   group_by(date_year) |>
+  #   summarise(totOccurrences=sum(n_occurrences)) |>
+  #   print(n=30)
+
+  effort_vec <- df_occuTot_sp |>
     group_by(date_year) |>
-    summarise(n=sum(n_occurrences)) |> 
-    # distinct(cellcode20) |> 
-    # count(date_year) |> 
+    summarise(n = sum(n_occurrences)) |>
+    # distinct(cellcode20) |>
+    # count(date_year) |>
     pull(n)
 
   # stima presenza/pseudo-assenza e celle non visitate
   occupafun <- function(df.occu) {
-    df_occ <- df_occuTot |> 
-      select(-n_occurrences) |> 
-      left_join(df_occu, by = c("cellcode20", "date_year"), ) |>
+    df_occ <- df_occuTot_sp |>
+      select(-n_occurrences) |>
+      left_join(df_occu, by = c("cellcode20", "date_year")) |>
       mutate(presence = replace_na(n_occurrences, 0)) |>
-      mutate(presence = ifelse(presence>0,1,0)) |>
-      select(cellcode20, date_year, presence) |> 
-      complete(cellcode20,date_year,
-               fill = list(presence=NA))
+      mutate(presence = ifelse(presence > 0, 1, 0)) |>
+      select(cellcode20, date_year, presence) |>
+      complete(cellcode20, date_year, fill = list(presence = NA))
     return(df_occ)
   }
-  
+
   # if (nomeSp == "Trithemis annulata") {
   #   df_sp <- df_sp |> filter(date_year > 2016)
   #   effort_vec <- effort_vec[13:21] # ATTENZIONE SE CAMBIA year_start
@@ -560,92 +611,298 @@ occProb <- function(nomeSp) {
   # }
 
   df_sp <- occupafun(df_occu)
-  df_sp |> 
-    group_by(date_year) |> 
+  df_sp |>
+    group_by(date_year) |>
     count(presence)
 
   detection_matrix <- df_sp |>
-    pivot_wider(names_from = date_year, 
-                values_from = presence, 
-                values_fill = NA) |>
+    pivot_wider(
+      names_from = date_year,
+      values_from = presence,
+      values_fill = NA
+    ) |>
     arrange(cellcode20)
   # Conversione in oggetto umf
-  y <- as.matrix(detection_matrix[,-1])
-  effort_matrix <- matrix(rep(1/effort_vec, 
-                              each = nrow(y)), 
-                          nrow = nrow(y))
+  y <- as.matrix(detection_matrix[, -1])
+  effort_matrix <- matrix(
+    rep(
+      scale(effort_vec), # con l'aumento delle segnalazioni la prob di rilevamento aumenta
+      each = nrow(y)
+    ),
+    nrow = nrow(y)
+  )
   rownames(y) <- detection_matrix$cellcode20
   umf <- unmarkedFrameOccu(y = y, obsCovs = list(effort = effort_matrix))
-  fm <- occu(~effort ~1, data = umf)
-  
+  fm <- occu(~effort ~ 1, data = umf)
+
   years_vec <- factor(min(df_occuTot$date_year):max(df_occuTot$date_year))
-  years <- matrix(years_vec, 
-                  nrow(effort_matrix), 
-                  length(years_vec), 
-                  byrow=TRUE)
-  umf2 <- unmarkedMultFrame(y=y,
-                            yearlySiteCovs=list(year=years),
-                            obsCovs=list(effort = effort_matrix),
-                            numPrimary=length(years_vec))
+  years_mat <- matrix(
+    years_vec,
+    nrow(effort_matrix),
+    length(years_vec),
+    byrow = TRUE
+  )
+  umf2 <- unmarkedMultFrame(
+    y = y,
+    yearlySiteCovs = list(year = years_mat),
+    obsCovs = list(effort = effort_matrix),
+    numPrimary = length(years_vec)
+  )
   # summary(umf2)
 
   fm2 <- colext(~1, ~year, ~year, ~effort, umf2, method = 'BFGS')
   #summary(fm2)
-  
+
   # backTransform(fm2, type="psi")
   # confint(backTransform(fm2, type="psi"))
   # backTransform(fm2, type="ext")
 
-  occ_values <- fm2@projected.mean["occupied",,drop=F]
+  occ_values <- fm2@projected.mean["occupied", , drop = F]
   rownames(occ_values) <- nomeSp
   colnames(occ_values) <- years_vec
 
-return(data = occ_values)
+  return(data = occ_values)
 }
 
 # listaSpecie
 # occProb("Sympetrum depressiusculum")
 results <- map(listaSpecie, occProb)
-all_species_df <- map_df(results, ~ as.data.frame(.x) %>% rownames_to_column("species"))
+all_species_df <- map_df(
+  results,
+  ~ as.data.frame(.x) %>% rownames_to_column("species")
+)
+
+all_species_df <- all_species_df |>
+  pivot_longer(cols = -species, names_to = 'year', values_to = 'psi') |>
+  mutate(year = as.numeric(year))
 ```
 
-```{r groupYears}
-all_species_df <- all_species_df |> 
-  pivot_longer(cols=-species,
-  names_to = 'year', values_to = 'psi') |> 
-  mutate(year=as.numeric(year))
-```
-
-```{r unmarked_plot, fig.width=12, fig.height=5}
-occu.plot <- function(nomeSp){
-  plot1 <- all_species_df |> 
-    filter(species==nomeSp) |>
+```{r unmarked_plot, fig.height=5, fig.width=12}
+#| eval: false
+#| include: false
+occu.plot <- function(nomeSp) {
+  plot1 <- all_species_df |>
+    filter(species == nomeSp) |>
     ggplot(aes(year, psi)) +
-    geom_smooth(col='black')+
+    geom_smooth(col = 'black') +
     geom_point(size = 4) +
-    # geom_line(aes(y=gamma), col='steelblue', 
-    #           size = 1, 
+    # geom_line(aes(y=gamma), col='steelblue',
+    #           size = 1,
     #           alpha=0.4) +
-    # geom_line(aes(y=epsilon), col='red', 
-    #           size = 1, 
+    #           geom_line(aes(y=epsilon), col='red',
+    #           size = 1,
     #           alpha=0.4) +
     labs(
-      title=nomeSp,
+      title = nomeSp,
       x = ""
     ) +
-    ylim(0,1)+
-    scale_color_viridis_d(direction = -1)+
-    theme_minimal(base_size = 13)+
-    theme(legend.position='none',
-          plot.title = element_text(face = 'italic'),
-          axis.text.x = element_text(angle = 45, vjust = 1, hjust=1))
-  
+    ylim(0, 1) +
+    scale_color_viridis_d(direction = -1) +
+    theme_minimal(base_size = 13) +
+    theme(
+      legend.position = 'none',
+      plot.title = element_text(face = 'italic'),
+      axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)
+    )
+
   plot1
 }
 listaSpecie
 
-nomeSp='Aeshna isoceles'
+nomeSp = 'Aeshna isoceles'
 occu.plot(nomeSp)
 
-map(listaSpecie,occu.plot)
+map(listaSpecie, occu.plot)
 ```
+
+
+## Modello Bayesiano
+
+```{r}
+library(nimble)
+# https://www.youtube.com/watch?v=kmMZpG4jK4k&t=192s
+library(coda)
+
+# nomeSp='Trithemis annulata'
+
+odoBayes <- function(nomeSp) {
+  # celle delle specie
+df_occu <- dfo |>
+  filter(species == nomeSp) |>
+  select(date_year, species, cellcode20) |>
+  as_tibble() |>
+  count(cellcode20, species, date_year, name = 'n_occurrences')
+
+y_matrix <- df_occu %>% 
+  complete(cellcode20, date_year, 
+           fill = list(n_occurrences = 0)) %>% 
+  mutate(detection = ifelse(n_occurrences > 0, 1, 0)) %>%
+  pivot_wider(id_cols = cellcode20, 
+              names_from = date_year, 
+              values_from = detection,
+              values_fill = 0) %>%
+  column_to_rownames("cellcode20") %>%
+  as.matrix()
+
+effort_matrix <- dfo %>%
+  filter(cellcode20 %in% df_occu$cellcode20) %>% 
+  select(date_year, cellcode20) |>
+  count(date_year, cellcode20, name = 'tot_occurrences') %>% 
+  pivot_wider(id_cols = cellcode20,
+              names_from = date_year,
+              values_from = tot_occurrences,
+              values_fill = 0) %>%
+  column_to_rownames("cellcode20") %>%
+  as.matrix()
+
+# Standardizza lo sforzo
+effort_std <- scale(effort_matrix)
+
+# Crea covariata temporale (anno)
+years <- as.numeric(colnames(y_matrix))
+year_std <- scale(years)
+
+# Standardizza anno
+year_std <- scale(as.numeric(colnames(y_matrix)))[,1]
+
+# Dati per NIMBLE
+nim_data <- list(
+  y = y_matrix,
+  effort = effort_std,
+  year = year_std
+)
+
+# Costanti
+nim_constants <- list(
+  n_sites = nrow(y_matrix),
+  n_years = ncol(y_matrix)
+)
+
+# 2. DEFINISCI IL MODELLO
+code <- nimbleCode({
+  
+  # PRIORS
+  # Occupancy
+  alpha_psi ~ dnorm(0, sd = 2)        # intercetta occupancy
+  beta_year_psi ~ dnorm(0, sd = 2)    # effetto trend su occupancy
+  
+  # Detection
+  alpha_p ~ dnorm(0, sd = 2)          # intercetta detection
+  beta_effort ~ dnorm(0, sd = 2)      # effetto sforzo
+  beta_year_p ~ dnorm(0, sd = 2)      # effetto anno su detection
+  
+  # LIKELIHOOD
+  for(i in 1:n_sites) {
+    
+    # Occupancy per ogni sito (può variare nel tempo)
+    for(t in 1:n_years) {
+      logit(psi[i,t]) <- alpha_psi + beta_year_psi * year[t]
+      z[i,t] ~ dbern(psi[i,t])  # true occupancy state
+    }
+    
+    # Detection dato occupancy
+    for(t in 1:n_years) {
+      logit(p[i,t]) <- alpha_p + beta_effort * effort[i,t] + 
+        beta_year_p * year[t]
+      mu[i,t] <- z[i,t] * p[i,t]
+      y[i,t] ~ dbern(mu[i,t])
+    }
+  }
+  
+  # QUANTITÀ DERIVATE
+  # Occupancy media per anno
+  for(t in 1:n_years) {
+    mean_psi[t] <- ilogit(alpha_psi + beta_year_psi * year[t])
+  }
+  
+  # Detection probability media
+  mean_p <- ilogit(alpha_p)
+  
+})
+
+# 3. INIZIALIZZA
+# Valori iniziali per z (true state)
+z_init <- ifelse(y_matrix == 1, 1, 0)
+# z=1 dove c'è detection
+for(i in 1:nrow(y_matrix)) {
+  for(j in 1:ncol(y_matrix)) {
+    if(is.na(z_init[i,j])) z_init[i,j] <- 0
+  }
+}
+
+inits <- list(
+  alpha_psi = 0,
+  beta_year_psi = 0,
+  alpha_p = 0,
+  beta_effort = 0,
+  beta_year_p = 0,
+  z = z_init
+)
+
+# 4. COMPILA ED ESEGUI
+model <- nimbleModel(
+  code = code,
+  constants = nim_constants,
+  data = nim_data,
+  inits = inits
+)
+
+# Compila
+c_model <- compileNimble(model,
+                         showCompilerOutput = T)
+
+# Configura MCMC
+mcmc_conf <- configureMCMC(model, monitors = c(
+  'alpha_psi', 'beta_year_psi', 
+  'alpha_p', 'beta_effort', 'beta_year_p',
+  'mean_psi', 'mean_p'
+))
+
+mcmc <- buildMCMC(mcmc_conf)
+c_mcmc <- compileNimble(mcmc, project = model)
+
+# 5. RUN MCMC
+set.seed(123)
+
+samples <- runMCMC(
+  c_mcmc,
+  niter = 10000,
+  nburnin = 2000,
+  nchains = 3,
+  thin = 5,
+  samplesAsCodaMCMC = TRUE
+)
+
+# 6. DIAGNOSTICA
+library(coda)
+effectiveSize(samples)
+plot(samples[, c('alpha_psi', 'beta_year_psi')])
+main_params <- c('alpha_psi', 'beta_year_psi')
+autocorr.plot(samples[[1]][, main_params])
+
+# 7. RISULTATI
+summary(samples)
+
+# Estrai occupancy per anno
+mean_psi_samples <- as.matrix(samples)[, grep("mean_psi", colnames(as.matrix(samples)))]
+mean_psi_est <- colMeans(mean_psi_samples)
+mean_psi_ci <- apply(mean_psi_samples, 2, quantile, probs = c(0.025, 0.975))
+
+# 8. PLOT TREND
+anni <- as.numeric(colnames(y_matrix))
+
+plot(anni, mean_psi_est, type = "l", lwd = 2,
+     ylim = c(0, 1), xlab = "Anno", ylab = "Occupancy",
+     main = paste("Trend",nomeSp,"(Bayesiano)"))
+lines(anni, mean_psi_ci[1,], lty = 2)
+lines(anni, mean_psi_ci[2,], lty = 2)
+polygon(c(anni, rev(anni)), 
+        c(mean_psi_ci[1,], rev(mean_psi_ci[2,])),
+        col = rgb(0,0,1,0.2), border = NA)
+  
+}
+#odoBayes('Anax parthenope')
+
+map(listaSpecie, odoBayes)
+```
+

@@ -139,7 +139,9 @@ make_matrix <- function(df_group) {
   df_group %>%
     group_by(cellcode, species) %>%
     summarise(count = n(), .groups = "drop") %>%
-    pivot_wider(names_from = species, values_from = count, values_fill = 0) %>%
+    pivot_wider(names_from = species, 
+                values_from = count, 
+                values_fill = 0) %>%
     column_to_rownames("cellcode") %>%
     as.matrix()
 }
@@ -186,7 +188,6 @@ pool <- poolaccum(mat_num)
 #summary(pool, display = "chao")
 plot(pool)
 ```
-
 
 ```{r norare}
 # eliminazione dall'analisi delle specie con meno di 50 occorrenze totali.

@@ -31,20 +31,24 @@ for (k in 2:T){ psi[k] <- psi[k-1]*phi[k-1] + (1-psi[k-1])*gamma[k-1] }
 
 yy <- matrix(y, M, J*T)
 
-year <- matrix(c(' 01' ,' 02' ,' 03' ,' 04' ,' 05'), nrow(yy), T, byrow=TRUE)
+years_mat <- matrix(c(' 01' ,' 02' ,' 03' ,' 04' ,' 05'), nrow(yy), T, byrow=TRUE)
 
 head(yy)
+effort_matrix <- matrix(c(10,10,20,20,30,30,400,400,300,300), nrow(yy), T*2, byrow=TRUE)
 
+library(unmarked)
 simUMF <- unmarkedMultFrame( y = yy, 
-                           yearlySiteCovs = list(year = year), 
+                           yearlySiteCovs = list(year = years_mat),
+                           obsCovs = list(effort=effort_matrix),
                            numPrimary=5)
+
 summary(simUMF)
 
 # Model with all constant parameters 
 m0 <- colext(psiformula= ~1, 
            gammaformula = ~ 1, 
            epsilonformula = ~ 1, 
-           pformula = ~ 1, 
+           pformula = ~ effort, 
            data = simUMF, method="BFGS")
 summary(m0)
 
@@ -56,6 +60,28 @@ backTransform(m0, type="ext")
 m0@projected.mean
 
 # confidence intervals for projected occupancy
-
 m0 <- nonparboot(m0, B = 10)
 cbind(projected=projected(m0)[2,], SE=m0@projected.mean.bsse[2,])
+
+
+# Nuovi dati per la predizione
+newdata <- data.frame(
+  effort = seq(min(simUMF@obsCovs$effort),
+               max(simUMF@obsCovs$effort),
+               length.out = 100)
+)
+
+# Predizione
+pred <- predict(m0, type = "det", newdata = newdata)
+
+# Grafico
+plot(newdata$effort, pred$Predicted,
+     type = "l", lwd = 2,
+     ylim = c(0,1),
+     xlab = "Effort",
+     ylab = "Probabilità di rilevamento (p)",
+     main = "p stimata in funzione di effort")
+
+# (opzionale) intervalli di confidenza
+lines(newdata$effort, pred$lower, lty = 2)
+lines(newdata$effort, pred$upper, lty = 2)
