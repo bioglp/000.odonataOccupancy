@@ -19,6 +19,10 @@ Serie dati raccolti in Piemonte e Lombardia nel periodo compreso tra il 1999 e i
 -   [output20k](https://bioglp.github.io/000.odonataOccupancy/000.odonataOccupancy20.html)
 
 ## Daily log
+- 2026-01-17
+    - riscrittura modello di occupancy e dei relativi plot
+        - utilizzata la funzione complete su cells e date_year
+    - creato un nuovo file con il codice 20k modificato su 10k
 
 -   2026-01-13
     - produzione di un codice con modello Bayesiano
