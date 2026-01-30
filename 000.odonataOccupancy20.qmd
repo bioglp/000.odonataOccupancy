@@ -664,13 +664,6 @@ odoBayes <- function(nomeSp) {
   )
   mcmc <- buildMCMC(mcmc_conf)
   c_mcmc <- compileNimble(mcmc, project = model)
-
-  samples <- runMCMC(
-    c_mcmc,
-    niter = 10000,
-    nburnin = 2000,
-    nchains = 3,
-    samplesAsCodaMCMC = TRUE
   )
 
   # 5. RUN MCMC
@@ -741,4 +734,5 @@ odoBayes <- function(nomeSp) {
 # odoBayes('Trithemis annulata')
 
 map(listaSpecie, odoBayes)
+
 ```

@@ -92,6 +92,65 @@ ul.task-list li input[type="checkbox"] {
 <section id="daily-log" class="level2">
 <h2 class="anchored" data-anchor-id="daily-log">Daily log</h2>
 <ul>
+<li>2026-01-29
+<ul>
+<li>creazione di gruppi di specie sulla base dei valori di HV, IW, TempIndex</li>
+</ul></li>
+<li>2026-01-26
+<ul>
+<li>includere covariate specie</li>
+</ul></li>
+<li>2026-01-17
+<ul>
+<li>riscrittura modello di occupancy e dei relativi plot
+<ul>
+<li>utilizzata la funzione complete su cells e date_year</li>
+</ul></li>
+<li>creato un nuovo file con il codice 20k modificato su 10k</li>
+</ul></li>
+<li>2026-01-13
+<ul>
+<li>produzione di un codice con modello Bayesiano
+<ul>
+<li>vantaggi</li>
+<li>ulteriori sviluppi per capire se ci sono casi di declino <code>decline_prob &lt;- mean(samples[, 'beta_year_psi'] &lt; 0)</code></li>
+</ul></li>
+</ul></li>
+<li>2026-01-05
+<ul>
+<li>lettura paper su ponderazione dei dati
+<ul>
+<li>(Lauret et al.&nbsp;2021) utile per i metodi su single-visit
+<ul>
+<li>da osservare l’importanza di includere delle covariate nel modello</li>
+<li>nel nostro caso si potrebbe usare DTM e Corine (le celle sono cmq molto grandi)</li>
+</ul></li>
+<li>(Kelleher et al.&nbsp;2025) review su dynamic occupancy models (DOMs)
+<ul>
+<li>il paper sottolinea l’importanza di utilizzare delle covariate</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>2025-12-23
+<ul>
+<li>riflessione sul fattore ponderale da usare e come calcolarlo</li>
+</ul></li>
+<li>2025-12-16
+<ul>
+<li>gambero sembra difficile inserirlo come covariata (matrice tutto 1)</li>
+<li>utilizzo di TRIM con peso per compensare il differente sforzo di campionamento nel tempo</li>
+<li>rivedere glm per avere il calcolo delle occorrenze per anno per cella</li>
+</ul></li>
+<li>2025-12-02
+<ul>
+<li>PCount</li>
+<li>modelli di occupancy con <em>occu</em> from unmarked</li>
+</ul></li>
+<li>2025-11-12
+<ul>
+<li>inclusi solo i dati di aree continentale stretta</li>
+<li></li>
+</ul></li>
 <li>2025-11-06
 <ul>
 <li>corretti i nomi delle specie</li>
@@ -101,7 +160,7 @@ ul.task-list li input[type="checkbox"] {
 </ul></li>
 <li>2025-11-05
 <ul>
-<li>modelli di occupancy con occu from unmarked</li>
+<li>modelli di occupancy con <em>occu</em> from unmarked</li>
 </ul></li>
 <li>2025-10-28
 <ul>
@@ -116,7 +175,7 @@ ul.task-list li input[type="checkbox"] {
 <li>leggere vignette</li>
 <li><strong>covariate da considerare</strong>
 <ul>
-<li>guild per famiglia</li>
+<li>guild per famiglia/tipo habitat</li>
 <li>temperature index (Termaat, 2019)</li>
 <li>Habitat specificity (Golfieri et al., 2016)</li>
 <li>IAS (P. clarkii)</li>

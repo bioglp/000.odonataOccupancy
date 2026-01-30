@@ -1,7 +1,7 @@
 ---
 title: "occupancyOdonata20k"
 author: "Gianandrea La Porta"
-date: "2025-01-13"
+date: "2025-01-29"
 format: 
   html:
     theme: cosmo
@@ -666,12 +666,12 @@ odoBayes <- function(nomeSp) {
   mcmc <- buildMCMC(mcmc_conf)
   c_mcmc <- compileNimble(mcmc, project = model)
 
-  samples <- runMCMC(
-    c_mcmc,
-    niter = 10000,
-    nburnin = 2000,
-    nchains = 3,
-    samplesAsCodaMCMC = TRUE
+  # samples <- runMCMC(
+  #   c_mcmc,
+  #   niter = 10000,
+  #   nburnin = 2000,
+  #   nchains = 3,
+  #   samplesAsCodaMCMC = TRUE
   )
 
   # 5. RUN MCMC
@@ -741,5 +741,5 @@ odoBayes <- function(nomeSp) {
 # odoBayes('Sympetrum sanguineum')
 # odoBayes('Trithemis annulata')
 
-map(listaSpecie[50], odoBayes)
+map(listaSpecie, odoBayes)
 ```

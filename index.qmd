@@ -19,6 +19,14 @@ Serie dati raccolti in Piemonte e Lombardia nel periodo compreso tra il 1999 e i
 -   [output20k](https://bioglp.github.io/000.odonataOccupancy/000.odonataOccupancy20.html)
 
 ## Daily log
+
+- 2026-01-29
+    - creazione di gruppi di specie sulla base dei valori di HV, IW, TempIndex
+    
+
+- 2026-01-26
+    - includere covariate specie
+
 - 2026-01-17
     - riscrittura modello di occupancy e dei relativi plot
         - utilizzata la funzione complete su cells e date_year
@@ -65,7 +73,7 @@ Serie dati raccolti in Piemonte e Lombardia nel periodo compreso tra il 1999 e i
         -   modelli di Occupancy
             -   leggere vignette
             -   **covariate da considerare**
-                -   guild per famiglia
+                -   guild per famiglia/tipo habitat
                 -   temperature index (Termaat, 2019)
                 -   Habitat specificity (Golfieri et al., 2016)
                 -   IAS (P. clarkii)

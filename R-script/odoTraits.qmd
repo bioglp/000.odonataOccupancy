@@ -1,0 +1,116 @@
+---
+title: "analisi dei tratti ecologici"
+format: html
+---
+
+## Import data
+
+```{r}
+library(tidyverse)
+odo <- read.csv('../input/Sönke/odoTraits.csv')
+```
+
+```{r}
+library(FactoMineR)
+library(factoextra)
+
+df_pca <- odo |>
+  select("Temperature.Index", "HV", "IW")
+rownames(df_pca) <- odo$species
+```
+
+```{r}
+# Standardizza i dati
+df_scaled <- scale(df_pca)
+dist_matrix <- dist(df_scaled, method = "euclidean")
+
+hc_ward <- hclust(dist_matrix, method = "ward.D2")
+
+library(dendextend)
+library(RColorBrewer)
+
+dend <- as.dendrogram(hc_ward)
+soglia_h <- 5
+dend <- color_branches(dend, h = soglia_h)
+dend <- color_labels(dend, h = soglia_h)
+dend <- set(dend, "labels_cex", 0.7)
+
+par(mar = c(5, 4, 4, 12))
+plot(dend, main = paste("", soglia_h), ylab = "Distanza (Ward.D2)", horiz = T)
+gruppi <- cutree(hc_ward, h = soglia_h)
+print(gruppi)
+
+odo$hc_ward <- as.factor(gruppi)
+```
+
+```{r}
+res.pca <- PCA(df_pca, scale.unit = TRUE, graph = T)
+
+fviz_eig(res.pca, addlabels = TRUE, ylim = c(0, 70))
+
+fviz_pca_biplot(
+  res.pca,
+  repel = TRUE,
+  col.var = "#2E9FDF",
+  col.ind = odo$hc_ward,
+  title = ""
+)
+```
+
+```{r}
+# gruppi di specie in funzione delle singole variabili
+library(classInt)
+#View(odo)
+
+# Funzione per calcolare il GVF
+calc_gvf <- function(x, n) {
+  # Calcola i tagli con Jenks
+  intervals <- classIntervals(x, n = n, style = "jenks")
+  # Assegna ogni valore al suo gruppo
+  groups <- cut(x, breaks = intervals$brks, include.lowest = TRUE)
+
+  # Calcola Somma dei Quadrati Totale (SST)
+  sst <- sum((x - mean(x))^2)
+  # Calcola Somma dei Quadrati entro i gruppi (SSW)
+  ssw <- sum(tapply(x, groups, function(val) sum((val - mean(val))^2)))
+
+  # Formula GVF: (SST - SSW) / SST
+  gvf <- (sst - ssw) / sst
+  return(gvf)
+}
+
+# GVF
+risultati <- data.frame(
+  n_classi = 2:6,
+  GVF = sapply(2:6, function(n) calc_gvf(odo$Temperature.Index, n))
+)
+print(risultati)
+risultati <- data.frame(
+  n_classi = 2:6,
+  GVF = sapply(2:6, function(n) calc_gvf(odo$HV, n))
+)
+print(risultati)
+
+jenks_breaks <- classIntervals(odo$Temperature.Index, n = 4, style = "jenks")
+odo$Temp_Group <- cut(
+  odo$`Temperature.Index`,
+  breaks = jenks_breaks$brks,
+  include.lowest = TRUE,
+  labels = c("1", "2", "3", "4")
+)
+jenks_breaks <- classIntervals(odo$HV, n = 4, style = "jenks")
+odo$HV_Group <- cut(
+  odo$HV,
+  breaks = jenks_breaks$brks,
+  include.lowest = TRUE,
+  labels = c("1", "2", "3", "4")
+)
+jenks_breaks <- classIntervals(odo$IW, n = 5, style = "jenks")
+odo$IW_Group <- cut(
+  odo$IW,
+  breaks = jenks_breaks$brks,
+  include.lowest = TRUE,
+  labels = c("1", "2", "3", "4", "5")
+)
+odo
+```
