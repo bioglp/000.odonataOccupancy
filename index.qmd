@@ -22,6 +22,9 @@ Serie dati raccolti in Piemonte e Lombardia nel periodo compreso tra il 1999 e i
 
 - 2026-01-29
     - creazione di gruppi di specie sulla base dei valori di HV, IW, TempIndex
+        - PCA sulle 3 variabili 
+        - Definizione soglie per gruppi su singole variabili con tecnica "jenks"
+            - Jenks natural breaks classification method
     
 
 - 2026-01-26

@@ -1,7 +1,7 @@
 ---
-title: "occupancyOdonata20k"
+title: "occupancyOdonata10k"
 author: "Gianandrea La Porta"
-date: "2025-01-29"
+date: "2025-01-31"
 format: 
   html:
     theme: cosmo
@@ -66,7 +66,6 @@ dfo$species[
 dfo$species[dfo$species == 'Calopteryx virgo virgo'] <- 'Calopteryx virgo'
 dfo$species[dfo$species == 'Gomphus flavipes'] <- 'Stylurus flavipes'
 dfo$species[dfo$species == 'Lestes viridis'] <- 'Chalcolestes viridis'
-dfo$species[
 dfo$species[dfo$species == 'Lestes virens vestalis'] <- 'Lestes virens'
 dfo$species[
   dfo$species == 'Onychogomphus forcipatus unguiculatus'
@@ -522,8 +521,6 @@ results <- map(listaSpecie, occProb)
 ## Modello Bayesiano
 
 ```{r}
-#| eval: false
-#| include: false
 #| message: false
 #| warning: false
 # https://www.youtube.com/watch?v=kmMZpG4jK4k&t=192s
@@ -672,7 +669,7 @@ odoBayes <- function(nomeSp) {
   #   nburnin = 2000,
   #   nchains = 3,
   #   samplesAsCodaMCMC = TRUE
-  )
+  #)
 
   # 5. RUN MCMC
   set.seed(123)
@@ -704,7 +701,7 @@ odoBayes <- function(nomeSp) {
   }
 
   # Salva in formato RDS (il nome del file include il nome della specie)
-  file_rds <- paste0("output_bayes/risultati_", nomeSp, ".rds")
+  file_rds <- paste0("output_bayes/risultati10k_", nomeSp, ".rds")
   saveRDS(risultati_finali, file = file_rds)
 
   message(paste("Statistiche salvate in:", file_rds))
@@ -743,3 +740,4 @@ odoBayes <- function(nomeSp) {
 
 map(listaSpecie, odoBayes)
 ```
+

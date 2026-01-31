@@ -1,0 +1,218 @@
+---
+title: "Temperature.Index"
+format: html
+---
+
+
+```{r}
+library(tidyverse)
+library(here)
+library(openxlsx)
+
+odo <- read.csv(here('input/Sönke/odoTraits.csv'))
+
+year_start <- 2005
+
+#dfo_1 <- read.xlsx('input/datasetSegnalazioni_R20251106.xlsx')
+dfo <- dfo_1 |> rename_with(tolower)
+dfo <- dfo |>
+  filter(
+    date_year >= year_start,
+    date_year < 2026,
+    code == 'Continental',
+    !is.na(cellcode)
+  )
+dfo <- dfo |>
+  rename(species = latin_taxon)
+
+# unisce i due df
+dfo <- merge(dfo, odo)
+glimpse(dfo) #View(dfo)
+```
+
+## Modello Bayesiano
+### approccio multispecie
+
+```{r}
+prepara_dati_classe <- function(
+  dfo,
+  specie_classe,
+  all_cells,
+  all_years,
+  effort_matrix
+) {
+  library(tidyverse)
+
+  n_specie <- length(specie_classe)
+  n_sites <- length(all_cells)
+  n_years <- length(all_years)
+
+  y_3d <- array(NA, dim = c(n_specie, n_sites, n_years))
+
+  for (s in 1:n_specie) {
+    sp_data <- dfo %>%
+      filter(species == specie_classe[s]) %>%
+      # 1. Raggruppa e riassumi per evitare duplicati cella/anno
+      group_by(cellcode, date_year) %>%
+      summarise(presence = ifelse(n() > 0, 1, 0), .groups = "drop") %>%
+      # 2. Riempimento celle/anni mancanti
+      complete(
+        cellcode = all_cells,
+        date_year = all_years,
+        fill = list(presence = 0)
+      ) %>%
+      # 3. Pivot
+      pivot_wider(names_from = date_year, values_from = presence) %>%
+      # 4. Trasformazione in matrice con controllo nomi
+      as.data.frame() # Forza a DF per sicurezza nomi
+
+    rownames(sp_data) <- sp_data$cellcode
+    sp_data_matrix <- as.matrix(sp_data[, as.character(all_years)])
+
+    # Inserimento nell'array 3D
+    y_3d[s, , ] <- sp_data_matrix[as.character(all_cells), ]
+  }
+  return(y_3d)
+}
+```
+
+
+```{r}
+run_class_model <- function(
+  class_name,
+  species_list,
+  dfo,
+  all_cells,
+  all_years,
+  effort_matrix
+) {
+  library(nimble)
+
+  y_3d <- prepara_dati_classe(
+    dfo,
+    species_list,
+    all_cells,
+    all_years,
+    effort_matrix
+  )
+
+  # Standardizzazione covariate
+  year_std <- as.vector(scale(all_years))
+  effort_vec <- as.numeric(effort_matrix)
+  effort_std <- matrix(scale(effort_vec), nrow = nrow(effort_matrix))
+
+  nim_data <- list(y = y_3d, effort = effort_std, year = year_std)
+  nim_constants <- list(
+    n_species = length(species_list),
+    n_sites = dim(y_3d)[2],
+    n_years = dim(y_3d)[3]
+  )
+
+  code <- nimbleCode({
+    # HYPER-PRIORS (Trend di Classe)
+    mu_beta_year ~ dnorm(0, sd = 2)
+    sigma_beta_year ~ dunif(0, 5)
+    mu_alpha_psi ~ dnorm(0, sd = 2)
+    sigma_alpha_psi ~ dunif(0, 5)
+
+    # Priors fissi per detection
+    alpha_p_mean ~ dnorm(0, sd = 2)
+    beta_effort ~ dnorm(0, sd = 2)
+
+    for (s in 1:n_species) {
+      # Specie-specific coefficients (estratti dalla distribuzione di classe)
+      beta_year_psi[s] ~ dnorm(mu_beta_year, sd = sigma_beta_year)
+      alpha_psi[s] ~ dnorm(mu_alpha_psi, sd = sigma_alpha_psi)
+      alpha_p[s] ~ dnorm(alpha_p_mean, sd = 2)
+
+      for (i in 1:n_sites) {
+        for (t in 1:n_years) {
+          # Occupancy
+          logit(psi[s, i, t]) <- alpha_psi[s] + beta_year_psi[s] * year[t]
+          z[s, i, t] ~ dbern(psi[s, i, t])
+          # Detection
+          logit(p[s, i, t]) <- alpha_p[s] + beta_effort * effort[i, t]
+          y[s, i, t] ~ dbern(z[s, i, t] * p[s, i, t])
+        }
+      }
+    }
+
+    # Parametro derivato: Trend medio della classe
+    for (t in 1:n_years) {
+      class_trend[t] <- ilogit(mu_alpha_psi + mu_beta_year * year[t])
+    }
+  })
+
+  z_init <- y_3d
+  z_init[is.na(z_init)] <- 0
+  inits <- list(
+    mu_beta_year = 0,
+    mu_alpha_psi = 0,
+    sigma_beta_year = 1,
+    sigma_alpha_psi = 1,
+    alpha_p_mean = 0,
+    beta_effort = 0,
+    z = z_init
+  )
+
+  # Esecuzione NIMBLE
+  samples <- nimbleMCMC(
+    code = code,
+    constants = nim_constants,
+    data = nim_data,
+    inits = inits,
+    monitors = c("mu_beta_year", "class_trend", "sigma_beta_year"),
+    niter = 20000,
+    nburnin = 5000,
+    nchains = 3,
+    thin = 10,
+    samplesAsCodaMCMC = TRUE
+  )
+
+  saveRDS(samples, paste0("output_bayes/class_", class_name, ".rds"))
+  return(samples)
+}
+```
+
+
+```{r}
+library(parallel)
+
+# Separazione gruppo specie per Temp_Group
+classi_lista <- split(
+  unique(dfo$species),
+  dfo[match(unique(dfo$species), dfo$species), "Temp_Group"]
+)
+
+# Setup Cluster (usa 3 core, uno per classe)
+cl <- makeCluster(3)
+
+# Esporta le variabili e le funzioni necessarie ai core
+clusterExport(
+  cl,
+  c(
+    "dfo",
+    "all_cells",
+    "all_years",
+    "effort_matrix",
+    "prepara_dati_classe",
+    "run_class_model"
+  )
+)
+
+# Esecuzione parallela
+risultati_classi <- clusterMap(
+  cl,
+  run_class_model,
+  class_name = names(classi_lista),
+  species_list = classi_lista,
+  MoreArgs = list(
+    dfo = dfo,
+    all_cells = all_cells,
+    all_years = all_years,
+    effort_matrix = effort_matrix
+  )
+)
+
+stopCluster(cl)
+```

@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Gianandrea La Porta">
-<meta name="dcterms.date" content="2025-01-13">
+<meta name="dcterms.date" content="2025-01-31">
 
-<title>occupancyOdonata20k</title>
+<title>occupancyOdonata10k</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -120,7 +120,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">January 13, 2025</p>
+      <p class="date">January 29, 2025</p>
     </div>
   </div>
   
@@ -222,24 +222,25 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="st">'Calopteryx virgo'</span></span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[dfo<span class="sc">$</span>species <span class="sc">==</span> <span class="st">'Calopteryx virgo virgo'</span>] <span class="ot">&lt;-</span> <span class="st">'Calopteryx virgo'</span></span>
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[dfo<span class="sc">$</span>species <span class="sc">==</span> <span class="st">'Gomphus flavipes'</span>] <span class="ot">&lt;-</span> <span class="st">'Stylurus flavipes'</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[dfo<span class="sc">$</span>species <span class="sc">==</span> <span class="st">'Lestes virens vestalis'</span>] <span class="ot">&lt;-</span> <span class="st">'Lestes virens'</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  dfo<span class="sc">$</span>species <span class="sc">==</span> <span class="st">'Onychogomphus forcipatus unguiculatus'</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="st">'Onychogomphus forcipatus'</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  dfo<span class="sc">$</span>species <span class="sc">==</span> <span class="st">'Onychogomphus forcipatus forcipatus'</span></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="st">'Onychogomphus forcipatus'</span></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[dfo<span class="sc">$</span>species <span class="sc">==</span> <span class="st">'Oxygastra curtisi'</span>] <span class="ot">&lt;-</span> <span class="st">'Oxygastra curtisii'</span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  dfo<span class="sc">$</span>species <span class="sc">==</span> <span class="st">'Cordulegaster bidentata bidentata'</span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="st">'Cordulegaster bidentata'</span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[</span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  dfo<span class="sc">$</span>species <span class="sc">==</span> <span class="st">'Orthetrum coerulescens coerulescens'</span></span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="st">'Orthetrum coerulescens'</span></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(species, <span class="st">"sp</span><span class="sc">\\</span><span class="st">.$|sp</span><span class="sc">\\</span><span class="st">s|sp$"</span>))</span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span> <span class="fu">filter</span>(species <span class="sc">!=</span> <span class="st">'No odonata'</span>)</span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[dfo<span class="sc">$</span>species <span class="sc">==</span> <span class="st">'Lestes viridis'</span>] <span class="ot">&lt;-</span> <span class="st">'Chalcolestes viridis'</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[dfo<span class="sc">$</span>species <span class="sc">==</span> <span class="st">'Lestes virens vestalis'</span>] <span class="ot">&lt;-</span> <span class="st">'Lestes virens'</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  dfo<span class="sc">$</span>species <span class="sc">==</span> <span class="st">'Onychogomphus forcipatus unguiculatus'</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="st">'Onychogomphus forcipatus'</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  dfo<span class="sc">$</span>species <span class="sc">==</span> <span class="st">'Onychogomphus forcipatus forcipatus'</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="st">'Onychogomphus forcipatus'</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[dfo<span class="sc">$</span>species <span class="sc">==</span> <span class="st">'Oxygastra curtisi'</span>] <span class="ot">&lt;-</span> <span class="st">'Oxygastra curtisii'</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  dfo<span class="sc">$</span>species <span class="sc">==</span> <span class="st">'Cordulegaster bidentata bidentata'</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="st">'Cordulegaster bidentata'</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>  dfo<span class="sc">$</span>species <span class="sc">==</span> <span class="st">'Orthetrum coerulescens coerulescens'</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>] <span class="ot">&lt;-</span> <span class="st">'Orthetrum coerulescens'</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(species, <span class="st">"sp</span><span class="sc">\\</span><span class="st">.$|sp</span><span class="sc">\\</span><span class="st">s|sp$"</span>))</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span> <span class="fu">filter</span>(species <span class="sc">!=</span> <span class="st">'No odonata'</span>)</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>La serie dati va dal 2005 al 2025.</p>
@@ -1101,6 +1102,1663 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 </section>
 <section id="modello-bayesiano" class="level2">
 <h2 class="anchored" data-anchor-id="modello-bayesiano">Modello Bayesiano</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># https://www.youtube.com/watch?v=kmMZpG4jK4k&amp;t=192s</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nimble)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(coda)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co"># source('R-Script/baseDati.R')</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>nomeSp <span class="ot">=</span> <span class="st">'Trithemis annulata'</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. PREPARAZIONE DATI COMUNI</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>all_cells <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(dfo<span class="sc">$</span>cellcode))</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>all_years <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(dfo<span class="sc">$</span>date_year))</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Matrice dello sforzo</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>effort_matrix <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(cellcode, date_year, <span class="at">name =</span> <span class="st">'tot_occurrences'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># includi tutte le celle possibili</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">complete</span>(</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">cellcode =</span> all_cells,</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">date_year =</span> all_years,</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">tot_occurrences =</span> <span class="dv">0</span>)</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">id_cols =</span> cellcode,</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> date_year,</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> tot_occurrences</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_to_rownames</span>(<span class="st">"cellcode"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>odoBayes <span class="ot">&lt;-</span> <span class="cf">function</span>(nomeSp) {</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Matrice di rilevamento (y)</span></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>  y_matrix <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(species <span class="sc">==</span> nomeSp) <span class="sc">%&gt;%</span></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(cellcode, date_year, <span class="at">name =</span> <span class="st">'n_occurrences'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">complete</span>(</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>      <span class="co"># includi anche le celle mai occupate dalla specie</span></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">cellcode =</span> all_cells,</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>      <span class="at">date_year =</span> all_years,</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">n_occurrences =</span> <span class="dv">0</span>)</span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">detection =</span> <span class="fu">ifelse</span>(n_occurrences <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_wider</span>(</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>      <span class="at">id_cols =</span> cellcode,</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>      <span class="at">names_from =</span> date_year,</span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>      <span class="at">values_from =</span> detection</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column_to_rownames</span>(<span class="st">"cellcode"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.matrix</span>()</span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Covariata Anno (vettore atomico per NIMBLE)</span></span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>  anni_num <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">colnames</span>(y_matrix))</span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a>  year_std <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(<span class="fu">scale</span>(anni_num))</span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Standardizzazione (vettoriale per evitare attributi scale)</span></span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a>  effort_vec <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(effort_matrix)</span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a>  effort_std_mat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a>    (effort_vec <span class="sc">-</span> <span class="fu">mean</span>(effort_vec)) <span class="sc">/</span> <span class="fu">sd</span>(effort_vec),</span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">nrow =</span> <span class="fu">nrow</span>(y_matrix),</span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="fu">ncol</span>(y_matrix)</span>
+<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Dati presenza e effort</span></span>
+<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a>  nim_data <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> y_matrix,</span>
+<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">effort =</span> effort_std_mat,</span>
+<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> year_std</span>
+<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a>  nim_constants <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb15-72"><a href="#cb15-72" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_sites =</span> <span class="fu">nrow</span>(y_matrix),</span>
+<span id="cb15-73"><a href="#cb15-73" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_years =</span> <span class="fu">ncol</span>(y_matrix)</span>
+<span id="cb15-74"><a href="#cb15-74" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-75"><a href="#cb15-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-76"><a href="#cb15-76" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 2. DEFINIZIONE MODELLO</span></span>
+<span id="cb15-77"><a href="#cb15-77" aria-hidden="true" tabindex="-1"></a>  code <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
+<span id="cb15-78"><a href="#cb15-78" aria-hidden="true" tabindex="-1"></a>    <span class="co"># PRIORS</span></span>
+<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a>    alpha_psi <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">2</span>)</span>
+<span id="cb15-80"><a href="#cb15-80" aria-hidden="true" tabindex="-1"></a>    beta_year_psi <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">2</span>)</span>
+<span id="cb15-81"><a href="#cb15-81" aria-hidden="true" tabindex="-1"></a>    alpha_p <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">2</span>)</span>
+<span id="cb15-82"><a href="#cb15-82" aria-hidden="true" tabindex="-1"></a>    beta_effort <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">2</span>)</span>
+<span id="cb15-83"><a href="#cb15-83" aria-hidden="true" tabindex="-1"></a>    beta_year_p <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">2</span>)</span>
+<span id="cb15-84"><a href="#cb15-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-85"><a href="#cb15-85" aria-hidden="true" tabindex="-1"></a>    <span class="co"># LIKELIHOOD</span></span>
+<span id="cb15-86"><a href="#cb15-86" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_sites) {</span>
+<span id="cb15-87"><a href="#cb15-87" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_years) {</span>
+<span id="cb15-88"><a href="#cb15-88" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Occupancy</span></span>
+<span id="cb15-89"><a href="#cb15-89" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logit</span>(psi[i, t]) <span class="ot">&lt;-</span> alpha_psi <span class="sc">+</span> beta_year_psi <span class="sc">*</span> year[t]</span>
+<span id="cb15-90"><a href="#cb15-90" aria-hidden="true" tabindex="-1"></a>        z[i, t] <span class="sc">~</span> <span class="fu">dbern</span>(psi[i, t])</span>
+<span id="cb15-91"><a href="#cb15-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-92"><a href="#cb15-92" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Detection</span></span>
+<span id="cb15-93"><a href="#cb15-93" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logit</span>(p[i, t]) <span class="ot">&lt;-</span> alpha_p <span class="sc">+</span></span>
+<span id="cb15-94"><a href="#cb15-94" aria-hidden="true" tabindex="-1"></a>          beta_effort <span class="sc">*</span> effort[i, t] <span class="sc">+</span></span>
+<span id="cb15-95"><a href="#cb15-95" aria-hidden="true" tabindex="-1"></a>          beta_year_p <span class="sc">*</span> year[t]</span>
+<span id="cb15-96"><a href="#cb15-96" aria-hidden="true" tabindex="-1"></a>        mu[i, t] <span class="ot">&lt;-</span> z[i, t] <span class="sc">*</span> p[i, t]</span>
+<span id="cb15-97"><a href="#cb15-97" aria-hidden="true" tabindex="-1"></a>        y[i, t] <span class="sc">~</span> <span class="fu">dbern</span>(mu[i, t])</span>
+<span id="cb15-98"><a href="#cb15-98" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb15-99"><a href="#cb15-99" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb15-100"><a href="#cb15-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-101"><a href="#cb15-101" aria-hidden="true" tabindex="-1"></a>    <span class="co"># DERIVED</span></span>
+<span id="cb15-102"><a href="#cb15-102" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_years) {</span>
+<span id="cb15-103"><a href="#cb15-103" aria-hidden="true" tabindex="-1"></a>      mean_psi[t] <span class="ot">&lt;-</span> <span class="fu">ilogit</span>(alpha_psi <span class="sc">+</span> beta_year_psi <span class="sc">*</span> year[t])</span>
+<span id="cb15-104"><a href="#cb15-104" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb15-105"><a href="#cb15-105" aria-hidden="true" tabindex="-1"></a>    mean_p <span class="ot">&lt;-</span> <span class="fu">ilogit</span>(alpha_p)</span>
+<span id="cb15-106"><a href="#cb15-106" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb15-107"><a href="#cb15-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-108"><a href="#cb15-108" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 3. INIZIALIZZAZIONE</span></span>
+<span id="cb15-109"><a href="#cb15-109" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Importante: z deve essere 1 se y è 1</span></span>
+<span id="cb15-110"><a href="#cb15-110" aria-hidden="true" tabindex="-1"></a>  z_init <span class="ot">&lt;-</span> y_matrix</span>
+<span id="cb15-111"><a href="#cb15-111" aria-hidden="true" tabindex="-1"></a>  z_init[<span class="fu">is.na</span>(z_init)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb15-112"><a href="#cb15-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-113"><a href="#cb15-113" aria-hidden="true" tabindex="-1"></a>  inits <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb15-114"><a href="#cb15-114" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha_psi =</span> <span class="dv">0</span>,</span>
+<span id="cb15-115"><a href="#cb15-115" aria-hidden="true" tabindex="-1"></a>    <span class="at">beta_year_psi =</span> <span class="dv">0</span>,</span>
+<span id="cb15-116"><a href="#cb15-116" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha_p =</span> <span class="dv">0</span>,</span>
+<span id="cb15-117"><a href="#cb15-117" aria-hidden="true" tabindex="-1"></a>    <span class="at">beta_effort =</span> <span class="dv">0</span>,</span>
+<span id="cb15-118"><a href="#cb15-118" aria-hidden="true" tabindex="-1"></a>    <span class="at">beta_year_p =</span> <span class="dv">0</span>,</span>
+<span id="cb15-119"><a href="#cb15-119" aria-hidden="true" tabindex="-1"></a>    <span class="at">z =</span> z_init</span>
+<span id="cb15-120"><a href="#cb15-120" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-121"><a href="#cb15-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-122"><a href="#cb15-122" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 4. ESECUZIONE</span></span>
+<span id="cb15-123"><a href="#cb15-123" aria-hidden="true" tabindex="-1"></a>  model <span class="ot">&lt;-</span> <span class="fu">nimbleModel</span>(</span>
+<span id="cb15-124"><a href="#cb15-124" aria-hidden="true" tabindex="-1"></a>    code,</span>
+<span id="cb15-125"><a href="#cb15-125" aria-hidden="true" tabindex="-1"></a>    <span class="at">constants =</span> nim_constants,</span>
+<span id="cb15-126"><a href="#cb15-126" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> nim_data,</span>
+<span id="cb15-127"><a href="#cb15-127" aria-hidden="true" tabindex="-1"></a>    <span class="at">inits =</span> inits</span>
+<span id="cb15-128"><a href="#cb15-128" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-129"><a href="#cb15-129" aria-hidden="true" tabindex="-1"></a>  c_model <span class="ot">&lt;-</span> <span class="fu">compileNimble</span>(model)</span>
+<span id="cb15-130"><a href="#cb15-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-131"><a href="#cb15-131" aria-hidden="true" tabindex="-1"></a>  mcmc_conf <span class="ot">&lt;-</span> <span class="fu">configureMCMC</span>(</span>
+<span id="cb15-132"><a href="#cb15-132" aria-hidden="true" tabindex="-1"></a>    model,</span>
+<span id="cb15-133"><a href="#cb15-133" aria-hidden="true" tabindex="-1"></a>    <span class="at">monitors =</span> <span class="fu">c</span>(</span>
+<span id="cb15-134"><a href="#cb15-134" aria-hidden="true" tabindex="-1"></a>      <span class="st">'alpha_psi'</span>,</span>
+<span id="cb15-135"><a href="#cb15-135" aria-hidden="true" tabindex="-1"></a>      <span class="st">'beta_year_psi'</span>,</span>
+<span id="cb15-136"><a href="#cb15-136" aria-hidden="true" tabindex="-1"></a>      <span class="st">'alpha_p'</span>,</span>
+<span id="cb15-137"><a href="#cb15-137" aria-hidden="true" tabindex="-1"></a>      <span class="st">'beta_effort'</span>,</span>
+<span id="cb15-138"><a href="#cb15-138" aria-hidden="true" tabindex="-1"></a>      <span class="st">'mean_psi'</span></span>
+<span id="cb15-139"><a href="#cb15-139" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-140"><a href="#cb15-140" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-141"><a href="#cb15-141" aria-hidden="true" tabindex="-1"></a>  mcmc <span class="ot">&lt;-</span> <span class="fu">buildMCMC</span>(mcmc_conf)</span>
+<span id="cb15-142"><a href="#cb15-142" aria-hidden="true" tabindex="-1"></a>  c_mcmc <span class="ot">&lt;-</span> <span class="fu">compileNimble</span>(mcmc, <span class="at">project =</span> model)</span>
+<span id="cb15-143"><a href="#cb15-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-144"><a href="#cb15-144" aria-hidden="true" tabindex="-1"></a>  <span class="co"># samples &lt;- runMCMC(</span></span>
+<span id="cb15-145"><a href="#cb15-145" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   c_mcmc,</span></span>
+<span id="cb15-146"><a href="#cb15-146" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   niter = 10000,</span></span>
+<span id="cb15-147"><a href="#cb15-147" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   nburnin = 2000,</span></span>
+<span id="cb15-148"><a href="#cb15-148" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   nchains = 3,</span></span>
+<span id="cb15-149"><a href="#cb15-149" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   samplesAsCodaMCMC = TRUE</span></span>
+<span id="cb15-150"><a href="#cb15-150" aria-hidden="true" tabindex="-1"></a>  <span class="co">#)</span></span>
+<span id="cb15-151"><a href="#cb15-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-152"><a href="#cb15-152" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 5. RUN MCMC</span></span>
+<span id="cb15-153"><a href="#cb15-153" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb15-154"><a href="#cb15-154" aria-hidden="true" tabindex="-1"></a>  samples <span class="ot">&lt;-</span> <span class="fu">runMCMC</span>(</span>
+<span id="cb15-155"><a href="#cb15-155" aria-hidden="true" tabindex="-1"></a>    c_mcmc,</span>
+<span id="cb15-156"><a href="#cb15-156" aria-hidden="true" tabindex="-1"></a>    <span class="at">niter =</span> <span class="dv">20000</span>, <span class="co"># corretto da 10000</span></span>
+<span id="cb15-157"><a href="#cb15-157" aria-hidden="true" tabindex="-1"></a>    <span class="at">nburnin =</span> <span class="dv">5000</span>,</span>
+<span id="cb15-158"><a href="#cb15-158" aria-hidden="true" tabindex="-1"></a>    <span class="at">nchains =</span> <span class="dv">3</span>,</span>
+<span id="cb15-159"><a href="#cb15-159" aria-hidden="true" tabindex="-1"></a>    <span class="at">thin =</span> <span class="dv">10</span>, <span class="co"># da 5</span></span>
+<span id="cb15-160"><a href="#cb15-160" aria-hidden="true" tabindex="-1"></a>    <span class="at">samplesAsCodaMCMC =</span> <span class="cn">TRUE</span></span>
+<span id="cb15-161"><a href="#cb15-161" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-162"><a href="#cb15-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-163"><a href="#cb15-163" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 6. CALCOLO DIAGNOSTICHE (R-hat)</span></span>
+<span id="cb15-164"><a href="#cb15-164" aria-hidden="true" tabindex="-1"></a>  rhat_values <span class="ot">&lt;-</span> <span class="fu">gelman.diag</span>(samples, <span class="at">multivariate =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb15-165"><a href="#cb15-165" aria-hidden="true" tabindex="-1"></a>  rhat_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(rhat_values<span class="sc">$</span>psrf)</span>
+<span id="cb15-166"><a href="#cb15-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-167"><a href="#cb15-167" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 7. RISULTATI E SALVATAGGIO</span></span>
+<span id="cb15-168"><a href="#cb15-168" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Creiamo una lista con tutto ciò che è importante</span></span>
+<span id="cb15-169"><a href="#cb15-169" aria-hidden="true" tabindex="-1"></a>  risultati_finali <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb15-170"><a href="#cb15-170" aria-hidden="true" tabindex="-1"></a>    <span class="at">specie =</span> nomeSp,</span>
+<span id="cb15-171"><a href="#cb15-171" aria-hidden="true" tabindex="-1"></a>    <span class="at">summary =</span> <span class="fu">summary</span>(samples),</span>
+<span id="cb15-172"><a href="#cb15-172" aria-hidden="true" tabindex="-1"></a>    <span class="at">rhat =</span> rhat_df,</span>
+<span id="cb15-173"><a href="#cb15-173" aria-hidden="true" tabindex="-1"></a>    <span class="at">samples =</span> samples <span class="co"># salva i campioni completi</span></span>
+<span id="cb15-174"><a href="#cb15-174" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-175"><a href="#cb15-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-176"><a href="#cb15-176" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Crea la cartella di output se non esiste</span></span>
+<span id="cb15-177"><a href="#cb15-177" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(<span class="st">"output_bayes"</span>)) {</span>
+<span id="cb15-178"><a href="#cb15-178" aria-hidden="true" tabindex="-1"></a>    <span class="fu">dir.create</span>(<span class="st">"output_bayes"</span>)</span>
+<span id="cb15-179"><a href="#cb15-179" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb15-180"><a href="#cb15-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-181"><a href="#cb15-181" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Salva in formato RDS (il nome del file include il nome della specie)</span></span>
+<span id="cb15-182"><a href="#cb15-182" aria-hidden="true" tabindex="-1"></a>  file_rds <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"output_bayes/risultati10k_"</span>, nomeSp, <span class="st">".rds"</span>)</span>
+<span id="cb15-183"><a href="#cb15-183" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(risultati_finali, <span class="at">file =</span> file_rds)</span>
+<span id="cb15-184"><a href="#cb15-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-185"><a href="#cb15-185" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="fu">paste</span>(<span class="st">"Statistiche salvate in:"</span>, file_rds))</span>
+<span id="cb15-186"><a href="#cb15-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-187"><a href="#cb15-187" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 8. PLOT TREND</span></span>
+<span id="cb15-188"><a href="#cb15-188" aria-hidden="true" tabindex="-1"></a>  anni_num <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">colnames</span>(y_matrix))</span>
+<span id="cb15-189"><a href="#cb15-189" aria-hidden="true" tabindex="-1"></a>  mean_psi_cols <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="st">"mean_psi"</span>, <span class="fu">colnames</span>(<span class="fu">as.matrix</span>(samples)))</span>
+<span id="cb15-190"><a href="#cb15-190" aria-hidden="true" tabindex="-1"></a>  mean_psi_samples <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(samples)[, mean_psi_cols]</span>
+<span id="cb15-191"><a href="#cb15-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-192"><a href="#cb15-192" aria-hidden="true" tabindex="-1"></a>  est <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(mean_psi_samples)</span>
+<span id="cb15-193"><a href="#cb15-193" aria-hidden="true" tabindex="-1"></a>  ci <span class="ot">&lt;-</span> <span class="fu">apply</span>(mean_psi_samples, <span class="dv">2</span>, quantile, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</span>
+<span id="cb15-194"><a href="#cb15-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-195"><a href="#cb15-195" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Generazione del grafico</span></span>
+<span id="cb15-196"><a href="#cb15-196" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(</span>
+<span id="cb15-197"><a href="#cb15-197" aria-hidden="true" tabindex="-1"></a>    anni_num,</span>
+<span id="cb15-198"><a href="#cb15-198" aria-hidden="true" tabindex="-1"></a>    est,</span>
+<span id="cb15-199"><a href="#cb15-199" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">"l"</span>,</span>
+<span id="cb15-200"><a href="#cb15-200" aria-hidden="true" tabindex="-1"></a>    <span class="at">pch =</span> <span class="dv">16</span>,</span>
+<span id="cb15-201"><a href="#cb15-201" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb15-202"><a href="#cb15-202" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlab =</span> <span class="st">"Year"</span>,</span>
+<span id="cb15-203"><a href="#cb15-203" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylab =</span> <span class="st">"Occupancy"</span>,</span>
+<span id="cb15-204"><a href="#cb15-204" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Trend Bayesiano:"</span>, nomeSp)</span>
+<span id="cb15-205"><a href="#cb15-205" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-206"><a href="#cb15-206" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(anni_num, ci[<span class="dv">1</span>, ], <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"blue"</span>)</span>
+<span id="cb15-207"><a href="#cb15-207" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(anni_num, ci[<span class="dv">2</span>, ], <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"blue"</span>)</span>
+<span id="cb15-208"><a href="#cb15-208" aria-hidden="true" tabindex="-1"></a>  <span class="fu">polygon</span>(</span>
+<span id="cb15-209"><a href="#cb15-209" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(anni_num, <span class="fu">rev</span>(anni_num)),</span>
+<span id="cb15-210"><a href="#cb15-210" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(ci[<span class="dv">1</span>, ], <span class="fu">rev</span>(ci[<span class="dv">2</span>, ])),</span>
+<span id="cb15-211"><a href="#cb15-211" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="fu">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.05</span>),</span>
+<span id="cb15-212"><a href="#cb15-212" aria-hidden="true" tabindex="-1"></a>    <span class="at">border =</span> <span class="cn">NA</span></span>
+<span id="cb15-213"><a href="#cb15-213" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-214"><a href="#cb15-214" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-215"><a href="#cb15-215" aria-hidden="true" tabindex="-1"></a><span class="co"># odoBayes('Sympetrum depressiusculum')</span></span>
+<span id="cb15-216"><a href="#cb15-216" aria-hidden="true" tabindex="-1"></a><span class="co"># odoBayes('Sympetrum sanguineum')</span></span>
+<span id="cb15-217"><a href="#cb15-217" aria-hidden="true" tabindex="-1"></a><span class="co"># odoBayes('Trithemis annulata')</span></span>
+<span id="cb15-218"><a href="#cb15-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-219"><a href="#cb15-219" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(listaSpecie, odoBayes)</span>
+<span id="cb15-220"><a href="#cb15-220" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+===== Monitors =====
+thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+===== Samplers =====
+RW sampler (5)
+  - alpha_psi
+  - beta_year_psi
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+binary sampler (6699)
+  - z[]  (6699 elements)
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+|-------------|-------------|-------------|-------------|
+|-------------------------------------------------------|
+[[1]]
+NULL
+
+[[2]]
+NULL
+
+[[3]]
+NULL
+
+[[4]]
+NULL
+
+[[5]]
+NULL
+
+[[6]]
+NULL
+
+[[7]]
+NULL
+
+[[8]]
+NULL
+
+[[9]]
+NULL
+
+[[10]]
+NULL
+
+[[11]]
+NULL
+
+[[12]]
+NULL
+
+[[13]]
+NULL
+
+[[14]]
+NULL
+
+[[15]]
+NULL
+
+[[16]]
+NULL
+
+[[17]]
+NULL
+
+[[18]]
+NULL
+
+[[19]]
+NULL
+
+[[20]]
+NULL
+
+[[21]]
+NULL
+
+[[22]]
+NULL
+
+[[23]]
+NULL
+
+[[24]]
+NULL
+
+[[25]]
+NULL
+
+[[26]]
+NULL
+
+[[27]]
+NULL
+
+[[28]]
+NULL
+
+[[29]]
+NULL
+
+[[30]]
+NULL
+
+[[31]]
+NULL
+
+[[32]]
+NULL
+
+[[33]]
+NULL
+
+[[34]]
+NULL
+
+[[35]]
+NULL
+
+[[36]]
+NULL
+
+[[37]]
+NULL
+
+[[38]]
+NULL
+
+[[39]]
+NULL
+
+[[40]]
+NULL
+
+[[41]]
+NULL
+
+[[42]]
+NULL
+
+[[43]]
+NULL
+
+[[44]]
+NULL
+
+[[45]]
+NULL
+
+[[46]]
+NULL
+
+[[47]]
+NULL
+
+[[48]]
+NULL
+
+[[49]]
+NULL
+
+[[50]]
+NULL
+
+[[51]]
+NULL
+
+[[52]]
+NULL
+
+[[53]]
+NULL</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-7.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-8.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-9.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-10.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-11.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-12.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-13.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-14.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-15.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-16.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-17.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-18.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-19.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-20.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-21.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-22.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-23.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-24.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-25.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-26.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-27.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-28.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-29.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-30.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-31.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-32.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-33.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-34.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-35.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-36.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-37.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-38.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-39.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-40.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-41.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-42.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-43.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-44.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-45.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-46.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-47.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-48.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-49.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-50.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-51.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-52.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="000.odonataOccupancy10_files/figure-html/unnamed-chunk-1-53.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 
 </main>
