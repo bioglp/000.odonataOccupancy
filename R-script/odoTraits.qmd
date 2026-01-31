@@ -7,7 +7,8 @@ format: html
 
 ```{r}
 library(tidyverse)
-odo <- read.csv('../input/Sönke/odoTraits.csv')
+library(here)
+odo <- read.csv(here('input/Sönke/odoTraits.csv'))
 ```
 
 ```{r}
@@ -112,5 +113,7 @@ odo$IW_Group <- cut(
   include.lowest = TRUE,
   labels = c("1", "2", "3", "4", "5")
 )
-odo
+odo |>
+  write.csv('input/Sönke/odoTraits.csv')
+
 ```
