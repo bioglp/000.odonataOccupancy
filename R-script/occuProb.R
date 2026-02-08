@@ -1,31 +1,16 @@
-occProb <- function(nomeSp) {
-  #print(nomeSp)
+# funzione occuProb
+# per il calcolo dell'occupancy
+# il campo cellcodeX è definito a monte
 
-  # 1. PREPARAZIONE DATI
-  all_cells <- sort(unique(dfo$cellcodeX))
-  all_years <- sort(unique(dfo$date_year))
-
-  # matrice di campionamento
-  effort_matrix <- dfo |>
-    count(cellcodeX, date_year, name = 'tot_occurrences') |>
-    complete(
-      cellcodeX = all_cells,
-      date_year = all_years,
-      fill = list(tot_occurrences = NA)
-    ) |>
-    pivot_wider(
-      id_cols = cellcodeX,
-      names_from = date_year,
-      values_from = tot_occurrences
-    ) |>
-    column_to_rownames("cellcodeX") |>
-    as.matrix()
+occuProb <- function(nomeSp) {
+  # nomeSp
+  cat(nomeSp, '\n')
 
   # matrice di rilevamento
   y_matrix <- dfo |>
     filter(species == nomeSp) |>
     count(cellcodeX, date_year, name = 'n_occurrences') |>
-    # Join con effort per avere la stessa struttura
+    # Join con effort
     right_join(
       dfo |>
         count(cellcodeX, date_year, name = 'tot_occurrences'),
@@ -84,7 +69,7 @@ occProb <- function(nomeSp) {
   tin_df <- data.frame(cellcodeX = cells_in_y) |>
     left_join(tin_data, by = "cellcodeX")
 
-  # Standardizzazione di tin_1 (gestendo eventuali NA)
+  # Standardizzazione di tin_1
   tin_std <- scale(tin_df$tin_1)
 
   # 2. creazione umf
@@ -115,7 +100,7 @@ occProb <- function(nomeSp) {
   pb <- parboot(
     m1,
     statistic = function(fm) smoothed(fm)[2, ],
-    nsim = 1000,
+    nsim = 700,
     parallel = T
   )
 
@@ -139,24 +124,36 @@ occProb <- function(nomeSp) {
     ) +
     geom_line(color = "steelblue", linewidth = 1) +
     geom_point(color = "steelblue", size = 3) +
-    geom_smooth(
-      method = "loess",
-      color = "red",
-      linetype = "dashed",
-      se = F,
-      alpha = 0.5
-    ) +
+    # geom_smooth(
+    #   method = "loess",
+    #   color = "red",
+    #   linetype = "dashed",
+    #   se = F,
+    #   alpha = 0.3
+    # ) +
     scale_y_continuous(limits = c(0, 1), labels = scales::percent) +
     labs(
-      title = paste(nomeSp),
+      title = nomeSp,
+      subtitle = paste("Convergence:", round(m1@opt$convergence, 1)),
       x = "",
       y = "Occupancy",
-      tag = "unmarked"
+      caption = "unmarked"
     ) +
     theme_bw(base_size = 14) +
     theme(plot.title = element_text(face = "italic"))
 
   print(pOccu)
 
-  return(list(data = df_plot, model = m1))
+  ggsave(
+    paste0('output_unmarked/', nomeSp, '_', today(), '.pdf'),
+    width = 9,
+    height = 6
+  )
+
+  saveRDS(
+    list(sm = sm, df_plot = df_plot),
+    paste0('output_unmarked/', nomeSp, "_", today(), ".rds")
+  )
+
+  return(range(df_plot$Occupancy))
 }

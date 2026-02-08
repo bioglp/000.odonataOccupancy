@@ -1,16 +1,15 @@
 # funzione odoBayes
 # per il calcolo dell'occupancy
 # richiede la definizione di un campo cellcodeX
+odoBayes <- function(nomeSp, nk = 10) {
+  cat(nomeSp, '\n')
 
-odoBayes <- function(nomeSp, nk = 30) {
-  # matrice di rilevamento (y)
+  # 1. PREPARAZIONE MATRICE Y
   y_matrix <- dfo %>%
     filter(species == nomeSp) %>%
     count(cellcodeX, date_year, name = 'n_occurrences') %>%
-    # Join con effort
     right_join(
-      dfo %>%
-        count(cellcodeX, date_year, name = 'tot_occurrences'),
+      dfo %>% count(cellcodeX, date_year, name = 'tot_occurrences'),
       by = c("cellcodeX", "date_year")
     ) %>%
     complete(
@@ -20,10 +19,9 @@ odoBayes <- function(nomeSp, nk = 30) {
     ) %>%
     mutate(
       detection = case_when(
-        is.na(tot_occurrences) ~ NA_real_, # Cella non indagata
-        n_occurrences > 0 ~ 1, # Specie trovata
-        tot_occurrences > 0 ~ 0, # Indagata ma specie non trovata
-        TRUE ~ NA_real_ # Cella non indagata
+        is.na(tot_occurrences) ~ NA_real_,
+        n_occurrences > 0 ~ 1,
+        tot_occurrences > 0 ~ 0
       )
     ) %>%
     pivot_wider(
@@ -34,11 +32,7 @@ odoBayes <- function(nomeSp, nk = 30) {
     column_to_rownames("cellcodeX") %>%
     as.matrix()
 
-  # Covariata Anno (vettore atomico per NIMBLE)
-  anni_num <- as.numeric(colnames(y_matrix))
-  year_std <- as.vector(scale(anni_num))
-
-  # Standardizzazione (vettoriale per evitare attributi scale)
+  # Standardizzazione effort
   effort_vec <- as.numeric(effort_matrix)
   effort_std_mat <- matrix(
     (effort_vec - mean(effort_vec, na.rm = TRUE)) /
@@ -47,6 +41,10 @@ odoBayes <- function(nomeSp, nk = 30) {
     ncol = ncol(y_matrix)
   )
 
+  anni_num <- as.numeric(colnames(y_matrix))
+  year_std <- as.vector(scale(anni_num))
+
+  # Covariata sito (tin_1)
   cells_in_y <- rownames(y_matrix)
   tin_data <- dfo %>%
     select(cellcodeX, tin_1) %>%
@@ -56,73 +54,111 @@ odoBayes <- function(nomeSp, nk = 30) {
     group_by(cellcodeX) %>%
     summarise(tin_1 = mean(round(tin_1), na.rm = TRUE))
 
-  # Crea un dataframe con tutte le celle nell'ordine corretto
   tin_df <- data.frame(cellcodeX = cells_in_y) %>%
     left_join(tin_data, by = "cellcodeX")
 
-  # Standardizzazione di tin_1
-  tin_mean <- mean(tin_df$tin_1, na.rm = TRUE)
-  tin_sd <- sd(tin_df$tin_1, na.rm = TRUE)
-  tin_std <- as.vector((tin_df$tin_1 - tin_mean) / tin_sd)
+  tin_std <- as.vector(scale(tin_df$tin_1))
 
-  # Dati presenza e effort
-  nim_data <- list(
-    y = y_matrix,
-    effort = effort_std_mat,
-    year = year_std,
-    tin_1 = tin_std
+  # Preparazione dati osservati (long format per NIMBLE)
+  obs_data <- data.frame(
+    site_idx = integer(),
+    year_idx = integer(),
+    y_value = numeric(),
+    effort_value = numeric(),
+    year_value = numeric()
   )
 
-  nim_constants <- list(
-    n_sites = nrow(y_matrix),
-    n_years = ncol(y_matrix)
-  )
+  for (i in 1:nrow(y_matrix)) {
+    for (t in 1:ncol(y_matrix)) {
+      if (!is.na(y_matrix[i, t])) {
+        obs_data <- rbind(
+          obs_data,
+          data.frame(
+            site_idx = i,
+            year_idx = t,
+            y_value = y_matrix[i, t],
+            effort_value = effort_std_mat[i, t],
+            year_value = year_std[t]
+          )
+        )
+      }
+    }
+  }
 
-  # 2. DEFINIZIONE MODELLO
+  # 2. DEFINIZIONE MODELLO DINAMICO
   code <- nimbleCode({
-    # PRIORS
-    alpha_psi ~ dnorm(0, sd = 2)
-    beta_year_psi ~ dnorm(0, sd = 2)
-    beta_tin_psi ~ dnorm(0, sd = 2)
+    # --- PRIORS ---
+    alpha_psi1 ~ dnorm(0, sd = 2)
+    beta_tin_psi1 ~ dnorm(0, sd = 2)
+    alpha_gamma ~ dnorm(0, sd = 2)
+    beta_year_gamma ~ dnorm(0, sd = 2)
+    alpha_eps ~ dnorm(0, sd = 2)
+    beta_year_eps ~ dnorm(0, sd = 2)
     alpha_p ~ dnorm(0, sd = 2)
     beta_effort ~ dnorm(0, sd = 2)
     beta_year_p ~ dnorm(0, sd = 2)
 
-    # LIKELIHOOD
+    # --- LIKELIHOOD ---
     for (i in 1:n_sites) {
-      for (t in 1:n_years) {
-        # Occupancy
-        logit(psi[i, t]) <- alpha_psi +
-          beta_year_psi * year[t] +
-          beta_tin_psi * tin_1[i]
-        z[i, t] ~ dbern(psi[i, t])
-
-        # Detection
-        logit(p[i, t]) <- alpha_p +
-          beta_effort * effort[i, t] +
-          beta_year_p * year[t]
-        mu[i, t] <- z[i, t] * p[i, t]
-        y[i, t] ~ dbern(mu[i, t])
+      # Anno 1
+      logit(psi1[i]) <- alpha_psi1 + beta_tin_psi1 * tin_1[i]
+      z[i, 1] ~ dbern(psi1[i])
+      # Anni successivi
+      for (t in 2:n_years) {
+        logit(gamma[i, t - 1]) <- alpha_gamma + beta_year_gamma * year[t]
+        logit(eps[i, t - 1]) <- alpha_eps + beta_year_eps * year[t]
+        prob_occ[i, t] <- z[i, t - 1] *
+          (1 - eps[i, t - 1]) +
+          (1 - z[i, t - 1]) * gamma[i, t - 1]
+        z[i, t] ~ dbern(prob_occ[i, t])
       }
     }
-
-    # DERIVED QUANTITIES
-    # Media occupancy per anno (calcolata al valore medio di tin_1 = 0)
-    for (t in 1:n_years) {
-      mean_psi[t] <- ilogit(alpha_psi + beta_year_psi * year[t])
+    # Rilevamento
+    for (k in 1:n_obs) {
+      logit(p[k]) <- alpha_p +
+        beta_effort * effort_obs[k] +
+        beta_year_p * year_value_obs[k]
+      mu[k] <- z[site_obs[k], year_idx_obs[k]] * p[k]
+      y_obs[k] ~ dbern(mu[k])
     }
-    mean_p <- ilogit(alpha_p)
+    # Quantità derivate
+    for (t in 1:n_years) {
+      mean_psi[t] <- sum(z[1:n_sites, t]) / n_sites
+    }
   })
 
   # 3. INIZIALIZZAZIONE
-  # Importante: z deve essere 1 se y è 1
+  # Cruciale: z non deve avere NA
+  prob_osservata <- mean(y_matrix, na.rm = TRUE)
+
   z_init <- y_matrix
-  z_init[is.na(z_init)] <- 0
+  z_init[is.na(z_init)] <- rbinom(sum(is.na(y_matrix)), 1, prob_osservata)
+  z_init[y_matrix == 1] <- 1
+  z_init[y_matrix == 0] <- 0
+
+  nim_constants <- list(
+    n_sites = nrow(y_matrix),
+    n_years = ncol(y_matrix),
+    n_obs = nrow(obs_data),
+    site_obs = obs_data$site_idx,
+    year_idx_obs = obs_data$year_idx,
+    tin_1 = tin_std,
+    year = year_std
+  )
+
+  nim_data <- list(
+    y_obs = obs_data$y_value,
+    effort_obs = obs_data$effort_value,
+    year_value_obs = obs_data$year_value
+  )
 
   inits <- list(
-    alpha_psi = 0,
-    beta_year_psi = 0,
-    beta_tin_psi = 0,
+    alpha_psi1 = 0,
+    beta_tin_psi1 = 0,
+    alpha_gamma = 0,
+    beta_year_gamma = 0,
+    alpha_eps = 0,
+    beta_year_eps = 0,
     alpha_p = 0,
     beta_effort = 0,
     beta_year_p = 0,
@@ -141,65 +177,41 @@ odoBayes <- function(nomeSp, nk = 30) {
   mcmc_conf <- configureMCMC(
     model,
     monitors = c(
-      'alpha_psi',
-      'beta_year_psi',
-      'beta_tin_psi',
+      'alpha_psi1',
+      'alpha_gamma',
+      'alpha_eps',
       'alpha_p',
-      'beta_effort',
       'mean_psi'
     )
   )
   mcmc <- buildMCMC(mcmc_conf)
-  c_mcmc <- compileNimble(mcmc, project = model, showCompilerOutput = F)
+  c_mcmc <- compileNimble(mcmc, project = model)
 
-  # 5. RUN MCMC
-  set.seed(32)
   samples <- runMCMC(
     c_mcmc,
     niter = 20000,
     nburnin = 5000,
     nchains = 3,
     thin = 10,
-    samplesAsCodaMCMC = TRUE
+    samplesAsCodaMCMC = T,
+    progressBar = F
   )
 
-  # 6. CALCOLO DIAGNOSTICHE (R-hat)
-  rhat_values <- gelman.diag(samples, multivariate = FALSE)
-  rhat_df <- as.data.frame(rhat_values$psrf)
+  # 5. DIAGNOSTICHE E RISULTATI
+  rhat_df <- as.data.frame(gelman.diag(samples, multivariate = FALSE)$psrf)
 
-  # 7. RISULTATI E SALVATAGGIO
-  risultati_finali <- list(
-    specie = nomeSp,
-    summary = summary(samples),
-    rhat = rhat_df,
-    samples = samples
-  )
-
-  # Salva in formato RDS (il nome del file include il nome della specie)
-  file_rds <- paste0("output_bayes/risultati", nk, "k_", nomeSp, ".rds")
-  saveRDS(risultati_finali, file = file_rds)
-
-  message(paste("Statistiche salvate in:", file_rds))
-
-  # 8. PLOT TREND
-  anni_num <- as.numeric(colnames(y_matrix))
   mean_psi_cols <- grep("mean_psi", colnames(as.matrix(samples)))
   mean_psi_samples <- as.matrix(samples)[, mean_psi_cols]
-  mean_rhat <- round(mean(rhat_df$`Point est.`), 2)
-  est <- colMeans(mean_psi_samples)
-  ci <- apply(mean_psi_samples, 2, quantile, probs = c(0.025, 0.975))
 
-  ## data.frame
   df_plot <- data.frame(
     Anno = anni_num,
-    Occupancy = est,
-    Lower = ci["2.5%", ],
-    Upper = ci["97.5%", ]
+    Occupancy = colMeans(mean_psi_samples),
+    Lower = apply(mean_psi_samples, 2, quantile, probs = 0.025),
+    Upper = apply(mean_psi_samples, 2, quantile, probs = 0.975)
   )
 
-  ## plot
-  pOccu <- df_plot |>
-    ggplot(aes(x = Anno, y = Occupancy)) +
+  # 6. PLOT E SALVATAGGIO
+  pOccu <- ggplot(df_plot, aes(x = Anno, y = Occupancy)) +
     geom_ribbon(
       aes(ymin = Lower, ymax = Upper),
       fill = "forestGreen",
@@ -207,28 +219,29 @@ odoBayes <- function(nomeSp, nk = 30) {
     ) +
     geom_line(color = "forestGreen", linewidth = 1) +
     geom_point(color = "forestGreen", size = 3) +
-    geom_smooth(
-      method = "loess",
-      color = "red",
-      linetype = "dashed",
-      se = F,
-      alpha = 0.5
-    ) +
     scale_y_continuous(limits = c(0, 1), labels = scales::percent) +
     labs(
-      title = paste(nomeSp),
-      x = "",
+      title = nomeSp,
+      subtitle = paste("R-hat:", round(mean(rhat_df[, 1]), 2)),
+      x = '',
       y = "Occupancy",
-      tag = "nimble"
+      caption = "nimble (dynamic)"
     ) +
     theme_bw(base_size = 14) +
     theme(plot.title = element_text(face = "italic"))
 
   print(pOccu)
 
-  beta_tin_samples <- as.matrix(samples)[, "beta_tin_psi"]
-  cat("Media posteriore:", mean(beta_tin_samples), "\n")
-  cat("IC 95%:", quantile(beta_tin_samples, c(0.025, 0.975)), "\n")
+  ggsave(
+    paste0('output_bayes/', nomeSp, '_', today(), '.pdf'),
+    width = 9,
+    height = 6
+  )
 
-  return(risultati_finali)
+  saveRDS(
+    list(samples = samples, plot_data = df_plot, rhat = rhat_df),
+    paste0("output_bayes/dyn_", nomeSp, "_", today(), ".rds")
+  )
+
+  return(range(df_plot$Occupancy))
 }

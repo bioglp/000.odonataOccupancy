@@ -20,6 +20,12 @@ Serie dati raccolti in Piemonte e Lombardia nel periodo compreso tra il 1999 e i
 
 ## Daily log
 
+- 2026-02-07
+    - gran parte del codice è stato revisionato
+        - per il modello bayesiano è stato introdotto il modello dynamic
+        - sono state verificate le congruenze nelle matrici
+        - sono stati inclusi i plot in output
+
 - 2026-01-29
     - creazione di gruppi di specie sulla base dei valori di HV, IW, TempIndex
         - PCA sulle 3 variabili 

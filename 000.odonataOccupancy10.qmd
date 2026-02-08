@@ -1,7 +1,7 @@
 ---
 title: "occupancyOdonata10k"
 author: "Gianandrea La Porta"
-date: "2025-01-31"
+date: "2025-02-07"
 format: 
   html:
     theme: cosmo
@@ -13,7 +13,7 @@ execute:
   message: false
   echo: fenced
 editor: source
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 
@@ -98,7 +98,6 @@ ncell <- dfo |>
   distinct(cellcode) |>
   count() |>
   pull()
-
 
 # celle monitorate x anno
 cells <- dfo |>
@@ -239,8 +238,6 @@ dfo <- dfo |>
 Plot del numero di celle in cui la specie è stata osservata nel corso degli anni. Il dato non tiene conto dello sforzo di ricerca.
 
 ```{r linear_trend, fig.height=5, fig.width=7}
-#| eval: false
-#| include: false
 
 # Numero di siti per specie e anno
 species_sites <- dfo |>
@@ -263,7 +260,7 @@ odoTrend <- function(sp) {
   #ggsave(filename, width = 7, height = 5)
 }
 
-lapply(listaSpecie, odoTrend)
+#lapply(listaSpecie, odoTrend)
 
 library(broom)
 # Regressione lineare per tutte le specie
@@ -356,7 +353,6 @@ print(negative_trends, n = 20)
 Grafico dei trend significativi
 
 ```{r trends, fig.height=12, fig.width=7}
-
 # Grafico a barre con specie ordinate per stima significativa
 # Le altre specie sono stabili
 species_trends |>
@@ -380,13 +376,12 @@ species_trends |>
   theme(legend.position = 'top', axis.text.y = element_text(face = 'italic'))
 ```
 
-## Modelli di occupancy con unmarked
-
-### Modello colext
+## Modello unmarked
 
 Il modello utilizzato è del tipo Dynamic occupancy models [colext](https://cran.r-project.org/web/packages/unmarked/vignettes/colext.html). La formula impiegata è `colext(~1, ~year, ~year, ~effort, umf` e considera una p in funzione dell'effort e una ψ (probabilità di occupazione), gamma (probabilità di colonizzazione - in blu), epsilon (probabilità di estinzione in rosso) costanti.
 
-```{r unmarked}
+```{r}
+#| label: unmarked
 #| eval: true
 #| include: true
 library(unmarked)
@@ -396,8 +391,28 @@ listaSpecie <- dfo |>
   filter(n >= 50) |>
   pull(species)
 
-nomeSp <- listaSpecie[45]
+nomeSp <- listaSpecie[1]
 dfo$cellcodeX <- dfo$cellcode
+
+# 1. PREPARAZIONE DATI
+all_cells <- sort(unique(dfo$cellcodeX))
+all_years <- sort(unique(dfo$date_year))
+
+# matrice di campionamento
+effort_matrix <- dfo |>
+  count(cellcodeX, date_year, name = 'tot_occurrences') |>
+  complete(
+    cellcodeX = all_cells,
+    date_year = all_years,
+    fill = list(tot_occurrences = NA)
+  ) |>
+  pivot_wider(
+    id_cols = cellcodeX,
+    names_from = date_year,
+    values_from = tot_occurrences
+  ) |>
+  column_to_rownames("cellcodeX") |>
+  as.matrix()
 
 source('R-script/occuProb.R')
 
@@ -406,14 +421,14 @@ source('R-script/occuProb.R')
 # occProb("Trithemis annulata")
 # occProb('Aeshna isoceles')
 # occProb("Libellula depressa")
-occProb("Sympetrum sanguineum")
-ggsave('Symsan_un10k.pdf', height = 6, width = 8)
-# results <- map(listaSpecie, occProb)
+# occProb("Coenagrion puella")
+resultsUnmarked <- map(listaSpecie, occuProb)
 ```
 
 ## Modello Bayesiano
 
 ```{r}
+# label: bayesian
 #| message: false
 #| warning: false
 # https://www.youtube.com/watch?v=kmMZpG4jK4k&t=192s
@@ -422,7 +437,7 @@ library(nimble)
 library(coda)
 
 # source('R-Script/baseDati.R')
-nomeSp = 'Trithemis annulata'
+# nomeSp = 'Trithemis annulata'
 
 # 1. PREPARAZIONE DATI COMUNI
 all_cells <- sort(unique(dfo$cellcode))
@@ -452,8 +467,7 @@ source('R-script/odoBayes.r')
 # odoBayes('Trithemis annulata','90')
 # odoBayes('Aeshna isoceles','90')
 # odoBayes("Libellula depressa",'50')
-odoBayes("Sympetrum sanguineum")
-ggsave('Symsan_ba10k.pdf', height = 6, width = 8)
-#map(listaSpecie, odoBayes)
+# odoBayes("Sympetrum sanguineum")
+# odoBayes("Coenagrion puella")
+resultsBayes <- map(listaSpecie, odoBayes)
 ```
-
