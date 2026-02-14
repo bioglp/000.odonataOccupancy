@@ -33,21 +33,52 @@ theme_set(theme_bw(base_size = 14))
 Campi del dataset di partenza filtrato per cellcode (grid 10km):
 
 ```{r import data}
-year_start <- 2005
+year_start <- 2004
 
 #dfo <- read.xlsx('input/datasetSegnalazioni_R20251106.xlsx')
 dfo <- read_csv('input/datasetSegnalazioni_R20251106.csv')
-dfo <- dfo |> rename_with(tolower)
+dfo <- dfo |>
+  rename_with(tolower) |>
+  filter(date_year >= year_start) |>
+  mutate(total_count = ifelse(is.na(total_count), 1, total_count))
+dim(dfo)
+
+dfo0 <- dfo |>
+  filter(
+    date_year < 2026,
+    total_count == 0,
+    code == 'Continental',
+    !is.na(cellcode)
+  )
+table(dfo0$latin_taxon)
+dim(dfo0)
+
 dfo <- dfo |>
   filter(
-    date_year >= year_start,
     date_year < 2026,
+    total_count != 0,
     code == 'Continental',
     !is.na(cellcode)
   )
 dfo <- dfo |>
   rename(species = latin_taxon)
 glimpse(dfo) #View(dfo)
+
+dfo <- dfo |>
+  select(date_year, species, cellcode, cellcode20, tin_1)
+
+# iNaturalist
+iNat <- read_csv('input/iNaturalist_20241123.csv')
+iNat <- iNat |>
+  select(
+    date_year = DATE_YEAR,
+    species = scientific_name,
+    cellcode,
+    cellcode20,
+    tin_1 = TIN_11
+  )
+
+dfo <- rbind(dfo, iNat)
 ```
 
 ```{r nomiSpecie}
@@ -84,6 +115,13 @@ dfo$species[
 
 dfo <- dfo |> filter(!str_detect(species, "sp\\.$|sp\\s|sp$"))
 dfo <- dfo |> filter(species != 'No odonata')
+
+dfo |>
+  filter(species == 'Selysiothemis nigra') |>
+  count(species) |>
+  arrange(desc(n))
+
+dim(dfo)
 ```
 
 La serie dati va dal `r min(dfo$date_year)` al `r max(dfo$date_year)`.
@@ -417,12 +455,12 @@ effort_matrix <- dfo |>
 source('R-script/occuProb.R')
 
 # listaSpecie
-# occProb("Sympetrum sanguineum")
-# occProb("Trithemis annulata")
-# occProb('Aeshna isoceles')
-# occProb("Libellula depressa")
-# occProb("Coenagrion puella")
-resultsUnmarked <- map(listaSpecie, occuProb)
+# occuProb("Sympetrum depressiusculum")
+# occuProb("Trithemis annulata")
+# occuProb('Aeshna isoceles')
+# occuProb("Libellula depressa")
+# occuProb("Oxygastra curtisii")
+# resultsUnmarked <- map(listaSpecie, occuProb)
 ```
 
 ## Modello Bayesiano
@@ -460,10 +498,9 @@ effort_matrix <- dfo %>%
   as.matrix()
 
 dfo$cellcodeX <- dfo$cellcode
-
 source('R-script/odoBayes.r')
-# odoBayes('Sympetrum depressiusculum', '90')
-# odoBayes('Sympetrum sanguineum', '90')
+
+# odoBayes('Sympetrum depressiusculum', '10')
 # odoBayes('Trithemis annulata','90')
 # odoBayes('Aeshna isoceles','90')
 # odoBayes("Libellula depressa",'50')

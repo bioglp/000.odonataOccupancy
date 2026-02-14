@@ -20,6 +20,20 @@ Serie dati raccolti in Piemonte e Lombardia nel periodo compreso tra il 1999 e i
 
 ## Daily log
 
+- 2026-02-12
+    - integrazione anno 2004 e sua rimozione dai grafici
+    - figure manoscritto
+        - area di studio e effort
+        - confronto per le specie e i modelli
+        - trend delle specie
+        - gruppi di specie
+            - temperature index
+            - habitat
+            - famiglia
+    - tabelle
+        - specie | n.celle totali | occupancy range | trend
+
+
 - 2026-02-07
     - gran parte del codice è stato revisionato
         - per il modello bayesiano è stato introdotto il modello dynamic

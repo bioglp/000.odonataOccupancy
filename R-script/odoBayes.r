@@ -211,7 +211,9 @@ odoBayes <- function(nomeSp, nk = 10) {
   )
 
   # 6. PLOT E SALVATAGGIO
-  pOccu <- ggplot(df_plot, aes(x = Anno, y = Occupancy)) +
+  pOccu <- df_plot |>
+    filter(Anno > 2004) |>
+    ggplot(aes(x = Anno, y = Occupancy)) +
     geom_ribbon(
       aes(ymin = Lower, ymax = Upper),
       fill = "forestGreen",
@@ -239,8 +241,14 @@ odoBayes <- function(nomeSp, nk = 10) {
   )
 
   saveRDS(
-    list(samples = samples, plot_data = df_plot, rhat = rhat_df),
-    paste0("output_bayes/dyn_", nomeSp, "_", today(), ".rds")
+    list(
+      species = nomeSp,
+      range = range(df_plot$Occupancy),
+      samples = samples,
+      plot_data = df_plot,
+      rhat = rhat_df
+    ),
+    paste0("output_bayes/", nomeSp, "_", today(), ".rds")
   )
 
   return(range(df_plot$Occupancy))

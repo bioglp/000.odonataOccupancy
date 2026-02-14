@@ -116,6 +116,7 @@ occuProb <- function(nomeSp) {
   )
 
   pOccu <- df_plot |>
+    filter(Anno > 2004) |>
     ggplot(aes(x = Anno, y = Occupancy)) +
     geom_ribbon(
       aes(ymin = Lower, ymax = Upper),
@@ -151,7 +152,12 @@ occuProb <- function(nomeSp) {
   )
 
   saveRDS(
-    list(sm = sm, df_plot = df_plot),
+    list(
+      species = nomeSp,
+      range = range(df_plot$Occupancy),
+      sm = sm,
+      df_plot = df_plot
+    ),
     paste0('output_unmarked/', nomeSp, "_", today(), ".rds")
   )
 
