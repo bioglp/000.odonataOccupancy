@@ -92,6 +92,7 @@ odoBayes <- function(nomeSp, nk = 10) {
     beta_tin_psi1 ~ dnorm(0, sd = 2)
     alpha_gamma ~ dnorm(0, sd = 2)
     beta_year_gamma ~ dnorm(0, sd = 2)
+    beta_tin_gamma ~ dnorm(0, sd = 2)
     alpha_eps ~ dnorm(0, sd = 2)
     beta_year_eps ~ dnorm(0, sd = 2)
     alpha_p ~ dnorm(0, sd = 2)
@@ -105,7 +106,9 @@ odoBayes <- function(nomeSp, nk = 10) {
       z[i, 1] ~ dbern(psi1[i])
       # Anni successivi
       for (t in 2:n_years) {
-        logit(gamma[i, t - 1]) <- alpha_gamma + beta_year_gamma * year[t]
+        logit(gamma[i, t - 1]) <- alpha_gamma +
+          beta_year_gamma * year[t] +
+          beta_tin_gamma * tin_1[i]
         logit(eps[i, t - 1]) <- alpha_eps + beta_year_eps * year[t]
         prob_occ[i, t] <- z[i, t - 1] *
           (1 - eps[i, t - 1]) +
@@ -157,6 +160,7 @@ odoBayes <- function(nomeSp, nk = 10) {
     beta_tin_psi1 = 0,
     alpha_gamma = 0,
     beta_year_gamma = 0,
+    beta_tin_gamma = 0,
     alpha_eps = 0,
     beta_year_eps = 0,
     alpha_p = 0,
