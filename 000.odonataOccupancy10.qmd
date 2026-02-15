@@ -501,10 +501,10 @@ dfo$cellcodeX <- dfo$cellcode
 source('R-script/odoBayes.r')
 
 # odoBayes('Sympetrum depressiusculum', '10')
-# odoBayes('Trithemis annulata','90')
+# odoBayes('Trithemis annulata','10')
 # odoBayes('Aeshna isoceles','90')
 # odoBayes("Libellula depressa",'50')
 # odoBayes("Sympetrum sanguineum")
-# odoBayes("Coenagrion puella")
-resultsBayes <- map(listaSpecie, odoBayes)
+# odoBayes("Ophiogomphus cecilia")
+# resultsBayes <- map(listaSpecie, odoBayes)
 ```
