@@ -3,4 +3,8 @@ cartografia/
 .Rhistory
 .Rproj.user/
 *.Rproj
+/.DS_Store
 R-script/.DS_Store
+/output_bayes/.DS_Store
+/output_unmarked/.DS_Store
+*.pdf
