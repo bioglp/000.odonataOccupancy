@@ -11,7 +11,7 @@ p_load(tidyverse, patchwork, here)
 
 ```{r}
 #| label: import data
-sp <- readRDS(here('output_bayes/Aeshna affinis_2026-02-12.rds'))
+sp <- readRDS(here('output_bayes/Aeshna affinis_2026-02-14.rds'))
 str(sp)
 ```
 
@@ -92,7 +92,8 @@ for (file in listafile) {
   mean_psi_rows <- grepl("mean_psi", rownames(sp$rhat))
 
   # stima del trend
-  ts_data <- ts(sp$df_plot$Occupancy, start = 2004)
+  sp$df_plot <- sp$df_plot |> filter(Anno > 2004)
+  ts_data <- ts(sp$df_plot$Occupancy, start = 2005)
   kend <- MannKendall(ts_data)
   sens <- sens.slope(ts_data)
 
@@ -106,8 +107,8 @@ for (file in listafile) {
     sens = round(sens$estimates, 3),
     Psen = round(sens$p.value, 3),
     m = round(m, 3),
-    occupancy_2005 = round(sp$df_plot$Occupancy[2], 2),
-    occupancy_2025 = round(sp$df_plot$Occupancy[22], 2),
+    occupancy_2005 = round(sp$df_plot$Occupancy[1], 2),
+    occupancy_2025 = round(sp$df_plot$Occupancy[21], 2),
     stringsAsFactors = FALSE
   )
 
@@ -170,7 +171,8 @@ for (file in listafile) {
   mean_psi_rows <- grepl("mean_psi", rownames(sp$rhat))
 
   # stima del trend
-  ts_data <- ts(sp$plot_data$Occupancy, start = 2004)
+  sp$plot_data <- sp$plot_data |> filter(Anno > 2004)
+  ts_data <- ts(sp$plot_data$Occupancy, start = 2005)
   kend <- MannKendall(ts_data)
   sens <- sens.slope(ts_data)
 
@@ -185,8 +187,8 @@ for (file in listafile) {
     sens = round(sens$estimates, 3),
     Psen = round(sens$p.value, 3),
     m = round(m, 3),
-    occupancy_2005 = round(sp$plot_data$Occupancy[2], 2),
-    occupancy_2025 = round(sp$plot_data$Occupancy[22], 2),
+    occupancy_2005 = round(sp$plot_data$Occupancy[1], 2),
+    occupancy_2025 = round(sp$plot_data$Occupancy[21], 2),
     stringsAsFactors = FALSE
   )
 
