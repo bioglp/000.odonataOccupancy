@@ -3,185 +3,641 @@ title: "Temperature.Index"
 format: html
 ---
 
+# modello bayesiano per TempIndex
+
 ```{r}
-run_class_model <- function(
-  class_name,
-  species_list,
-  dfo,
-  all_cells,
-  all_years,
-  effort_matrix
-) {
-  y_3d <- prepara_dati_classe(
-    dfo,
-    species_list,
-    all_cells,
-    all_years,
-    effort_matrix
-  )
+library(parallel)
+library(nimble)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(coda)
 
-  # Standardizzazione covariate
-  year_std <- as.vector(scale(all_years))
+odoMultiSpecies_AllGroups <- function(species_index_df, nk = 10, ncores = 3) {
+  cat("Preparazione dati multispecie per TUTTI i gruppi...\n")
+
+  species_subset <- species_index_df %>%
+    select(species, gindex) %>%
+    distinct()
+
+  all_species <- unique(species_subset$species)
+  n_species <- length(all_species)
+
+  cat("Numero totale di specie:", n_species, "\n")
+  cat("Distribuzione per gruppo:\n")
+  print(table(species_subset$gindex))
+
+  # Creare matrice Y per ogni specie
+  y_list <- list()
+  tin_std_list <- list()
+
+  for (sp in all_species) {
+    cat("Preparando dati per", sp, "\n")
+
+    y_matrix <- dfo %>%
+      filter(species == sp) %>%
+      count(cellcodeX, date_year, name = 'n_occurrences') %>%
+      right_join(
+        dfo %>% count(cellcodeX, date_year, name = 'tot_occurrences'),
+        by = c("cellcodeX", "date_year")
+      ) %>%
+      complete(
+        cellcodeX = all_cells,
+        date_year = all_years,
+        fill = list(n_occurrences = NA, tot_occurrences = NA)
+      ) %>%
+      mutate(
+        detection = case_when(
+          is.na(tot_occurrences) ~ NA_real_,
+          n_occurrences > 0 ~ 1,
+          tot_occurrences > 0 ~ 0
+        )
+      ) %>%
+      pivot_wider(
+        id_cols = cellcodeX,
+        names_from = date_year,
+        values_from = detection
+      ) %>%
+      column_to_rownames("cellcodeX") %>%
+      as.matrix()
+
+    y_list[[sp]] <- y_matrix
+
+    # Covariata sito (tin_1)
+    cells_in_y <- rownames(y_matrix)
+    tin_data <- dfo %>%
+      select(cellcodeX, tin_1) %>%
+      distinct() %>%
+      mutate(cellcodeX = as.character(cellcodeX)) %>%
+      filter(cellcodeX %in% cells_in_y) %>%
+      group_by(cellcodeX) %>%
+      summarise(tin_1 = mean(round(tin_1), na.rm = TRUE), .groups = 'drop')
+
+    tin_df <- data.frame(cellcodeX = cells_in_y) %>%
+      left_join(tin_data, by = "cellcodeX")
+
+    tin_std_list[[sp]] <- as.vector(scale(tin_df$tin_1))
+  }
+
+  # Standardizzazione effort (uguale per tutte le specie)
   effort_vec <- as.numeric(effort_matrix)
-  effort_std <- matrix(scale(effort_vec), nrow = nrow(effort_matrix))
-
-  # Preparazione covariata tin_1 (quota altimetrica)
-  cells_in_y <- rownames(effort_matrix)
-  tin_data <- dfo %>%
-    select(cellcodeX, tin_1) %>%
-    distinct() %>%
-    mutate(cellcodeX = as.character(cellcodeX)) %>%
-    filter(cellcodeX %in% cells_in_y) %>%
-    group_by(cellcodeX) %>%
-    summarise(tin_1 = mean(round(tin_1), na.rm = TRUE), .groups = "drop")
-
-  tin_df <- data.frame(cellcodeX = cells_in_y) %>%
-    left_join(tin_data, by = "cellcodeX")
-
-  tin_std <- as.vector(scale(tin_df$tin_1))
-
-  nim_data <- list(
-    y = y_3d,
-    effort = effort_std,
-    year = year_std,
-    tin_1 = tin_std
-  )
-  nim_constants <- list(
-    n_species = length(species_list),
-    n_sites = dim(y_3d)[2],
-    n_years = dim(y_3d)[3]
+  effort_std_mat <- matrix(
+    (effort_vec - mean(effort_vec, na.rm = TRUE)) /
+      sd(effort_vec, na.rm = TRUE),
+    nrow = nrow(y_list[[1]]),
+    ncol = ncol(y_list[[1]])
   )
 
+  anni_num <- as.numeric(colnames(y_list[[1]]))
+  year_std <- as.vector(scale(anni_num))
+
+  # Preparazione dati osservati per tutte le specie
+  obs_data <- data.frame(
+    species_idx = integer(),
+    site_idx = integer(),
+    year_idx = integer(),
+    y_value = numeric(),
+    effort_value = numeric(),
+    year_value = numeric()
+  )
+
+  for (s in 1:n_species) {
+    sp <- all_species[s]
+    y_matrix <- y_list[[sp]]
+
+    for (i in 1:nrow(y_matrix)) {
+      for (t in 1:ncol(y_matrix)) {
+        if (!is.na(y_matrix[i, t])) {
+          obs_data <- rbind(
+            obs_data,
+            data.frame(
+              species_idx = s,
+              site_idx = i,
+              year_idx = t,
+              y_value = y_matrix[i, t],
+              effort_value = effort_std_mat[i, t],
+              year_value = year_std[t]
+            )
+          )
+        }
+      }
+    }
+  }
+
+  cat("N. osservazioni totali:", nrow(obs_data), "\n")
+
+  # Mappare gindex per ogni specie
+  gindex_vec <- species_subset$gindex[match(
+    all_species,
+    species_subset$species
+  )]
+
+  cat("Verifica gindex:\n")
+  print(table(gindex_vec))
+
+  # 2. DEFINIZIONE MODELLO
   code <- nimbleCode({
-    # HYPER-PRIORS (Trend di Classe)
-    mu_beta_year ~ dnorm(0, sd = 2)
-    sigma_beta_year ~ dunif(0, 5)
-    mu_alpha_psi ~ dnorm(0, sd = 2)
-    sigma_alpha_psi ~ dunif(0, 5)
-    mu_beta_tin ~ dnorm(0, sd = 2)
-    sigma_beta_tin ~ dunif(0, 5)
+    # --- HYPERPRIORS PER OGNI GRUPPO (1-4) ---
+    for (tg in 1:4) {
+      mu_alpha_psi1[tg] ~ dnorm(0, sd = 2)
+      mu_alpha_gamma[tg] ~ dnorm(0, sd = 2)
+      mu_alpha_eps[tg] ~ dnorm(0, sd = 2)
+      mu_alpha_p[tg] ~ dnorm(0, sd = 2)
 
-    # Priors fissi per detection
-    alpha_p_mean ~ dnorm(0, sd = 2)
+      sigma_alpha_psi1[tg] ~ dexp(1)
+      sigma_alpha_gamma[tg] ~ dexp(1)
+      sigma_alpha_eps[tg] ~ dexp(1)
+      sigma_alpha_p[tg] ~ dexp(1)
+    }
+
+    # --- PRIORS COMUNI ---
+    beta_tin_psi1 ~ dnorm(0, sd = 2)
+    beta_year_gamma ~ dnorm(0, sd = 2)
+    beta_tin_gamma ~ dnorm(0, sd = 2)
+    beta_year_eps ~ dnorm(0, sd = 2)
     beta_effort ~ dnorm(0, sd = 2)
+    beta_year_p ~ dnorm(0, sd = 2)
 
+    # --- PRIORS SPECIFICI PER SPECIE ---
     for (s in 1:n_species) {
-      # Specie-specific coefficients (estratti dalla distribuzione di classe)
-      beta_year_psi[s] ~ dnorm(mu_beta_year, sd = sigma_beta_year)
-      alpha_psi[s] ~ dnorm(mu_alpha_psi, sd = sigma_alpha_psi)
-      beta_tin_psi[s] ~ dnorm(mu_beta_tin, sd = sigma_beta_tin)
-      alpha_p[s] ~ dnorm(alpha_p_mean, sd = 2)
+      alpha_psi1[s] ~ dnorm(
+        mu_alpha_psi1[gindex[s]],
+        sd = sigma_alpha_psi1[gindex[s]]
+      )
+      alpha_gamma[s] ~ dnorm(
+        mu_alpha_gamma[gindex[s]],
+        sd = sigma_alpha_gamma[gindex[s]]
+      )
+      alpha_eps[s] ~ dnorm(
+        mu_alpha_eps[gindex[s]],
+        sd = sigma_alpha_eps[gindex[s]]
+      )
+      alpha_p[s] ~ dnorm(mu_alpha_p[gindex[s]], sd = sigma_alpha_p[gindex[s]])
+    }
 
+    # --- LIKELIHOOD ---
+    for (s in 1:n_species) {
       for (i in 1:n_sites) {
-        for (t in 1:n_years) {
-          # Occupancy (con effetto quota)
-          logit(psi[s, i, t]) <- alpha_psi[s] +
-            beta_year_psi[s] * year[t] +
-            beta_tin_psi[s] * tin_1[i]
-          z[s, i, t] ~ dbern(psi[s, i, t])
-          # Detection
-          logit(p[s, i, t]) <- alpha_p[s] + beta_effort * effort[i, t]
-          y[s, i, t] ~ dbern(z[s, i, t] * p[s, i, t])
+        # Anno 1
+        logit(psi1[s, i]) <- alpha_psi1[s] + beta_tin_psi1 * tin_1[s, i]
+        z[s, i, 1] ~ dbern(psi1[s, i])
+
+        # Anni successivi
+        for (t in 2:n_years) {
+          logit(gamma[s, i, t - 1]) <- alpha_gamma[s] +
+            beta_year_gamma * year[t] +
+            beta_tin_gamma * tin_1[s, i]
+          logit(eps[s, i, t - 1]) <- alpha_eps[s] + beta_year_eps * year[t]
+          prob_occ[s, i, t] <- z[s, i, t - 1] *
+            (1 - eps[s, i, t - 1]) +
+            (1 - z[s, i, t - 1]) * gamma[s, i, t - 1]
+          z[s, i, t] ~ dbern(prob_occ[s, i, t])
         }
       }
     }
 
-    # Trend medio della classe (a quota media)
-    for (t in 1:n_years) {
-      class_trend[t] <- ilogit(mu_alpha_psi + mu_beta_year * year[t])
+    # Rilevamento
+    for (k in 1:n_obs) {
+      logit(p[k]) <- alpha_p[species_obs[k]] +
+        beta_effort * effort_obs[k] +
+        beta_year_p * year_value_obs[k]
+      mu[k] <- z[species_obs[k], site_obs[k], year_idx_obs[k]] * p[k]
+      y_obs[k] ~ dbern(mu[k])
+    }
+
+    # Quantità derivate per singola specie
+    for (s in 1:n_species) {
+      for (t in 1:n_years) {
+        mean_psi[s, t] <- sum(z[s, 1:n_sites, t]) / n_sites
+      }
     }
   })
 
-  z_init <- y_3d
-  z_init[is.na(z_init)] <- 0
-  inits <- list(
-    mu_beta_year = 0,
-    mu_alpha_psi = 0,
-    mu_beta_tin = 0,
-    sigma_beta_year = 1,
-    sigma_alpha_psi = 1,
-    sigma_beta_tin = 1,
-    alpha_p_mean = 0,
-    beta_effort = 0,
-    z = z_init
+  # 3. INIZIALIZZAZIONE
+  z_init <- array(NA, dim = c(n_species, nrow(y_list[[1]]), ncol(y_list[[1]])))
+
+  for (s in 1:n_species) {
+    sp <- all_species[s]
+    y_matrix <- y_list[[sp]]
+    prob_osservata <- mean(y_matrix, na.rm = TRUE)
+    if (is.na(prob_osservata) || prob_osservata == 0) {
+      prob_osservata <- 0.5
+    }
+
+    z_temp <- matrix(NA, nrow = nrow(y_matrix), ncol = ncol(y_matrix))
+
+    for (i in 1:nrow(y_matrix)) {
+      for (t in 1:ncol(y_matrix)) {
+        if (!is.na(y_matrix[i, t])) {
+          if (y_matrix[i, t] == 1) {
+            z_temp[i, t] <- 1
+          } else {
+            z_temp[i, t] <- rbinom(1, 1, 0.3)
+          }
+        } else {
+          z_temp[i, t] <- rbinom(1, 1, prob_osservata)
+        }
+      }
+    }
+
+    z_init[s, , ] <- z_temp
+  }
+
+  # Preparare tin_1 come matrice
+  tin_matrix <- matrix(NA, nrow = n_species, ncol = nrow(y_list[[1]]))
+  for (s in 1:n_species) {
+    sp <- all_species[s]
+    tin_matrix[s, ] <- tin_std_list[[sp]]
+  }
+
+  nim_constants <- list(
+    n_sites = nrow(y_list[[1]]),
+    n_years = ncol(y_list[[1]]),
+    n_species = n_species,
+    n_obs = nrow(obs_data),
+    species_obs = obs_data$species_idx,
+    site_obs = obs_data$site_idx,
+    year_idx_obs = obs_data$year_idx,
+    tin_1 = tin_matrix,
+    year = year_std,
+    gindex = gindex_vec
   )
 
-  # Esecuzione NIMBLE
-  samples <- nimbleMCMC(
-    code = code,
-    constants = nim_constants,
-    data = nim_data,
-    inits = inits,
-    monitors = c(
-      "mu_beta_year",
-      "mu_beta_tin",
-      "class_trend",
-      "sigma_beta_year",
-      "sigma_beta_tin"
-    ),
-    niter = 20000,
-    nburnin = 5000,
-    nchains = 3,
-    thin = 10,
-    samplesAsCodaMCMC = TRUE
+  nim_data <- list(
+    y_obs = obs_data$y_value,
+    effort_obs = obs_data$effort_value,
+    year_value_obs = obs_data$year_value
   )
 
-  # 5. DIAGNOSTICHE E RISULTATI
-  rhat_df <- as.data.frame(gelman.diag(samples, multivariate = FALSE)$psrf)
+  # 4. ESECUZIONE CON PARALLELIZZAZIONE
+  cat("\nEsecuzione MCMC in parallelo con", ncores, "core...\n")
 
-  class_trend_cols <- grep("class_trend", colnames(as.matrix(samples)))
-  class_trend_samples <- as.matrix(samples)[, class_trend_cols]
+  run_chain <- function(
+    chain_id,
+    seed_val,
+    model_code,
+    constants,
+    data,
+    n_sp,
+    y_matrices
+  ) {
+    set.seed(seed_val)
 
-  anni_num <- all_years
+    z_init_local <- array(
+      NA,
+      dim = c(n_sp, constants$n_sites, constants$n_years)
+    )
 
-  df_plot <- data.frame(
-    Anno = anni_num,
-    Occupancy = colMeans(class_trend_samples),
-    Lower = apply(class_trend_samples, 2, quantile, probs = 0.025),
-    Upper = apply(class_trend_samples, 2, quantile, probs = 0.975)
+    for (s in 1:n_sp) {
+      y_mat <- y_matrices[[s]]
+      prob_init <- runif(1, 0.4, 0.6)
+
+      for (i in 1:constants$n_sites) {
+        for (t in 1:constants$n_years) {
+          if (!is.na(y_mat[i, t])) {
+            if (y_mat[i, t] == 1) {
+              z_init_local[s, i, t] <- 1
+            } else {
+              z_init_local[s, i, t] <- rbinom(1, 1, 0.3)
+            }
+          } else {
+            z_init_local[s, i, t] <- rbinom(1, 1, prob_init)
+          }
+        }
+      }
+    }
+
+    initial_values <- list(
+      mu_alpha_psi1 = rnorm(4, 0, 0.5),
+      mu_alpha_gamma = rnorm(4, 0, 0.5),
+      mu_alpha_eps = rnorm(4, 0, 0.5),
+      mu_alpha_p = rnorm(4, 0, 0.5),
+      sigma_alpha_psi1 = rexp(4, 1),
+      sigma_alpha_gamma = rexp(4, 1),
+      sigma_alpha_eps = rexp(4, 1),
+      sigma_alpha_p = rexp(4, 1),
+      alpha_psi1 = rnorm(n_sp, 0, 0.5),
+      alpha_gamma = rnorm(n_sp, 0, 0.5),
+      alpha_eps = rnorm(n_sp, 0, 0.5),
+      alpha_p = rnorm(n_sp, 0, 0.5),
+      beta_tin_psi1 = rnorm(1, 0, 0.5),
+      beta_year_gamma = rnorm(1, 0, 0.5),
+      beta_tin_gamma = rnorm(1, 0, 0.5),
+      beta_year_eps = rnorm(1, 0, 0.5),
+      beta_effort = rnorm(1, 0, 0.5),
+      beta_year_p = rnorm(1, 0, 0.5),
+      z = z_init_local
+    )
+
+    suppressMessages({
+      model <- nimbleModel(
+        model_code,
+        constants = constants,
+        data = data,
+        inits = initial_values
+      )
+      c_model <- compileNimble(model, showCompilerOutput = FALSE)
+
+      monitors_vec <- c(
+        'mu_alpha_psi1',
+        'mu_alpha_gamma',
+        'mu_alpha_eps',
+        'mu_alpha_p',
+        'sigma_alpha_psi1',
+        'sigma_alpha_gamma',
+        'sigma_alpha_eps',
+        'sigma_alpha_p',
+        'mean_psi'
+      )
+
+      mcmc_conf <- configureMCMC(model, monitors = monitors_vec)
+      mcmc <- buildMCMC(mcmc_conf)
+      c_mcmc <- compileNimble(mcmc, project = model, showCompilerOutput = FALSE)
+    })
+
+    samples <- runMCMC(
+      c_mcmc,
+      niter = 20000,
+      nburnin = 5000,
+      thin = 10,
+      samplesAsCodaMCMC = TRUE,
+      progressBar = TRUE
+    )
+
+    return(samples)
+  }
+
+  cl <- makeCluster(ncores, outfile = "")
+  invisible(clusterEvalQ(cl, {
+    library(nimble)
+    library(coda)
+  }))
+
+  samples_list <- tryCatch(
+    {
+      parLapply(cl, 1:3, function(i) {
+        run_chain(
+          i,
+          1000 + i * 123,
+          code,
+          nim_constants,
+          nim_data,
+          n_species,
+          y_list
+        )
+      })
+    },
+    finally = {
+      stopCluster(cl)
+    }
   )
 
-  # 6. PLOT E SALVATAGGIO
-  pOccu <- df_plot |>
-    ggplot(aes(x = Anno, y = Occupancy)) +
-    geom_ribbon(
-      aes(ymin = Lower, ymax = Upper),
-      fill = "forestGreen",
-      alpha = 0.2
+  samples <- as.mcmc.list(samples_list)
+
+  # 5. CALCOLARE group_mean_psi POST-HOC
+  cat("\nCalcolando statistiche di gruppo...\n")
+
+  mean_psi_samples <- as.matrix(samples)[, grep(
+    "mean_psi\\[",
+    colnames(as.matrix(samples))
+  )]
+
+  group_results <- list()
+  for (g in 1:4) {
+    # Trova quali specie appartengono al gruppo g
+    species_in_group <- which(gindex_vec == g)
+
+    if (length(species_in_group) == 0) {
+      cat("Nessuna specie nel gruppo", g, "\n")
+      next
+    }
+
+    # Per ogni anno, calcola la media delle specie del gruppo
+    group_mean_by_year <- matrix(
+      NA,
+      nrow = nrow(mean_psi_samples),
+      ncol = length(anni_num)
+    )
+
+    for (t in 1:length(anni_num)) {
+      # Colonne per anno t
+      cols_year_t <- grep(paste0(", ", t, "\\]"), colnames(mean_psi_samples))
+      # Filtra solo le specie del gruppo
+      cols_group_year <- cols_year_t[sapply(cols_year_t, function(col) {
+        sp_idx <- as.numeric(gsub(
+          ".*\\[(\\d+),.*",
+          "\\1",
+          colnames(mean_psi_samples)[col]
+        ))
+        sp_idx %in% species_in_group
+      })]
+
+      if (length(cols_group_year) > 0) {
+        group_mean_by_year[, t] <- rowMeans(mean_psi_samples[,
+          cols_group_year,
+          drop = FALSE
+        ])
+      }
+    }
+
+    df_plot <- data.frame(
+      Anno = anni_num,
+      Group = g,
+      Occupancy = colMeans(group_mean_by_year, na.rm = TRUE),
+      Lower = apply(
+        group_mean_by_year,
+        2,
+        quantile,
+        probs = 0.025,
+        na.rm = TRUE
+      ),
+      Upper = apply(
+        group_mean_by_year,
+        2,
+        quantile,
+        probs = 0.975,
+        na.rm = TRUE
+      )
+    )
+
+    group_results[[g]] <- list(
+      group = g,
+      n_species = length(species_in_group),
+      plot_data = df_plot,
+      samples = group_mean_by_year
+    )
+  }
+
+  # 6. DIAGNOSTICHE
+  rhat_df <- tryCatch(
+    {
+      as.data.frame(gelman.diag(samples, multivariate = FALSE)$psrf)
+    },
+    error = function(e) {
+      data.frame(Point.est = NA, Upper.C.I. = NA)
+    }
+  )
+
+  # 7. PLOT
+  all_group_data <- bind_rows(lapply(group_results, function(x) x$plot_data))
+
+  pGroups <- all_group_data %>%
+    filter(Anno > 2004) %>%
+    ggplot(aes(
+      x = Anno,
+      y = Occupancy,
+      color = factor(Group),
+      fill = factor(Group)
+    )) +
+    geom_ribbon(aes(ymin = Lower, ymax = Upper), alpha = 0.2, color = NA) +
+    geom_line(linewidth = 1.2) +
+    geom_point(size = 2) +
+    scale_color_viridis_d(
+      name = "Temperature Group",
+      labels = paste("Group", 1:4)
     ) +
-    geom_line(color = "forestGreen", linewidth = 1) +
-    geom_point(color = "forestGreen", size = 3) +
+    scale_fill_viridis_d(
+      name = "Temperature Group",
+      labels = paste("Group", 1:4)
+    ) +
     scale_y_continuous(limits = c(0, 1), labels = scales::percent) +
     labs(
-      title = class_name,
-      subtitle = paste("R-hat:", round(mean(rhat_df[, 1]), 2)),
-      x = '',
-      y = "Occupancy (Class Trend)",
-      caption = "nimble (hierarchical multi-species)"
+      title = "Occupancy Comparison Across Temperature Groups",
+      x = 'Year',
+      y = "Mean Occupancy"
     ) +
     theme_bw(base_size = 14) +
-    theme(plot.title = element_text(face = "bold"))
+    theme(legend.position = "bottom")
 
-  print(pOccu)
+  print(pGroups)
 
   ggsave(
-    paste0('output_bayes/', class_name, '_', today(), '.pdf'),
-    width = 9,
-    height = 6
+    paste0('output_bayes/ALL_GROUPS_comparison_', today(), '.pdf'),
+    width = 12,
+    height = 8
   )
 
-  # Salva risultati completi
+  # 8. CONFRONTI STATISTICI
+  cat("\n=== CONFRONTI TRA GRUPPI ===\n")
+
+  mu_psi1_samples <- as.matrix(samples)[, grep(
+    "^mu_alpha_psi1\\[",
+    colnames(as.matrix(samples))
+  )]
+  mu_gamma_samples <- as.matrix(samples)[, grep(
+    "^mu_alpha_gamma\\[",
+    colnames(as.matrix(samples))
+  )]
+
+  comparisons <- list()
+  for (g1 in 1:3) {
+    for (g2 in (g1 + 1):4) {
+      diff_psi1 <- mu_psi1_samples[, g2] - mu_psi1_samples[, g1]
+      diff_gamma <- mu_gamma_samples[, g2] - mu_gamma_samples[, g1]
+
+      cat("\n--- Gruppo", g2, "vs Gruppo", g1, "---\n")
+      cat("Occupancy iniziale:\n")
+      cat("  Prob(G", g2, "> G", g1, "):", mean(diff_psi1 > 0), "\n")
+      cat("Colonizzazione:\n")
+      cat("  Prob(G", g2, "> G", g1, "):", mean(diff_gamma > 0), "\n")
+
+      comparisons[[paste0("G", g2, "_vs_G", g1)]] <- list(
+        diff_psi1 = diff_psi1,
+        diff_gamma = diff_gamma
+      )
+    }
+  }
+
   saveRDS(
     list(
-      class = class_name,
-      species_list = species_list,
+      n_species = n_species,
+      species = all_species,
+      gindex = gindex_vec,
       samples = samples,
-      plot_data = df_plot,
+      group_results = group_results,
+      comparisons = comparisons,
       rhat = rhat_df
     ),
-    paste0("output_bayes/class_", class_name, "_", today(), ".rds")
+    paste0("output_bayes/MULTISPECIES_ALL_GROUPS_", today(), ".rds")
   )
 
-  return(samples)
+  cat("\nAnalisi completata!\n")
+  return(list(
+    group_results = group_results,
+    comparisons = comparisons
+  ))
 }
+
+### -------------------------
+
+# Script di verifica preliminare
+verify_data <- function(species_index_df) {
+  cat("=== VERIFICA PRELIMINARE ===\n\n")
+
+  # 1. Controllare distribuzione specie per gruppo
+  cat("Distribuzione specie per gruppo:\n")
+  print(table(species_index_df$gindex))
+
+  # 2. Verificare che tutte le specie esistano in dfo
+  species_list <- unique(species_index_df$species)
+  species_in_dfo <- unique(dfo$species)
+  missing <- setdiff(species_list, species_in_dfo)
+
+  if (length(missing) > 0) {
+    cat("\nATTENZIONE: Specie mancanti in dfo:\n")
+    print(missing)
+    return(FALSE)
+  }
+
+  # 3. Contare osservazioni per specie
+  obs_per_species <- dfo %>%
+    filter(species %in% species_list) %>%
+    group_by(species) %>%
+    summarise(n_obs = n(), .groups = 'drop') %>%
+    arrange(n_obs)
+
+  cat("\nOsservazioni per specie:\n")
+  print(obs_per_species)
+
+  # 4. Verificare celle e anni
+  cat("\nNumero di celle:", length(unique(dfo$cellcodeX)), "\n")
+  cat(
+    "Anni disponibili:",
+    paste(sort(unique(dfo$date_year)), collapse = ", "),
+    "\n"
+  )
+
+  # 5. Stimare tempo di esecuzione
+  n_species <- nrow(species_index_df)
+  estimated_minutes <- n_species * 2 # approssimazione: 2 min per specie
+
+  cat("\n=== STIMA TEMPO ===\n")
+  cat("Numero totale di specie:", n_species, "\n")
+  cat("Tempo stimato:", round(estimated_minutes / 60, 1), "ore\n")
+
+  return(TRUE)
+}
+
+# Eseguire verifica
+dfo_with_gindex <- dfo %>%
+  mutate(gindex = Temp_Group) %>%
+  select(species, gindex) %>%
+  distinct()
+
+verify_data(dfo_with_gindex)
+
+### -------------------------
+# Test con 1 specie per gruppo
+test_species <- dfo %>%
+  group_by(Temp_Group) %>%
+  distinct(species) %>%
+  slice_head(n = 1) %>%
+  ungroup() %>%
+  mutate(gindex = Temp_Group) %>%
+  select(species, gindex)
+
+results <- odoMultiSpecies_AllGroups(test_species, ncores = 2)
+
+### -------------------------
+
 ```
