@@ -3,80 +3,6 @@ title: "Temperature.Index"
 format: html
 ---
 
-
-```{r}
-library(tidyverse)
-library(here)
-library(openxlsx)
-
-odo <- read.csv(here('input/Sönke/odoTraits.csv'))
-
-year_start <- 2005
-
-#dfo_1 <- read.xlsx('input/datasetSegnalazioni_R20251106.xlsx')
-dfo <- dfo_1 |> rename_with(tolower)
-dfo <- dfo |>
-  filter(
-    date_year >= year_start,
-    date_year < 2026,
-    code == 'Continental',
-    !is.na(cellcode)
-  )
-dfo <- dfo |>
-  rename(species = latin_taxon)
-
-# unisce i due df
-dfo <- merge(dfo, odo)
-glimpse(dfo) #View(dfo)
-```
-
-## Modello Bayesiano
-### approccio multispecie
-
-```{r}
-prepara_dati_classe <- function(
-  dfo,
-  specie_classe,
-  all_cells,
-  all_years,
-  effort_matrix
-) {
-  library(tidyverse)
-
-  n_specie <- length(specie_classe)
-  n_sites <- length(all_cells)
-  n_years <- length(all_years)
-
-  y_3d <- array(NA, dim = c(n_specie, n_sites, n_years))
-
-  for (s in 1:n_specie) {
-    sp_data <- dfo %>%
-      filter(species == specie_classe[s]) %>%
-      # 1. Raggruppa e riassumi per evitare duplicati cella/anno
-      group_by(cellcode, date_year) %>%
-      summarise(presence = ifelse(n() > 0, 1, 0), .groups = "drop") %>%
-      # 2. Riempimento celle/anni mancanti
-      complete(
-        cellcode = all_cells,
-        date_year = all_years,
-        fill = list(presence = 0)
-      ) %>%
-      # 3. Pivot
-      pivot_wider(names_from = date_year, values_from = presence) %>%
-      # 4. Trasformazione in matrice con controllo nomi
-      as.data.frame() # Forza a DF per sicurezza nomi
-
-    rownames(sp_data) <- sp_data$cellcode
-    sp_data_matrix <- as.matrix(sp_data[, as.character(all_years)])
-
-    # Inserimento nell'array 3D
-    y_3d[s, , ] <- sp_data_matrix[as.character(all_cells), ]
-  }
-  return(y_3d)
-}
-```
-
-
 ```{r}
 run_class_model <- function(
   class_name,
@@ -86,8 +12,6 @@ run_class_model <- function(
   all_years,
   effort_matrix
 ) {
-  library(nimble)
-
   y_3d <- prepara_dati_classe(
     dfo,
     species_list,
@@ -101,7 +25,27 @@ run_class_model <- function(
   effort_vec <- as.numeric(effort_matrix)
   effort_std <- matrix(scale(effort_vec), nrow = nrow(effort_matrix))
 
-  nim_data <- list(y = y_3d, effort = effort_std, year = year_std)
+  # Preparazione covariata tin_1 (quota altimetrica)
+  cells_in_y <- rownames(effort_matrix)
+  tin_data <- dfo %>%
+    select(cellcodeX, tin_1) %>%
+    distinct() %>%
+    mutate(cellcodeX = as.character(cellcodeX)) %>%
+    filter(cellcodeX %in% cells_in_y) %>%
+    group_by(cellcodeX) %>%
+    summarise(tin_1 = mean(round(tin_1), na.rm = TRUE), .groups = "drop")
+
+  tin_df <- data.frame(cellcodeX = cells_in_y) %>%
+    left_join(tin_data, by = "cellcodeX")
+
+  tin_std <- as.vector(scale(tin_df$tin_1))
+
+  nim_data <- list(
+    y = y_3d,
+    effort = effort_std,
+    year = year_std,
+    tin_1 = tin_std
+  )
   nim_constants <- list(
     n_species = length(species_list),
     n_sites = dim(y_3d)[2],
@@ -114,6 +58,8 @@ run_class_model <- function(
     sigma_beta_year ~ dunif(0, 5)
     mu_alpha_psi ~ dnorm(0, sd = 2)
     sigma_alpha_psi ~ dunif(0, 5)
+    mu_beta_tin ~ dnorm(0, sd = 2)
+    sigma_beta_tin ~ dunif(0, 5)
 
     # Priors fissi per detection
     alpha_p_mean ~ dnorm(0, sd = 2)
@@ -123,12 +69,15 @@ run_class_model <- function(
       # Specie-specific coefficients (estratti dalla distribuzione di classe)
       beta_year_psi[s] ~ dnorm(mu_beta_year, sd = sigma_beta_year)
       alpha_psi[s] ~ dnorm(mu_alpha_psi, sd = sigma_alpha_psi)
+      beta_tin_psi[s] ~ dnorm(mu_beta_tin, sd = sigma_beta_tin)
       alpha_p[s] ~ dnorm(alpha_p_mean, sd = 2)
 
       for (i in 1:n_sites) {
         for (t in 1:n_years) {
-          # Occupancy
-          logit(psi[s, i, t]) <- alpha_psi[s] + beta_year_psi[s] * year[t]
+          # Occupancy (con effetto quota)
+          logit(psi[s, i, t]) <- alpha_psi[s] +
+            beta_year_psi[s] * year[t] +
+            beta_tin_psi[s] * tin_1[i]
           z[s, i, t] ~ dbern(psi[s, i, t])
           # Detection
           logit(p[s, i, t]) <- alpha_p[s] + beta_effort * effort[i, t]
@@ -137,7 +86,7 @@ run_class_model <- function(
       }
     }
 
-    # Parametro derivato: Trend medio della classe
+    # Trend medio della classe (a quota media)
     for (t in 1:n_years) {
       class_trend[t] <- ilogit(mu_alpha_psi + mu_beta_year * year[t])
     }
@@ -148,8 +97,10 @@ run_class_model <- function(
   inits <- list(
     mu_beta_year = 0,
     mu_alpha_psi = 0,
+    mu_beta_tin = 0,
     sigma_beta_year = 1,
     sigma_alpha_psi = 1,
+    sigma_beta_tin = 1,
     alpha_p_mean = 0,
     beta_effort = 0,
     z = z_init
@@ -161,7 +112,13 @@ run_class_model <- function(
     constants = nim_constants,
     data = nim_data,
     inits = inits,
-    monitors = c("mu_beta_year", "class_trend", "sigma_beta_year"),
+    monitors = c(
+      "mu_beta_year",
+      "mu_beta_tin",
+      "class_trend",
+      "sigma_beta_year",
+      "sigma_beta_tin"
+    ),
     niter = 20000,
     nburnin = 5000,
     nchains = 3,
@@ -169,50 +126,62 @@ run_class_model <- function(
     samplesAsCodaMCMC = TRUE
   )
 
-  saveRDS(samples, paste0("output_bayes/class_", class_name, ".rds"))
+  # 5. DIAGNOSTICHE E RISULTATI
+  rhat_df <- as.data.frame(gelman.diag(samples, multivariate = FALSE)$psrf)
+
+  class_trend_cols <- grep("class_trend", colnames(as.matrix(samples)))
+  class_trend_samples <- as.matrix(samples)[, class_trend_cols]
+
+  anni_num <- all_years
+
+  df_plot <- data.frame(
+    Anno = anni_num,
+    Occupancy = colMeans(class_trend_samples),
+    Lower = apply(class_trend_samples, 2, quantile, probs = 0.025),
+    Upper = apply(class_trend_samples, 2, quantile, probs = 0.975)
+  )
+
+  # 6. PLOT E SALVATAGGIO
+  pOccu <- df_plot |>
+    ggplot(aes(x = Anno, y = Occupancy)) +
+    geom_ribbon(
+      aes(ymin = Lower, ymax = Upper),
+      fill = "forestGreen",
+      alpha = 0.2
+    ) +
+    geom_line(color = "forestGreen", linewidth = 1) +
+    geom_point(color = "forestGreen", size = 3) +
+    scale_y_continuous(limits = c(0, 1), labels = scales::percent) +
+    labs(
+      title = class_name,
+      subtitle = paste("R-hat:", round(mean(rhat_df[, 1]), 2)),
+      x = '',
+      y = "Occupancy (Class Trend)",
+      caption = "nimble (hierarchical multi-species)"
+    ) +
+    theme_bw(base_size = 14) +
+    theme(plot.title = element_text(face = "bold"))
+
+  print(pOccu)
+
+  ggsave(
+    paste0('output_bayes/', class_name, '_', today(), '.pdf'),
+    width = 9,
+    height = 6
+  )
+
+  # Salva risultati completi
+  saveRDS(
+    list(
+      class = class_name,
+      species_list = species_list,
+      samples = samples,
+      plot_data = df_plot,
+      rhat = rhat_df
+    ),
+    paste0("output_bayes/class_", class_name, "_", today(), ".rds")
+  )
+
   return(samples)
 }
-```
-
-
-```{r}
-library(parallel)
-
-# Separazione gruppo specie per Temp_Group
-classi_lista <- split(
-  unique(dfo$species),
-  dfo[match(unique(dfo$species), dfo$species), "Temp_Group"]
-)
-
-# Setup Cluster (usa 3 core, uno per classe)
-cl <- makeCluster(3)
-
-# Esporta le variabili e le funzioni necessarie ai core
-clusterExport(
-  cl,
-  c(
-    "dfo",
-    "all_cells",
-    "all_years",
-    "effort_matrix",
-    "prepara_dati_classe",
-    "run_class_model"
-  )
-)
-
-# Esecuzione parallela
-risultati_classi <- clusterMap(
-  cl,
-  run_class_model,
-  class_name = names(classi_lista),
-  species_list = classi_lista,
-  MoreArgs = list(
-    dfo = dfo,
-    all_cells = all_cells,
-    all_years = all_years,
-    effort_matrix = effort_matrix
-  )
-)
-
-stopCluster(cl)
 ```

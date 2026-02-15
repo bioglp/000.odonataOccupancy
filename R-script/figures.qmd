@@ -1,0 +1,235 @@
+---
+title: "Figure paper"
+format: html
+---
+
+```{r}
+#| label: libraries
+library(pacman)
+p_load(tidyverse, patchwork, here)
+```
+
+```{r}
+#| label: import data
+sp <- readRDS(here('output_bayes/Aeshna affinis_2026-02-12.rds'))
+str(sp)
+```
+
+```{r}
+#| label: plot
+df_plot <- sp$plot_data
+nomeSp <- sp$species
+
+pOccu1 <- df_plot |>
+  filter(Anno > 2004) |>
+  ggplot(aes(x = Anno, y = Occupancy)) +
+  geom_ribbon(
+    aes(ymin = Lower, ymax = Upper),
+    fill = "forestGreen",
+    alpha = 0.2
+  ) +
+  geom_line(color = "forestGreen", linewidth = 1) +
+  geom_point(color = "forestGreen", size = 3) +
+  scale_y_continuous(limits = c(0, 1), labels = scales::percent) +
+  labs(
+    title = nomeSp,
+    #subtitle = paste("R-hat:", round(mean(rhat_df[, 1]), 2)),
+    x = '',
+    y = "Occupancy"
+  ) +
+  theme_bw(base_size = 14) +
+  theme(plot.title = element_text(face = "italic"))
+
+print(pOccu1)
+```
+
+
+```{r}
+#| label: rescale plot
+# riscalatura a 100
+base_value <- df_plot$Occupancy[2]
+df_plot$Occupancy_scaled <- (df_plot$Occupancy / base_value)
+df_plot$Lower_scaled <- (df_plot$Lower / base_value)
+df_plot$Upper_scaled <- (df_plot$Upper / base_value)
+
+pOccu2 <-
+  df_plot |>
+  filter(Anno > 2004) |>
+  ggplot(aes(x = Anno, y = Occupancy_scaled)) +
+  geom_ribbon(
+    aes(ymin = Lower_scaled, ymax = Upper_scaled),
+    alpha = 0.3,
+    fill = "steelblue"
+  ) +
+  geom_line(color = "steelblue", linewidth = 1) +
+  geom_point(color = "steelblue", size = 3) +
+  geom_hline(yintercept = 1, linetype = "dashed", color = "red") +
+  scale_y_continuous(limits = c(0, 1.5), labels = scales::percent) +
+  labs(x = "", y = "", caption = "nimble (dynamic)") +
+  theme_bw(base_size = 14)
+
+print(pOccu2)
+
+pOccu1 + pOccu2
+```
+
+## Modello unmarked
+
+```{r}
+#| label: tabUnmarked
+library(Kendall)
+library(trend)
+listafile <- list.files(pattern = '\\.rds', path = 'output_unmarked/')
+# file <- listafile[41]
+
+stats <- list()
+for (file in listafile) {
+  sp <- readRDS(paste0('output_unmarked/', file))
+  sp$df_plot |>
+    select(Anno, Occupancy)
+
+  m <- coef(lm(sp$df_plot$Occupancy ~ sp$df_plot$Anno))[2]
+  mean_psi_rows <- grepl("mean_psi", rownames(sp$rhat))
+
+  # stima del trend
+  ts_data <- ts(sp$df_plot$Occupancy, start = 2004)
+  kend <- MannKendall(ts_data)
+  sens <- sens.slope(ts_data)
+
+  # Estrazione dati
+  stats[[length(stats) + 1]] <- data.frame(
+    species = sp$species,
+    range_min = round(sp$range[1], 2),
+    range_max = round(sp$range[2], 2),
+    tau = round(kend$tau, 3),
+    Ptau = round(kend$sl[1], 3),
+    sens = round(sens$estimates, 3),
+    Psen = round(sens$p.value, 3),
+    m = round(m, 3),
+    occupancy_2005 = round(sp$df_plot$Occupancy[2], 2),
+    occupancy_2025 = round(sp$df_plot$Occupancy[22], 2),
+    stringsAsFactors = FALSE
+  )
+
+  cat(file, "- OK\n")
+
+  tab <- bind_rows(stats) %>% arrange(species)
+  row.names(tab) <- NULL
+}
+
+tab <- tab |>
+  mutate(
+    trend = case_when(
+      tau > 0.25 & Ptau < 0.05 ~ "increase",
+      tau < -0.25 & Ptau < 0.05 ~ "decrease",
+      TRUE ~ "stable"
+    )
+  )
+write.csv(tab, 'risultatiUnmarked.csv')
+```
+
+```{r}
+#| label: utrend
+# rappresentazione dei tau di kendall
+tab |>
+  ggplot(aes(x = reorder(species, tau), y = tau, fill = trend)) +
+  geom_col() +
+  coord_flip() + # barre orizzontali per leggibilità
+  labs(
+    x = "",
+    y = "\nMann-Kendall's tau",
+    fill = "",
+    title = "A)"
+  ) +
+  scale_fill_manual(
+    values = c(
+      "increase" = "forestgreen",
+      "stable" = "gray70",
+      "decrease" = "red"
+    )
+  ) +
+  theme_bw(base_size = 14) +
+  theme(legend.position = 'top', axis.text.y = element_text(face = 'italic'))
+
+ggsave('trendU.pdf', width = 8, height = 13)
+```
+
+
+
+## Modello bayesiano
+
+```{r}
+#| label: tabBayes
+listafile <- list.files(pattern = '\\.rds', path = 'output_bayes/')
+
+stats <- list()
+for (file in listafile) {
+  sp <- readRDS(paste0('output_bayes/', file))
+
+  m <- coef(lm(sp$plot_data$Occupancy ~ sp$plot_data$Anno))[2]
+  mean_psi_rows <- grepl("mean_psi", rownames(sp$rhat))
+
+  # stima del trend
+  ts_data <- ts(sp$plot_data$Occupancy, start = 2004)
+  kend <- MannKendall(ts_data)
+  sens <- sens.slope(ts_data)
+
+  # Estrazione dati
+  stats[[length(stats) + 1]] <- data.frame(
+    species = sp$species,
+    range_min = round(sp$range[1], 2),
+    range_max = round(sp$range[2], 2),
+    rhat = round(mean(sp$rhat$`Point est.`[mean_psi_rows]), 2),
+    tau = round(kend$tau, 3),
+    Ptau = round(kend$sl[1], 3),
+    sens = round(sens$estimates, 3),
+    Psen = round(sens$p.value, 3),
+    m = round(m, 3),
+    occupancy_2005 = round(sp$plot_data$Occupancy[2], 2),
+    occupancy_2025 = round(sp$plot_data$Occupancy[22], 2),
+    stringsAsFactors = FALSE
+  )
+
+  cat(file, "- OK\n")
+
+  tab <- bind_rows(stats) %>% arrange(species)
+  row.names(tab) <- NULL
+}
+
+tab <- tab |>
+  mutate(
+    trend = case_when(
+      tau > 0.25 & Ptau < 0.05 ~ "increase",
+      tau < -0.25 & Ptau < 0.05 ~ "decrease",
+      TRUE ~ "stable"
+    )
+  )
+write.csv(tab, 'risultatiBayes.csv')
+```
+
+```{r}
+#| label: btrend
+# rappresentazione dei tau di kendall
+tab |>
+  ggplot(aes(x = reorder(species, tau), y = tau, fill = trend)) +
+  geom_col() +
+  coord_flip() + # barre orizzontali per leggibilità
+  labs(
+    x = "",
+    y = "\nMann-Kendall's tau",
+    fill = "",
+    title = "B)"
+  ) +
+  scale_fill_manual(
+    values = c(
+      "increase" = "forestgreen",
+      "stable" = "gray70",
+      "decrease" = "red"
+    )
+  ) +
+  theme_bw(base_size = 14) +
+  theme(legend.position = 'top', axis.text.y = element_text(face = 'italic'))
+
+ggsave('trendB.pdf', width = 8, height = 13)
+```
+

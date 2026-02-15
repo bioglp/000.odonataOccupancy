@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Gianandrea La Porta">
-<meta name="dcterms.date" content="2025-01-31">
+<meta name="dcterms.date" content="2025-02-07">
 
 <title>occupancyOdonata10k</title>
 <style>
@@ -63,14 +63,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="000.odonataOccupancy10_files/libs/clipboard/clipboard.min.js"></script>
 <script src="000.odonataOccupancy10_files/libs/quarto-html/quarto.js" type="module"></script>
 <script src="000.odonataOccupancy10_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="000.odonataOccupancy10_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="000.odonataOccupancy10_files/libs/quarto-html/popper.min.js"></script>
 <script src="000.odonataOccupancy10_files/libs/quarto-html/tippy.umd.min.js"></script>
 <script src="000.odonataOccupancy10_files/libs/quarto-html/anchor.min.js"></script>
 <link href="000.odonataOccupancy10_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="000.odonataOccupancy10_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="000.odonataOccupancy10_files/libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="000.odonataOccupancy10_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="000.odonataOccupancy10_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="000.odonataOccupancy10_files/libs/bootstrap/bootstrap-8a894fcc3cb5e37eb5bf30def131be2f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="000.odonataOccupancy10_files/libs/bootstrap/bootstrap-a74871fe4945b66d259aafc266475145.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -91,10 +92,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#linear-trends" id="toc-linear-trends" class="nav-link" data-scroll-target="#linear-trends">Linear trends</a></li>
   <li><a href="#sampling-effort" id="toc-sampling-effort" class="nav-link" data-scroll-target="#sampling-effort">Sampling effort</a></li>
-  <li><a href="#modelli-di-occupancy-con-unmarked" id="toc-modelli-di-occupancy-con-unmarked" class="nav-link" data-scroll-target="#modelli-di-occupancy-con-unmarked">Modelli di occupancy con unmarked</a>
-  <ul class="collapse">
-  <li><a href="#modello-colext" id="toc-modello-colext" class="nav-link" data-scroll-target="#modello-colext">Modello colext</a></li>
-  </ul></li>
+  <li><a href="#modello-unmarked" id="toc-modello-unmarked" class="nav-link" data-scroll-target="#modello-unmarked">Modello unmarked</a></li>
   <li><a href="#modello-bayesiano" id="toc-modello-bayesiano" class="nav-link" data-scroll-target="#modello-bayesiano">Modello Bayesiano</a></li>
   </ul>
 </nav>
@@ -120,7 +118,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">January 31, 2025</p>
+      <p class="date">February 7, 2025</p>
     </div>
   </div>
   
@@ -137,7 +135,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r libraries}</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r libraries}</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">'input'</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#dir.create('output', showWarnings = FALSE)</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#dir.create('plots', showWarnings = FALSE)</span></span>
@@ -146,67 +144,69 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pacman)</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">p_load</span>(tidyverse, gt, skimr, ggpubr, rstatix, openxlsx, scales, patchwork)</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">14</span>))</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>Campi del dataset di partenza filtrato per cellcode (grid 10km):</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r import data}</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r import data}</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>year_start <span class="ot">&lt;-</span> <span class="dv">2005</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> <span class="fu">read.xlsx</span>(<span class="st">'input/datasetSegnalazioni_R20251106.xlsx'</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span> <span class="fu">rename_with</span>(tolower)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    date_year <span class="sc">&gt;=</span> year_start,</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    date_year <span class="sc">&lt;</span> <span class="dv">2026</span>,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    code <span class="sc">==</span> <span class="st">'Continental'</span>,</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">is.na</span>(cellcode)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">species =</span> latin_taxon)</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(dfo) <span class="co">#View(dfo)</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#dfo &lt;- read.xlsx('input/datasetSegnalazioni_R20251106.xlsx')</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">'input/datasetSegnalazioni_R20251106.csv'</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span> <span class="fu">rename_with</span>(tolower)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    date_year <span class="sc">&gt;=</span> year_start,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    date_year <span class="sc">&lt;</span> <span class="dv">2026</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    code <span class="sc">==</span> <span class="st">'Continental'</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">is.na</span>(cellcode)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">species =</span> latin_taxon)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(dfo) <span class="co">#View(dfo)</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 86,287
-Columns: 28
-$ id              &lt;dbl&gt; 34223, 34224, 36402, 36403, 36404, 29429, 29430, 29431…
-$ fid             &lt;dbl&gt; 34223, 34224, 36402, 36403, 36404, 29429, 29430, 29431…
-$ id_sighting     &lt;chr&gt; NA, "9790306", "9623207", "9623208", "9623209", "23869…
-$ date_year       &lt;dbl&gt; 2008, 2016, 2016, 2016, 2016, 2023, 2023, 2023, 2023, …
-$ date_month      &lt;dbl&gt; 9, 8, 7, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 8, 8, 8, 8, 8, …
-$ date_day        &lt;dbl&gt; 9, 27, 10, 10, 10, 14, 14, 14, 14, 14, 30, 30, 30, 9, …
-$ id_observer     &lt;chr&gt; NA, "4214", "4898", "4898", "4898", "91", "91", "91", …
-$ observer_name   &lt;chr&gt; "CRISTIANO L., EVANGELISTA M.", "Stefano Ghiano", "Rob…
-$ species         &lt;chr&gt; "Sympetrum striolatum", "Anax imperator", "Calopteryx …
-$ place           &lt;chr&gt; "Filogera, Torr. Chisone, ponte nuovo", "San Secondo d…
-$ precision       &lt;chr&gt; "GPS", "Localizzazione precisa", "Quadrato chilometric…
-$ behaviour       &lt;chr&gt; "NA; NA", NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
-$ total_count     &lt;dbl&gt; NA, 1, 1, 2, 2, 8, 5, 1, 2, 1, 2, 1, 1, 1, NA, NA, NA,…
-$ estimation_code &lt;chr&gt; "Non rilevato", NA, NA, NA, "&gt;", "&gt;", "&gt;", NA, NA, NA,…
+Columns: 29
+$ id              &lt;dbl&gt; 101922, 101923, 101924, 101925, 101926, 101928, 101929…
+$ fid             &lt;dbl&gt; 101922, 101923, 101924, 101925, 101926, 101928, 101929…
+$ id_sighting     &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ date_year       &lt;dbl&gt; 2006, 2006, 2006, 2006, 2006, 2006, 2006, 2006, 2006, …
+$ date_month      &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ date_day        &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ id_observer     &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ observer_name   &lt;chr&gt; "RISERVATO E.", "RISERVATO E.", "RISERVATO E.", "RISER…
+$ species         &lt;chr&gt; "Crocothemis erythraea", "Orthetrum cancellatum", "Ort…
+$ place           &lt;chr&gt; "Casone", "Casone", "Casone", "Casone", "Casone", "Guz…
+$ precision       &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ behaviour       &lt;chr&gt; "NA; NA", "NA; NA", "NA; NA", "NA; NA", "NA; NA", "NA;…
+$ total_count     &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ estimation_code &lt;chr&gt; "Non rilevato", "Non rilevato", "Non rilevato", "Non r…
 $ detail          &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
-$ comment         &lt;chr&gt; NA, NA, NA, NA, NA, "in massima parte M", NA, NA, NA, …
-$ source          &lt;chr&gt; "rimappato", "ornitho", "ornitho", "ornitho", "ornitho…
-$ cellcode        &lt;chr&gt; "10kmE410N242", "10kmE410N242", "10kmE410N243", "10kmE…
-$ eoforigin       &lt;dbl&gt; 4100000, 4100000, 4100000, 4100000, 4100000, 4100000, …
-$ noforigin       &lt;dbl&gt; 2420000, 2420000, 2430000, 2430000, 2430000, 2400000, …
-$ umbria          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ comment         &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+$ source          &lt;chr&gt; "rimappato", "rimappato", "rimappato", "rimappato", "r…
+$ cellcode        &lt;chr&gt; "10kmE421N250", "10kmE421N250", "10kmE421N250", "10kmE…
+$ eoforigin       &lt;dbl&gt; 4210000, 4210000, 4210000, 4210000, 4210000, 4210000, …
+$ noforigin       &lt;dbl&gt; 2500000, 2500000, 2500000, 2500000, 2500000, 2500000, …
+$ umbria          &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
 $ bioreg          &lt;chr&gt; "CON", "CON", "CON", "CON", "CON", "CON", "CON", "CON"…
 $ pk_uid          &lt;dbl&gt; 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, …
 $ short_name      &lt;chr&gt; "continental", "continental", "continental", "continen…
 $ pre_2012        &lt;chr&gt; "CON", "CON", "CON", "CON", "CON", "CON", "CON", "CON"…
 $ code            &lt;chr&gt; "Continental", "Continental", "Continental", "Continen…
 $ name            &lt;chr&gt; "Continental Bio-geographical Region", "Continental Bi…
-$ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41, 41…</code></pre>
+$ cellcode20      &lt;dbl&gt; 126, 126, 126, 126, 126, 126, 126, 126, 126, 126, 126,…
+$ tin_1           &lt;dbl&gt; 170.6444, 170.6444, 170.6444, 170.6444, 170.6444, 176.…</code></pre>
 </div>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r nomiSpecie}</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r nomiSpecie}</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># rinominare specie</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># dfo |&gt; distinct(species) |&gt; arrange() |&gt; pull()</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>species[dfo<span class="sc">$</span>species <span class="sc">==</span> <span class="st">'Sympetrum fonscolombei'</span>] <span class="ot">&lt;-</span> <span class="st">'Sympetrum fonscolombii'</span></span>
@@ -240,7 +240,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(species, <span class="st">"sp</span><span class="sc">\\</span><span class="st">.$|sp</span><span class="sc">\\</span><span class="st">s|sp$"</span>))</span>
 <span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span> <span class="fu">filter</span>(species <span class="sc">!=</span> <span class="st">'No odonata'</span>)</span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>La serie dati va dal 2005 al 2025.</p>
@@ -251,27 +251,26 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r 'sampling_effort'}</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r 'sampling_effort'}</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># totale celle</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>ncell <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(cellcode) <span class="sc">|&gt;</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>() <span class="sc">|&gt;</span></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>()</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># celle monitorate x anno</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>cells <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date_year) <span class="sc">|&gt;</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(cellcode)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>cells <span class="sc">|&gt;</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(date_year) <span class="sc">|&gt;</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">p =</span> n <span class="sc">/</span> ncell) <span class="sc">|&gt;</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(date_year, p)) <span class="sc">+</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_area</span>(<span class="at">fill =</span> <span class="st">'forestgreen'</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">'no. cells</span><span class="sc">\n</span><span class="st">'</span>, <span class="at">x =</span> <span class="st">''</span>) <span class="sc">+</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">percent_format</span>())</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># celle monitorate x anno</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>cells <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date_year) <span class="sc">|&gt;</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(cellcode)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>cells <span class="sc">|&gt;</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(date_year) <span class="sc">|&gt;</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">p =</span> n <span class="sc">/</span> ncell) <span class="sc">|&gt;</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(date_year, p)) <span class="sc">+</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_area</span>(<span class="at">fill =</span> <span class="st">'forestgreen'</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">'no. cells</span><span class="sc">\n</span><span class="st">'</span>, <span class="at">x =</span> <span class="st">''</span>) <span class="sc">+</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="fu">percent_format</span>())</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -287,7 +286,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r sites-species}</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r sites-species}</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>mat <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cellcode, species) <span class="sc">|&gt;</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
@@ -302,7 +301,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(accum, <span class="at">xlab =</span> <span class="st">"Sites"</span>, <span class="at">ylab =</span> <span class="st">"No. of species"</span>)</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -317,7 +316,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r accumulation_year}</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r accumulation_year}</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Funzione per creare la matrice sito × specie per un anno</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>make_matrix <span class="ot">&lt;-</span> <span class="cf">function</span>(df_year) {</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  df_year <span class="sc">|&gt;</span></span>
@@ -390,7 +389,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">""</span></span>
 <span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">'top'</span>, <span class="at">legend.direction =</span> <span class="st">'horizontal'</span>)</span>
-<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -404,11 +403,11 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r extrapolated_richness}</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r extrapolated_richness}</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>pool <span class="ot">&lt;-</span> <span class="fu">poolaccum</span>(mat_num)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(pool, display = "chao")</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pool)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -421,7 +420,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r norare}</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r norare}</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># eliminazione dall'analisi delle specie con meno di 50 occorrenze totali.</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>listaSpecie <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(species) <span class="sc">|&gt;</span></span>
@@ -435,7 +434,7 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>dfo <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span></span>
 <span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species <span class="sc">%in%</span> listaSpecie)</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -443,6 +442,57 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <section id="linear-trends" class="level2">
 <h2 class="anchored" data-anchor-id="linear-trends">Linear trends</h2>
 <p>Plot del numero di celle in cui la specie è stata osservata nel corso degli anni. Il dato non tiene conto dello sforzo di ricerca.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r linear_trend, fig.height=5, fig.width=7}</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Numero di siti per specie e anno</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>species_sites <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species, date_year) <span class="sc">|&gt;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n_sites =</span> <span class="fu">n_distinct</span>(cellcode), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>sp <span class="ot">&lt;-</span> listaSpecie[<span class="dv">1</span>]</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>odoTrend <span class="ot">&lt;-</span> <span class="cf">function</span>(sp) {</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  species_sites <span class="sc">|&gt;</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(species <span class="sc">==</span> sp) <span class="sc">|&gt;</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> date_year, <span class="at">y =</span> n_sites)) <span class="sc">+</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">'lm'</span>, <span class="at">col =</span> <span class="st">'forestgreen'</span>) <span class="sc">+</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_regline_equation</span>() <span class="sc">+</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">"No. sites"</span>, <span class="at">title =</span> sp) <span class="sc">+</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">'italic'</span>))</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  <span class="co">#filename &lt;- paste0("trend/lm_", gsub(" ", "_", sp), ".pdf")</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  <span class="co">#ggsave(filename, width = 7, height = 5)</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="co">#lapply(listaSpecie, odoTrend)</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Regressione lineare per tutte le specie</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>species_trends <span class="ot">&lt;-</span> species_sites <span class="sc">|&gt;</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species) <span class="sc">|&gt;</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">do</span>(<span class="fu">tidy</span>(<span class="fu">lm</span>(n_sites <span class="sc">~</span> date_year, <span class="at">data =</span> .)))</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleziona solo le righe relative a date_year e con pendenza negativa</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>negative_trends <span class="ot">&lt;-</span> species_trends <span class="sc">|&gt;</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"date_year"</span>, estimate <span class="sc">&lt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(species, estimate, std.error, statistic, p.value)</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>negative_trends</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 5
+# Groups:   species [3]
+  species               estimate std.error statistic p.value
+  &lt;chr&gt;                    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+1 Coenagrion pulchellum  -0.127     0.0641    -1.97   0.0638
+2 Lestes dryas           -0.0413    0.0555    -0.745  0.466 
+3 Ophiogomphus cecilia   -0.304     0.141     -2.16   0.0445</code></pre>
+</div>
+</div>
 </section>
 <section id="sampling-effort" class="level2">
 <h2 class="anchored" data-anchor-id="sampling-effort">Sampling effort</h2>
@@ -450,77 +500,77 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r glm_offset}</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. PREPARAZIONE DATI</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>all_cells <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(dfo<span class="sc">$</span>cellcode))</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>all_years <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(dfo<span class="sc">$</span>date_year))</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Matrice dello sforzo</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>effort_df <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(cellcode, date_year, <span class="at">name =</span> <span class="st">'tot_occurrences'</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">complete</span>(</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">cellcode =</span> all_cells,</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">date_year =</span> all_years,</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">tot_occurrences =</span> <span class="dv">0</span>)</span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co"># specie test</span></span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co"># nomeSp &lt;- listaSpecie[1]</span></span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>glmSpecies <span class="ot">&lt;-</span> <span class="cf">function</span>(nomeSp) {</span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  y_df <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span></span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(species <span class="sc">==</span> nomeSp) <span class="sc">%&gt;%</span></span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(cellcode, date_year, <span class="at">name =</span> <span class="st">'n_occurrences'</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">complete</span>(</span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>      <span class="co"># includi anche le celle mai occupate dalla specie</span></span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">cellcode =</span> all_cells,</span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">date_year =</span> all_years,</span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">n_occurrences =</span> <span class="dv">0</span>)</span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
-<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">detection =</span> <span class="fu">ifelse</span>(n_occurrences <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span>
-<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>  species_sites <span class="ot">&lt;-</span> <span class="fu">merge</span>(y_df, effort_df)</span>
-<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>  model_offset <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
-<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>    detection <span class="sc">~</span> date_year <span class="sc">+</span> <span class="fu">offset</span>(<span class="fu">log</span>(tot_occurrences <span class="sc">+</span> <span class="dv">1</span>)),</span>
-<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> binomial,</span>
-<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> species_sites</span>
-<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>  sp_results <span class="ot">&lt;-</span> <span class="fu">tidy</span>(model_offset)</span>
-<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>  sp_results<span class="sc">$</span>species <span class="ot">=</span> nomeSp</span>
-<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(sp_results)</span>
-<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a><span class="co">#glmSpecies(listaSpecie[5])</span></span>
-<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">map</span>(listaSpecie, glmSpecies) <span class="sc">|&gt;</span> <span class="fu">list_rbind</span>()</span>
-<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>species_trends <span class="ot">&lt;-</span> results <span class="sc">|&gt;</span></span>
-<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"date_year"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">trend =</span> <span class="fu">case_when</span>(</span>
-<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>      estimate <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"increase"</span>,</span>
-<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>      estimate <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"decrease"</span>,</span>
-<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"stable"</span></span>
-<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r glm_offset}</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. PREPARAZIONE DATI</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>all_cells <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(dfo<span class="sc">$</span>cellcode))</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>all_years <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(dfo<span class="sc">$</span>date_year))</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Matrice dello sforzo</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>effort_df <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(cellcode, date_year, <span class="at">name =</span> <span class="st">'tot_occurrences'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">complete</span>(</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">cellcode =</span> all_cells,</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">date_year =</span> all_years,</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">tot_occurrences =</span> <span class="dv">0</span>)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co"># specie test</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co"># nomeSp &lt;- listaSpecie[1]</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>glmSpecies <span class="ot">&lt;-</span> <span class="cf">function</span>(nomeSp) {</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  y_df <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(species <span class="sc">==</span> nomeSp) <span class="sc">%&gt;%</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(cellcode, date_year, <span class="at">name =</span> <span class="st">'n_occurrences'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">complete</span>(</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>      <span class="co"># includi anche le celle mai occupate dalla specie</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">cellcode =</span> all_cells,</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">date_year =</span> all_years,</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">n_occurrences =</span> <span class="dv">0</span>)</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">detection =</span> <span class="fu">ifelse</span>(n_occurrences <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>  species_sites <span class="ot">&lt;-</span> <span class="fu">merge</span>(y_df, effort_df)</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>  model_offset <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>    detection <span class="sc">~</span> date_year <span class="sc">+</span> <span class="fu">offset</span>(<span class="fu">log</span>(tot_occurrences <span class="sc">+</span> <span class="dv">1</span>)),</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> binomial,</span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> species_sites</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>  sp_results <span class="ot">&lt;-</span> <span class="fu">tidy</span>(model_offset)</span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>  sp_results<span class="sc">$</span>species <span class="ot">=</span> nomeSp</span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(sp_results)</span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a><span class="co">#glmSpecies(listaSpecie[5])</span></span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">map</span>(listaSpecie, glmSpecies) <span class="sc">|&gt;</span> <span class="fu">list_rbind</span>()</span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a>species_trends <span class="ot">&lt;-</span> results <span class="sc">|&gt;</span></span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"date_year"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">trend =</span> <span class="fu">case_when</span>(</span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a>      estimate <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"increase"</span>,</span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a>      estimate <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"decrease"</span>,</span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"stable"</span></span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>Le specie che mostrano trend negativi significativi nei loro range sono:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r negative-trends}</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleziona solo le righe con pendenza negativa</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>negative_trends <span class="ot">&lt;-</span> species_trends <span class="sc">|&gt;</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"date_year"</span>, estimate <span class="sc">&lt;</span> <span class="dv">0</span>, p.value <span class="sc">&lt;</span> <span class="fl">0.05</span>) <span class="sc">|&gt;</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(species, estimate, std.error, statistic, p.value, trend)</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(negative_trends, <span class="at">n =</span> <span class="dv">20</span>)</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r negative-trends}</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleziona solo le righe con pendenza negativa</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>negative_trends <span class="ot">&lt;-</span> species_trends <span class="sc">|&gt;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(term <span class="sc">==</span> <span class="st">"date_year"</span>, estimate <span class="sc">&lt;</span> <span class="dv">0</span>, p.value <span class="sc">&lt;</span> <span class="fl">0.05</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(species, estimate, std.error, statistic, p.value, trend)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(negative_trends, <span class="at">n =</span> <span class="dv">20</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 20 × 6
@@ -552,29 +602,29 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r trends, fig.height=12, fig.width=7}</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico a barre con specie ordinate per stima significativa</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Le altre specie sono stabili</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>species_trends <span class="sc">|&gt;</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(estimate), p.value <span class="sc">&lt;</span> <span class="fl">0.05</span>) <span class="sc">|&gt;</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(species, estimate), <span class="at">y =</span> estimate, <span class="at">fill =</span> trend)) <span class="sc">+</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span> <span class="co"># barre orizzontali per leggibilità</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">""</span>,</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"glm slope"</span>,</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Trend"</span>,</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">""</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>      <span class="st">"increase"</span> <span class="ot">=</span> <span class="st">"forestgreen"</span>,</span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>      <span class="st">"stable"</span> <span class="ot">=</span> <span class="st">"gray70"</span>,</span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>      <span class="st">"decrease"</span> <span class="ot">=</span> <span class="st">"red"</span></span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">'top'</span>, <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">'italic'</span>))</span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r trends, fig.height=12, fig.width=7}</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico a barre con specie ordinate per stima significativa</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Le altre specie sono stabili</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>species_trends <span class="sc">|&gt;</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(estimate), p.value <span class="sc">&lt;</span> <span class="fl">0.05</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(species, estimate), <span class="at">y =</span> estimate, <span class="at">fill =</span> trend)) <span class="sc">+</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span> <span class="co"># barre orizzontali per leggibilità</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">""</span>,</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"glm slope"</span>,</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Trend"</span>,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">""</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>      <span class="st">"increase"</span> <span class="ot">=</span> <span class="st">"forestgreen"</span>,</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>      <span class="st">"stable"</span> <span class="ot">=</span> <span class="st">"gray70"</span>,</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>      <span class="st">"decrease"</span> <span class="ot">=</span> <span class="st">"red"</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">'top'</span>, <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">'italic'</span>))</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -585,147 +635,112 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 </div>
 </div>
 </section>
-<section id="modelli-di-occupancy-con-unmarked" class="level2">
-<h2 class="anchored" data-anchor-id="modelli-di-occupancy-con-unmarked">Modelli di occupancy con unmarked</h2>
-<section id="modello-colext" class="level3">
-<h3 class="anchored" data-anchor-id="modello-colext">Modello colext</h3>
+<section id="modello-unmarked" class="level2">
+<h2 class="anchored" data-anchor-id="modello-unmarked">Modello unmarked</h2>
 <p>Il modello utilizzato è del tipo Dynamic occupancy models <a href="https://cran.r-project.org/web/packages/unmarked/vignettes/colext.html">colext</a>. La formula impiegata è <code>colext(~1, ~year, ~year, ~effort, umf</code> e considera una p in funzione dell’effort e una ψ (probabilità di occupazione), gamma (probabilità di colonizzazione - in blu), epsilon (probabilità di estinzione in rosso) costanti.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r unmarked}</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(unmarked)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>listaSpecie <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(species) <span class="sc">|&gt;</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n <span class="sc">&gt;=</span> <span class="dv">50</span>) <span class="sc">|&gt;</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(species)</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>nomeSp <span class="ot">&lt;-</span> listaSpecie[<span class="dv">45</span>]</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>occProb <span class="ot">&lt;-</span> <span class="cf">function</span>(nomeSp) {</span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">#print(nomeSp)</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 1. PREPARAZIONE DATI</span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  all_cells <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(dfo<span class="sc">$</span>cellcode))</span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>  all_years <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(dfo<span class="sc">$</span>date_year))</span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Matrice di rilevamento (y)</span></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>  y_matrix <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span></span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(species <span class="sc">==</span> nomeSp) <span class="sc">%&gt;%</span></span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(cellcode, date_year, <span class="at">name =</span> <span class="st">'n_occurrences'</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">complete</span>(</span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>      <span class="co"># includi anche le celle mai occupate dalla specie</span></span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">cellcode =</span> all_cells,</span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">date_year =</span> all_years,</span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">n_occurrences =</span> <span class="dv">0</span>)</span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">detection =</span> <span class="fu">ifelse</span>(n_occurrences <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_wider</span>(</span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">id_cols =</span> cellcode,</span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">names_from =</span> date_year,</span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>      <span class="at">values_from =</span> detection</span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column_to_rownames</span>(<span class="st">"cellcode"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.matrix</span>()</span>
-<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Matrice dello sforzo</span></span>
-<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>  effort_matrix <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span></span>
-<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(cellcode, date_year, <span class="at">name =</span> <span class="st">'tot_occurrences'</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">complete</span>(</span>
-<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>      <span class="at">cellcode =</span> all_cells,</span>
-<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>      <span class="at">date_year =</span> all_years,</span>
-<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">tot_occurrences =</span> <span class="dv">0</span>)</span>
-<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
-<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_wider</span>(</span>
-<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>      <span class="at">id_cols =</span> cellcode,</span>
-<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>      <span class="at">names_from =</span> date_year,</span>
-<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>      <span class="at">values_from =</span> tot_occurrences</span>
-<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
-<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column_to_rownames</span>(<span class="st">"cellcode"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.matrix</span>()</span>
-<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Standardizzazione vettoriale</span></span>
-<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a>  effort_vec <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(effort_matrix)</span>
-<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>  effort_std_mat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
-<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a>    (effort_vec <span class="sc">-</span> <span class="fu">mean</span>(effort_vec)) <span class="sc">/</span> <span class="fu">sd</span>(effort_vec),</span>
-<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">nrow =</span> <span class="fu">nrow</span>(y_matrix),</span>
-<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="fu">ncol</span>(y_matrix)</span>
-<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Covariata Anno</span></span>
-<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>  anni_num <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">colnames</span>(y_matrix))</span>
-<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a>  year_std <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(<span class="fu">scale</span>(anni_num))</span>
-<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a>  n_siti <span class="ot">&lt;-</span> <span class="fu">nrow</span>(y_matrix)</span>
-<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>  n_anni <span class="ot">&lt;-</span> <span class="fu">ncol</span>(y_matrix)</span>
-<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a>  <span class="co"># matrice degli anni (standardizzati) con dimensioni siti x anni</span></span>
-<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a>  year_mat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(year_std, <span class="at">each =</span> n_siti), <span class="at">nrow =</span> n_siti, <span class="at">ncol =</span> n_anni)</span>
-<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 2. creazione umf</span></span>
-<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a>  umf <span class="ot">&lt;-</span> <span class="fu">unmarkedMultFrame</span>(</span>
-<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> y_matrix,</span>
-<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a>    <span class="at">yearlySiteCovs =</span> <span class="fu">list</span>(</span>
-<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a>      <span class="at">effort =</span> effort_std_mat,</span>
-<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a>      <span class="at">year_idx =</span> year_mat <span class="co"># Ora il modello troverà 'year_idx'</span></span>
-<span id="cb14-78"><a href="#cb14-78" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb14-79"><a href="#cb14-79" aria-hidden="true" tabindex="-1"></a>    <span class="at">numPrimary =</span> n_anni</span>
-<span id="cb14-80"><a href="#cb14-80" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb14-81"><a href="#cb14-81" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-82"><a href="#cb14-82" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 3. Esecuzione del modello</span></span>
-<span id="cb14-83"><a href="#cb14-83" aria-hidden="true" tabindex="-1"></a>  m1 <span class="ot">&lt;-</span> <span class="fu">colext</span>(</span>
-<span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a>    <span class="at">psiformula =</span> <span class="sc">~</span><span class="dv">1</span>,</span>
-<span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a>    <span class="at">gammaformula =</span> <span class="sc">~</span>year_idx, <span class="co"># Tasso di colonizzazione influenzato dall'anno</span></span>
-<span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a>    <span class="at">epsilonformula =</span> <span class="sc">~</span>year_idx, <span class="co"># Tasso di estinzione influenzato dall'anno</span></span>
-<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a>    <span class="at">pformula =</span> <span class="sc">~</span>effort,</span>
-<span id="cb14-88"><a href="#cb14-88" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> umf</span>
-<span id="cb14-89"><a href="#cb14-89" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb14-90"><a href="#cb14-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-91"><a href="#cb14-91" aria-hidden="true" tabindex="-1"></a>  <span class="co"># summary(m1)</span></span>
-<span id="cb14-92"><a href="#cb14-92" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Lo stato 1 è "non occupato", lo stato 2 è "occupato"</span></span>
-<span id="cb14-93"><a href="#cb14-93" aria-hidden="true" tabindex="-1"></a>  sm <span class="ot">&lt;-</span> <span class="fu">smoothed</span>(m1)</span>
-<span id="cb14-94"><a href="#cb14-94" aria-hidden="true" tabindex="-1"></a>  occ_values <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(sm[<span class="st">"occupied"</span>, ])</span>
-<span id="cb14-95"><a href="#cb14-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-96"><a href="#cb14-96" aria-hidden="true" tabindex="-1"></a>  df_plot <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb14-97"><a href="#cb14-97" aria-hidden="true" tabindex="-1"></a>    <span class="at">Species =</span> nomeSp,</span>
-<span id="cb14-98"><a href="#cb14-98" aria-hidden="true" tabindex="-1"></a>    <span class="at">Anno =</span> anni_num,</span>
-<span id="cb14-99"><a href="#cb14-99" aria-hidden="true" tabindex="-1"></a>    <span class="at">Occupancy =</span> occ_values</span>
-<span id="cb14-100"><a href="#cb14-100" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb14-101"><a href="#cb14-101" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-102"><a href="#cb14-102" aria-hidden="true" tabindex="-1"></a>  pOccu <span class="ot">&lt;-</span> df_plot <span class="sc">|&gt;</span></span>
-<span id="cb14-103"><a href="#cb14-103" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Anno, <span class="at">y =</span> Occupancy)) <span class="sc">+</span></span>
-<span id="cb14-104"><a href="#cb14-104" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb14-105"><a href="#cb14-105" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb14-106"><a href="#cb14-106" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(</span>
-<span id="cb14-107"><a href="#cb14-107" aria-hidden="true" tabindex="-1"></a>      <span class="at">method =</span> <span class="st">"loess"</span>,</span>
-<span id="cb14-108"><a href="#cb14-108" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="st">"red"</span>,</span>
-<span id="cb14-109"><a href="#cb14-109" aria-hidden="true" tabindex="-1"></a>      <span class="at">linetype =</span> <span class="st">"dashed"</span>,</span>
-<span id="cb14-110"><a href="#cb14-110" aria-hidden="true" tabindex="-1"></a>      <span class="at">se =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb14-111"><a href="#cb14-111" aria-hidden="true" tabindex="-1"></a>      <span class="at">alpha =</span> <span class="fl">0.5</span></span>
-<span id="cb14-112"><a href="#cb14-112" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb14-113"><a href="#cb14-113" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
-<span id="cb14-114"><a href="#cb14-114" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
-<span id="cb14-115"><a href="#cb14-115" aria-hidden="true" tabindex="-1"></a>      <span class="at">title =</span> <span class="fu">paste</span>(nomeSp),</span>
-<span id="cb14-116"><a href="#cb14-116" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="st">""</span>,</span>
-<span id="cb14-117"><a href="#cb14-117" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="st">"Occupancy"</span></span>
-<span id="cb14-118"><a href="#cb14-118" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb14-119"><a href="#cb14-119" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
-<span id="cb14-120"><a href="#cb14-120" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-121"><a href="#cb14-121" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(pOccu)</span>
-<span id="cb14-122"><a href="#cb14-122" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ---------------------------------------------</span></span>
-<span id="cb14-123"><a href="#cb14-123" aria-hidden="true" tabindex="-1"></a>  <span class="co"># backTransform(m1, type="psi")</span></span>
-<span id="cb14-124"><a href="#cb14-124" aria-hidden="true" tabindex="-1"></a>  <span class="co"># confint(backTransform(m1, type="psi"))</span></span>
-<span id="cb14-125"><a href="#cb14-125" aria-hidden="true" tabindex="-1"></a>  <span class="co"># backTransform(m1, type="ext")</span></span>
-<span id="cb14-126"><a href="#cb14-126" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="at">data =</span> df_plot)</span>
-<span id="cb14-127"><a href="#cb14-127" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb14-128"><a href="#cb14-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-129"><a href="#cb14-129" aria-hidden="true" tabindex="-1"></a><span class="co"># listaSpecie</span></span>
-<span id="cb14-130"><a href="#cb14-130" aria-hidden="true" tabindex="-1"></a><span class="co"># occProb("Sympetrum sanguineum")</span></span>
-<span id="cb14-131"><a href="#cb14-131" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">map</span>(listaSpecie, occProb)</span>
-<span id="cb14-132"><a href="#cb14-132" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r unmarked}</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: unmarked</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: true</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: true</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(unmarked)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>listaSpecie <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(species) <span class="sc">|&gt;</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n <span class="sc">&gt;=</span> <span class="dv">50</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(species)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>nomeSp <span class="ot">&lt;-</span> listaSpecie[<span class="dv">1</span>]</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>cellcodeX <span class="ot">&lt;-</span> dfo<span class="sc">$</span>cellcode</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. PREPARAZIONE DATI</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>all_cells <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(dfo<span class="sc">$</span>cellcodeX))</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>all_years <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(dfo<span class="sc">$</span>date_year))</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="co"># matrice di campionamento</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>effort_matrix <span class="ot">&lt;-</span> dfo <span class="sc">|&gt;</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(cellcodeX, date_year, <span class="at">name =</span> <span class="st">'tot_occurrences'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">complete</span>(</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">cellcodeX =</span> all_cells,</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">date_year =</span> all_years,</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">tot_occurrences =</span> <span class="cn">NA</span>)</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">id_cols =</span> cellcodeX,</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> date_year,</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> tot_occurrences</span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_to_rownames</span>(<span class="st">"cellcodeX"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">'R-script/occuProb.R'</span>)</span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a><span class="co"># listaSpecie</span></span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a><span class="co"># occProb("Sympetrum sanguineum")</span></span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a><span class="co"># occProb("Trithemis annulata")</span></span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a><span class="co"># occProb('Aeshna isoceles')</span></span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a><span class="co"># occProb("Libellula depressa")</span></span>
+<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a><span class="co"># occProb("Coenagrion puella")</span></span>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>resultsUnmarked <span class="ot">&lt;-</span> <span class="fu">map</span>(listaSpecie, occuProb)</span>
+<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Aeshna affinis 
+Aeshna cyanea 
+Aeshna isoceles 
+Aeshna mixta 
+Anax ephippiger 
+Anax imperator 
+Anax parthenope 
+Boyeria irene 
+Calopteryx splendens 
+Calopteryx virgo 
+Ceriagrion tenellum 
+Chalcolestes viridis 
+Coenagrion puella 
+Coenagrion pulchellum 
+Coenagrion scitulum 
+Cordulegaster boltonii 
+Cordulia aenea 
+Crocothemis erythraea 
+Enallagma cyathigerum 
+Erythromma lindenii 
+Erythromma viridulum 
+Gomphus vulgatissimus 
+Ischnura elegans 
+Ischnura pumilio 
+Lestes dryas 
+Lestes sponsa 
+Lestes virens 
+Libellula depressa 
+Libellula fulva 
+Libellula quadrimaculata 
+Onychogomphus forcipatus 
+Onychogomphus uncatus 
+Ophiogomphus cecilia 
+Orthetrum albistylum 
+Orthetrum brunneum 
+Orthetrum cancellatum 
+Orthetrum coerulescens 
+Oxygastra curtisii 
+Platycnemis pennipes 
+Pyrrhosoma nymphula 
+Selysiothemis nigra 
+Somatochlora flavomaculata 
+Somatochlora metallica 
+Stylurus flavipes 
+Sympecma fusca 
+Sympecma paedisca 
+Sympetrum depressiusculum 
+Sympetrum fonscolombii 
+Sympetrum meridionale 
+Sympetrum pedemontanum 
+Sympetrum sanguineum 
+Sympetrum striolatum 
+Trithemis annulata </code></pre>
+</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1099,1293 +1114,1064 @@ $ cellcode20      &lt;dbl&gt; 40, 40, 40, 40, 40, 41, 41, 41, 41, 41, 41, 41, 41
 </div>
 </div>
 </section>
-</section>
 <section id="modello-bayesiano" class="level2">
 <h2 class="anchored" data-anchor-id="modello-bayesiano">Modello Bayesiano</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># https://www.youtube.com/watch?v=kmMZpG4jK4k&amp;t=192s</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nimble)</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(coda)</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co"># source('R-Script/baseDati.R')</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>nomeSp <span class="ot">=</span> <span class="st">'Trithemis annulata'</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. PREPARAZIONE DATI COMUNI</span></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>all_cells <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(dfo<span class="sc">$</span>cellcode))</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>all_years <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(dfo<span class="sc">$</span>date_year))</span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Matrice dello sforzo</span></span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>effort_matrix <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span></span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(cellcode, date_year, <span class="at">name =</span> <span class="st">'tot_occurrences'</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># includi tutte le celle possibili</span></span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">complete</span>(</span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">cellcode =</span> all_cells,</span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">date_year =</span> all_years,</span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">tot_occurrences =</span> <span class="dv">0</span>)</span>
-<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
-<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">id_cols =</span> cellcode,</span>
-<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> date_year,</span>
-<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> tot_occurrences</span>
-<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
-<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_to_rownames</span>(<span class="st">"cellcode"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
-<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>odoBayes <span class="ot">&lt;-</span> <span class="cf">function</span>(nomeSp) {</span>
-<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Matrice di rilevamento (y)</span></span>
-<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>  y_matrix <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span></span>
-<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(species <span class="sc">==</span> nomeSp) <span class="sc">%&gt;%</span></span>
-<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(cellcode, date_year, <span class="at">name =</span> <span class="st">'n_occurrences'</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">complete</span>(</span>
-<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>      <span class="co"># includi anche le celle mai occupate dalla specie</span></span>
-<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>      <span class="at">cellcode =</span> all_cells,</span>
-<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>      <span class="at">date_year =</span> all_years,</span>
-<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">n_occurrences =</span> <span class="dv">0</span>)</span>
-<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
-<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">detection =</span> <span class="fu">ifelse</span>(n_occurrences <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_wider</span>(</span>
-<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>      <span class="at">id_cols =</span> cellcode,</span>
-<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>      <span class="at">names_from =</span> date_year,</span>
-<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>      <span class="at">values_from =</span> detection</span>
-<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
-<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">column_to_rownames</span>(<span class="st">"cellcode"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.matrix</span>()</span>
-<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Covariata Anno (vettore atomico per NIMBLE)</span></span>
-<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>  anni_num <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">colnames</span>(y_matrix))</span>
-<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a>  year_std <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(<span class="fu">scale</span>(anni_num))</span>
-<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Standardizzazione (vettoriale per evitare attributi scale)</span></span>
-<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a>  effort_vec <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(effort_matrix)</span>
-<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a>  effort_std_mat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
-<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a>    (effort_vec <span class="sc">-</span> <span class="fu">mean</span>(effort_vec)) <span class="sc">/</span> <span class="fu">sd</span>(effort_vec),</span>
-<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">nrow =</span> <span class="fu">nrow</span>(y_matrix),</span>
-<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="fu">ncol</span>(y_matrix)</span>
-<span id="cb15-62"><a href="#cb15-62" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb15-63"><a href="#cb15-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-64"><a href="#cb15-64" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Dati presenza e effort</span></span>
-<span id="cb15-65"><a href="#cb15-65" aria-hidden="true" tabindex="-1"></a>  nim_data <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb15-66"><a href="#cb15-66" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> y_matrix,</span>
-<span id="cb15-67"><a href="#cb15-67" aria-hidden="true" tabindex="-1"></a>    <span class="at">effort =</span> effort_std_mat,</span>
-<span id="cb15-68"><a href="#cb15-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> year_std</span>
-<span id="cb15-69"><a href="#cb15-69" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb15-70"><a href="#cb15-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-71"><a href="#cb15-71" aria-hidden="true" tabindex="-1"></a>  nim_constants <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb15-72"><a href="#cb15-72" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_sites =</span> <span class="fu">nrow</span>(y_matrix),</span>
-<span id="cb15-73"><a href="#cb15-73" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_years =</span> <span class="fu">ncol</span>(y_matrix)</span>
-<span id="cb15-74"><a href="#cb15-74" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb15-75"><a href="#cb15-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-76"><a href="#cb15-76" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 2. DEFINIZIONE MODELLO</span></span>
-<span id="cb15-77"><a href="#cb15-77" aria-hidden="true" tabindex="-1"></a>  code <span class="ot">&lt;-</span> <span class="fu">nimbleCode</span>({</span>
-<span id="cb15-78"><a href="#cb15-78" aria-hidden="true" tabindex="-1"></a>    <span class="co"># PRIORS</span></span>
-<span id="cb15-79"><a href="#cb15-79" aria-hidden="true" tabindex="-1"></a>    alpha_psi <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">2</span>)</span>
-<span id="cb15-80"><a href="#cb15-80" aria-hidden="true" tabindex="-1"></a>    beta_year_psi <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">2</span>)</span>
-<span id="cb15-81"><a href="#cb15-81" aria-hidden="true" tabindex="-1"></a>    alpha_p <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">2</span>)</span>
-<span id="cb15-82"><a href="#cb15-82" aria-hidden="true" tabindex="-1"></a>    beta_effort <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">2</span>)</span>
-<span id="cb15-83"><a href="#cb15-83" aria-hidden="true" tabindex="-1"></a>    beta_year_p <span class="sc">~</span> <span class="fu">dnorm</span>(<span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">2</span>)</span>
-<span id="cb15-84"><a href="#cb15-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-85"><a href="#cb15-85" aria-hidden="true" tabindex="-1"></a>    <span class="co"># LIKELIHOOD</span></span>
-<span id="cb15-86"><a href="#cb15-86" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_sites) {</span>
-<span id="cb15-87"><a href="#cb15-87" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_years) {</span>
-<span id="cb15-88"><a href="#cb15-88" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Occupancy</span></span>
-<span id="cb15-89"><a href="#cb15-89" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logit</span>(psi[i, t]) <span class="ot">&lt;-</span> alpha_psi <span class="sc">+</span> beta_year_psi <span class="sc">*</span> year[t]</span>
-<span id="cb15-90"><a href="#cb15-90" aria-hidden="true" tabindex="-1"></a>        z[i, t] <span class="sc">~</span> <span class="fu">dbern</span>(psi[i, t])</span>
-<span id="cb15-91"><a href="#cb15-91" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-92"><a href="#cb15-92" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Detection</span></span>
-<span id="cb15-93"><a href="#cb15-93" aria-hidden="true" tabindex="-1"></a>        <span class="fu">logit</span>(p[i, t]) <span class="ot">&lt;-</span> alpha_p <span class="sc">+</span></span>
-<span id="cb15-94"><a href="#cb15-94" aria-hidden="true" tabindex="-1"></a>          beta_effort <span class="sc">*</span> effort[i, t] <span class="sc">+</span></span>
-<span id="cb15-95"><a href="#cb15-95" aria-hidden="true" tabindex="-1"></a>          beta_year_p <span class="sc">*</span> year[t]</span>
-<span id="cb15-96"><a href="#cb15-96" aria-hidden="true" tabindex="-1"></a>        mu[i, t] <span class="ot">&lt;-</span> z[i, t] <span class="sc">*</span> p[i, t]</span>
-<span id="cb15-97"><a href="#cb15-97" aria-hidden="true" tabindex="-1"></a>        y[i, t] <span class="sc">~</span> <span class="fu">dbern</span>(mu[i, t])</span>
-<span id="cb15-98"><a href="#cb15-98" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb15-99"><a href="#cb15-99" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb15-100"><a href="#cb15-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-101"><a href="#cb15-101" aria-hidden="true" tabindex="-1"></a>    <span class="co"># DERIVED</span></span>
-<span id="cb15-102"><a href="#cb15-102" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_years) {</span>
-<span id="cb15-103"><a href="#cb15-103" aria-hidden="true" tabindex="-1"></a>      mean_psi[t] <span class="ot">&lt;-</span> <span class="fu">ilogit</span>(alpha_psi <span class="sc">+</span> beta_year_psi <span class="sc">*</span> year[t])</span>
-<span id="cb15-104"><a href="#cb15-104" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb15-105"><a href="#cb15-105" aria-hidden="true" tabindex="-1"></a>    mean_p <span class="ot">&lt;-</span> <span class="fu">ilogit</span>(alpha_p)</span>
-<span id="cb15-106"><a href="#cb15-106" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb15-107"><a href="#cb15-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-108"><a href="#cb15-108" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 3. INIZIALIZZAZIONE</span></span>
-<span id="cb15-109"><a href="#cb15-109" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Importante: z deve essere 1 se y è 1</span></span>
-<span id="cb15-110"><a href="#cb15-110" aria-hidden="true" tabindex="-1"></a>  z_init <span class="ot">&lt;-</span> y_matrix</span>
-<span id="cb15-111"><a href="#cb15-111" aria-hidden="true" tabindex="-1"></a>  z_init[<span class="fu">is.na</span>(z_init)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb15-112"><a href="#cb15-112" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-113"><a href="#cb15-113" aria-hidden="true" tabindex="-1"></a>  inits <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb15-114"><a href="#cb15-114" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha_psi =</span> <span class="dv">0</span>,</span>
-<span id="cb15-115"><a href="#cb15-115" aria-hidden="true" tabindex="-1"></a>    <span class="at">beta_year_psi =</span> <span class="dv">0</span>,</span>
-<span id="cb15-116"><a href="#cb15-116" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha_p =</span> <span class="dv">0</span>,</span>
-<span id="cb15-117"><a href="#cb15-117" aria-hidden="true" tabindex="-1"></a>    <span class="at">beta_effort =</span> <span class="dv">0</span>,</span>
-<span id="cb15-118"><a href="#cb15-118" aria-hidden="true" tabindex="-1"></a>    <span class="at">beta_year_p =</span> <span class="dv">0</span>,</span>
-<span id="cb15-119"><a href="#cb15-119" aria-hidden="true" tabindex="-1"></a>    <span class="at">z =</span> z_init</span>
-<span id="cb15-120"><a href="#cb15-120" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb15-121"><a href="#cb15-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-122"><a href="#cb15-122" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 4. ESECUZIONE</span></span>
-<span id="cb15-123"><a href="#cb15-123" aria-hidden="true" tabindex="-1"></a>  model <span class="ot">&lt;-</span> <span class="fu">nimbleModel</span>(</span>
-<span id="cb15-124"><a href="#cb15-124" aria-hidden="true" tabindex="-1"></a>    code,</span>
-<span id="cb15-125"><a href="#cb15-125" aria-hidden="true" tabindex="-1"></a>    <span class="at">constants =</span> nim_constants,</span>
-<span id="cb15-126"><a href="#cb15-126" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> nim_data,</span>
-<span id="cb15-127"><a href="#cb15-127" aria-hidden="true" tabindex="-1"></a>    <span class="at">inits =</span> inits</span>
-<span id="cb15-128"><a href="#cb15-128" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb15-129"><a href="#cb15-129" aria-hidden="true" tabindex="-1"></a>  c_model <span class="ot">&lt;-</span> <span class="fu">compileNimble</span>(model)</span>
-<span id="cb15-130"><a href="#cb15-130" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-131"><a href="#cb15-131" aria-hidden="true" tabindex="-1"></a>  mcmc_conf <span class="ot">&lt;-</span> <span class="fu">configureMCMC</span>(</span>
-<span id="cb15-132"><a href="#cb15-132" aria-hidden="true" tabindex="-1"></a>    model,</span>
-<span id="cb15-133"><a href="#cb15-133" aria-hidden="true" tabindex="-1"></a>    <span class="at">monitors =</span> <span class="fu">c</span>(</span>
-<span id="cb15-134"><a href="#cb15-134" aria-hidden="true" tabindex="-1"></a>      <span class="st">'alpha_psi'</span>,</span>
-<span id="cb15-135"><a href="#cb15-135" aria-hidden="true" tabindex="-1"></a>      <span class="st">'beta_year_psi'</span>,</span>
-<span id="cb15-136"><a href="#cb15-136" aria-hidden="true" tabindex="-1"></a>      <span class="st">'alpha_p'</span>,</span>
-<span id="cb15-137"><a href="#cb15-137" aria-hidden="true" tabindex="-1"></a>      <span class="st">'beta_effort'</span>,</span>
-<span id="cb15-138"><a href="#cb15-138" aria-hidden="true" tabindex="-1"></a>      <span class="st">'mean_psi'</span></span>
-<span id="cb15-139"><a href="#cb15-139" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb15-140"><a href="#cb15-140" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb15-141"><a href="#cb15-141" aria-hidden="true" tabindex="-1"></a>  mcmc <span class="ot">&lt;-</span> <span class="fu">buildMCMC</span>(mcmc_conf)</span>
-<span id="cb15-142"><a href="#cb15-142" aria-hidden="true" tabindex="-1"></a>  c_mcmc <span class="ot">&lt;-</span> <span class="fu">compileNimble</span>(mcmc, <span class="at">project =</span> model)</span>
-<span id="cb15-143"><a href="#cb15-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-144"><a href="#cb15-144" aria-hidden="true" tabindex="-1"></a>  <span class="co"># samples &lt;- runMCMC(</span></span>
-<span id="cb15-145"><a href="#cb15-145" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   c_mcmc,</span></span>
-<span id="cb15-146"><a href="#cb15-146" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   niter = 10000,</span></span>
-<span id="cb15-147"><a href="#cb15-147" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   nburnin = 2000,</span></span>
-<span id="cb15-148"><a href="#cb15-148" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   nchains = 3,</span></span>
-<span id="cb15-149"><a href="#cb15-149" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   samplesAsCodaMCMC = TRUE</span></span>
-<span id="cb15-150"><a href="#cb15-150" aria-hidden="true" tabindex="-1"></a>  <span class="co">#)</span></span>
-<span id="cb15-151"><a href="#cb15-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-152"><a href="#cb15-152" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 5. RUN MCMC</span></span>
-<span id="cb15-153"><a href="#cb15-153" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb15-154"><a href="#cb15-154" aria-hidden="true" tabindex="-1"></a>  samples <span class="ot">&lt;-</span> <span class="fu">runMCMC</span>(</span>
-<span id="cb15-155"><a href="#cb15-155" aria-hidden="true" tabindex="-1"></a>    c_mcmc,</span>
-<span id="cb15-156"><a href="#cb15-156" aria-hidden="true" tabindex="-1"></a>    <span class="at">niter =</span> <span class="dv">20000</span>, <span class="co"># corretto da 10000</span></span>
-<span id="cb15-157"><a href="#cb15-157" aria-hidden="true" tabindex="-1"></a>    <span class="at">nburnin =</span> <span class="dv">5000</span>,</span>
-<span id="cb15-158"><a href="#cb15-158" aria-hidden="true" tabindex="-1"></a>    <span class="at">nchains =</span> <span class="dv">3</span>,</span>
-<span id="cb15-159"><a href="#cb15-159" aria-hidden="true" tabindex="-1"></a>    <span class="at">thin =</span> <span class="dv">10</span>, <span class="co"># da 5</span></span>
-<span id="cb15-160"><a href="#cb15-160" aria-hidden="true" tabindex="-1"></a>    <span class="at">samplesAsCodaMCMC =</span> <span class="cn">TRUE</span></span>
-<span id="cb15-161"><a href="#cb15-161" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb15-162"><a href="#cb15-162" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-163"><a href="#cb15-163" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 6. CALCOLO DIAGNOSTICHE (R-hat)</span></span>
-<span id="cb15-164"><a href="#cb15-164" aria-hidden="true" tabindex="-1"></a>  rhat_values <span class="ot">&lt;-</span> <span class="fu">gelman.diag</span>(samples, <span class="at">multivariate =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb15-165"><a href="#cb15-165" aria-hidden="true" tabindex="-1"></a>  rhat_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(rhat_values<span class="sc">$</span>psrf)</span>
-<span id="cb15-166"><a href="#cb15-166" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-167"><a href="#cb15-167" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 7. RISULTATI E SALVATAGGIO</span></span>
-<span id="cb15-168"><a href="#cb15-168" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Creiamo una lista con tutto ciò che è importante</span></span>
-<span id="cb15-169"><a href="#cb15-169" aria-hidden="true" tabindex="-1"></a>  risultati_finali <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb15-170"><a href="#cb15-170" aria-hidden="true" tabindex="-1"></a>    <span class="at">specie =</span> nomeSp,</span>
-<span id="cb15-171"><a href="#cb15-171" aria-hidden="true" tabindex="-1"></a>    <span class="at">summary =</span> <span class="fu">summary</span>(samples),</span>
-<span id="cb15-172"><a href="#cb15-172" aria-hidden="true" tabindex="-1"></a>    <span class="at">rhat =</span> rhat_df,</span>
-<span id="cb15-173"><a href="#cb15-173" aria-hidden="true" tabindex="-1"></a>    <span class="at">samples =</span> samples <span class="co"># salva i campioni completi</span></span>
-<span id="cb15-174"><a href="#cb15-174" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb15-175"><a href="#cb15-175" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-176"><a href="#cb15-176" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Crea la cartella di output se non esiste</span></span>
-<span id="cb15-177"><a href="#cb15-177" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(<span class="st">"output_bayes"</span>)) {</span>
-<span id="cb15-178"><a href="#cb15-178" aria-hidden="true" tabindex="-1"></a>    <span class="fu">dir.create</span>(<span class="st">"output_bayes"</span>)</span>
-<span id="cb15-179"><a href="#cb15-179" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb15-180"><a href="#cb15-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-181"><a href="#cb15-181" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Salva in formato RDS (il nome del file include il nome della specie)</span></span>
-<span id="cb15-182"><a href="#cb15-182" aria-hidden="true" tabindex="-1"></a>  file_rds <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"output_bayes/risultati10k_"</span>, nomeSp, <span class="st">".rds"</span>)</span>
-<span id="cb15-183"><a href="#cb15-183" aria-hidden="true" tabindex="-1"></a>  <span class="fu">saveRDS</span>(risultati_finali, <span class="at">file =</span> file_rds)</span>
-<span id="cb15-184"><a href="#cb15-184" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-185"><a href="#cb15-185" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="fu">paste</span>(<span class="st">"Statistiche salvate in:"</span>, file_rds))</span>
-<span id="cb15-186"><a href="#cb15-186" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-187"><a href="#cb15-187" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 8. PLOT TREND</span></span>
-<span id="cb15-188"><a href="#cb15-188" aria-hidden="true" tabindex="-1"></a>  anni_num <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">colnames</span>(y_matrix))</span>
-<span id="cb15-189"><a href="#cb15-189" aria-hidden="true" tabindex="-1"></a>  mean_psi_cols <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="st">"mean_psi"</span>, <span class="fu">colnames</span>(<span class="fu">as.matrix</span>(samples)))</span>
-<span id="cb15-190"><a href="#cb15-190" aria-hidden="true" tabindex="-1"></a>  mean_psi_samples <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(samples)[, mean_psi_cols]</span>
-<span id="cb15-191"><a href="#cb15-191" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-192"><a href="#cb15-192" aria-hidden="true" tabindex="-1"></a>  est <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(mean_psi_samples)</span>
-<span id="cb15-193"><a href="#cb15-193" aria-hidden="true" tabindex="-1"></a>  ci <span class="ot">&lt;-</span> <span class="fu">apply</span>(mean_psi_samples, <span class="dv">2</span>, quantile, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</span>
-<span id="cb15-194"><a href="#cb15-194" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-195"><a href="#cb15-195" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Generazione del grafico</span></span>
-<span id="cb15-196"><a href="#cb15-196" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(</span>
-<span id="cb15-197"><a href="#cb15-197" aria-hidden="true" tabindex="-1"></a>    anni_num,</span>
-<span id="cb15-198"><a href="#cb15-198" aria-hidden="true" tabindex="-1"></a>    est,</span>
-<span id="cb15-199"><a href="#cb15-199" aria-hidden="true" tabindex="-1"></a>    <span class="at">type =</span> <span class="st">"l"</span>,</span>
-<span id="cb15-200"><a href="#cb15-200" aria-hidden="true" tabindex="-1"></a>    <span class="at">pch =</span> <span class="dv">16</span>,</span>
-<span id="cb15-201"><a href="#cb15-201" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb15-202"><a href="#cb15-202" aria-hidden="true" tabindex="-1"></a>    <span class="at">xlab =</span> <span class="st">"Year"</span>,</span>
-<span id="cb15-203"><a href="#cb15-203" aria-hidden="true" tabindex="-1"></a>    <span class="at">ylab =</span> <span class="st">"Occupancy"</span>,</span>
-<span id="cb15-204"><a href="#cb15-204" aria-hidden="true" tabindex="-1"></a>    <span class="at">main =</span> <span class="fu">paste</span>(<span class="st">"Trend Bayesiano:"</span>, nomeSp)</span>
-<span id="cb15-205"><a href="#cb15-205" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb15-206"><a href="#cb15-206" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(anni_num, ci[<span class="dv">1</span>, ], <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"blue"</span>)</span>
-<span id="cb15-207"><a href="#cb15-207" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lines</span>(anni_num, ci[<span class="dv">2</span>, ], <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"blue"</span>)</span>
-<span id="cb15-208"><a href="#cb15-208" aria-hidden="true" tabindex="-1"></a>  <span class="fu">polygon</span>(</span>
-<span id="cb15-209"><a href="#cb15-209" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(anni_num, <span class="fu">rev</span>(anni_num)),</span>
-<span id="cb15-210"><a href="#cb15-210" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(ci[<span class="dv">1</span>, ], <span class="fu">rev</span>(ci[<span class="dv">2</span>, ])),</span>
-<span id="cb15-211"><a href="#cb15-211" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="fu">rgb</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.05</span>),</span>
-<span id="cb15-212"><a href="#cb15-212" aria-hidden="true" tabindex="-1"></a>    <span class="at">border =</span> <span class="cn">NA</span></span>
-<span id="cb15-213"><a href="#cb15-213" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb15-214"><a href="#cb15-214" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb15-215"><a href="#cb15-215" aria-hidden="true" tabindex="-1"></a><span class="co"># odoBayes('Sympetrum depressiusculum')</span></span>
-<span id="cb15-216"><a href="#cb15-216" aria-hidden="true" tabindex="-1"></a><span class="co"># odoBayes('Sympetrum sanguineum')</span></span>
-<span id="cb15-217"><a href="#cb15-217" aria-hidden="true" tabindex="-1"></a><span class="co"># odoBayes('Trithemis annulata')</span></span>
-<span id="cb15-218"><a href="#cb15-218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-219"><a href="#cb15-219" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(listaSpecie, odoBayes)</span>
-<span id="cb15-220"><a href="#cb15-220" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># label: bayesian</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># https://www.youtube.com/watch?v=kmMZpG4jK4k&amp;t=192s</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nimble)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(coda)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co"># source('R-Script/baseDati.R')</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co"># nomeSp = 'Trithemis annulata'</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. PREPARAZIONE DATI COMUNI</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>all_cells <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(dfo<span class="sc">$</span>cellcode))</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>all_years <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">unique</span>(dfo<span class="sc">$</span>date_year))</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Matrice dello sforzo</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>effort_matrix <span class="ot">&lt;-</span> dfo <span class="sc">%&gt;%</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(cellcode, date_year, <span class="at">name =</span> <span class="st">'tot_occurrences'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">complete</span>(</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">cellcode =</span> all_cells,</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">date_year =</span> all_years,</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">tot_occurrences =</span> <span class="cn">NA</span>)</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">id_cols =</span> cellcode,</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> date_year,</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> tot_occurrences</span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_to_rownames</span>(<span class="st">"cellcode"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>dfo<span class="sc">$</span>cellcodeX <span class="ot">&lt;-</span> dfo<span class="sc">$</span>cellcode</span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">'R-script/odoBayes.r'</span>)</span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a><span class="co"># odoBayes('Sympetrum depressiusculum', '90')</span></span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a><span class="co"># odoBayes('Sympetrum sanguineum', '90')</span></span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a><span class="co"># odoBayes('Trithemis annulata','90')</span></span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a><span class="co"># odoBayes('Aeshna isoceles','90')</span></span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a><span class="co"># odoBayes("Libellula depressa",'50')</span></span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a><span class="co"># odoBayes("Sympetrum sanguineum")</span></span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a><span class="co"># odoBayes("Coenagrion puella")</span></span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>resultsBayes <span class="ot">&lt;-</span> <span class="fu">map</span>(listaSpecie, odoBayes)</span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
-===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
-  - alpha_p
-  - beta_effort
-  - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+<pre><code>Aeshna affinis 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Aeshna cyanea 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Aeshna isoceles 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Aeshna mixta 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Anax ephippiger 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Anax imperator 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Anax parthenope 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Boyeria irene 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Calopteryx splendens 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Calopteryx virgo 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Ceriagrion tenellum 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Chalcolestes viridis 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Coenagrion puella 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Coenagrion pulchellum 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Coenagrion scitulum 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Cordulegaster boltonii 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Cordulia aenea 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Crocothemis erythraea 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Enallagma cyathigerum 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Erythromma lindenii 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Erythromma viridulum 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Gomphus vulgatissimus 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Ischnura elegans 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Ischnura pumilio 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Lestes dryas 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Lestes sponsa 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Lestes virens 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Libellula depressa 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Libellula fulva 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Libellula quadrimaculata 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Onychogomphus forcipatus 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Onychogomphus uncatus 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Ophiogomphus cecilia 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Orthetrum albistylum 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Orthetrum brunneum 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Orthetrum cancellatum 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Orthetrum coerulescens 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Oxygastra curtisii 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Platycnemis pennipes 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Pyrrhosoma nymphula 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Selysiothemis nigra 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Somatochlora flavomaculata 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Somatochlora metallica 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Stylurus flavipes 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Sympecma fusca 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Sympecma paedisca 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Sympetrum depressiusculum 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Sympetrum fonscolombii 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Sympetrum meridionale 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Sympetrum pedemontanum 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Sympetrum sanguineum 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Sympetrum striolatum 
 ===== Monitors =====
-thin = 1: alpha_p, alpha_psi, beta_effort, beta_year_psi, mean_psi
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
 ===== Samplers =====
-RW sampler (5)
-  - alpha_psi
-  - beta_year_psi
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
   - alpha_p
   - beta_effort
   - beta_year_p
-binary sampler (6699)
-  - z[]  (6699 elements)
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-|-------------|-------------|-------------|-------------|
-|-------------------------------------------------------|
-[[1]]
-NULL
-
-[[2]]
-NULL
-
-[[3]]
-NULL
-
-[[4]]
-NULL
-
-[[5]]
-NULL
-
-[[6]]
-NULL
-
-[[7]]
-NULL
-
-[[8]]
-NULL
-
-[[9]]
-NULL
-
-[[10]]
-NULL
-
-[[11]]
-NULL
-
-[[12]]
-NULL
-
-[[13]]
-NULL
-
-[[14]]
-NULL
-
-[[15]]
-NULL
-
-[[16]]
-NULL
-
-[[17]]
-NULL
-
-[[18]]
-NULL
-
-[[19]]
-NULL
-
-[[20]]
-NULL
-
-[[21]]
-NULL
-
-[[22]]
-NULL
-
-[[23]]
-NULL
-
-[[24]]
-NULL
-
-[[25]]
-NULL
-
-[[26]]
-NULL
-
-[[27]]
-NULL
-
-[[28]]
-NULL
-
-[[29]]
-NULL
-
-[[30]]
-NULL
-
-[[31]]
-NULL
-
-[[32]]
-NULL
-
-[[33]]
-NULL
-
-[[34]]
-NULL
-
-[[35]]
-NULL
-
-[[36]]
-NULL
-
-[[37]]
-NULL
-
-[[38]]
-NULL
-
-[[39]]
-NULL
-
-[[40]]
-NULL
-
-[[41]]
-NULL
-
-[[42]]
-NULL
-
-[[43]]
-NULL
-
-[[44]]
-NULL
-
-[[45]]
-NULL
-
-[[46]]
-NULL
-
-[[47]]
-NULL
-
-[[48]]
-NULL
-
-[[49]]
-NULL
-
-[[50]]
-NULL
-
-[[51]]
-NULL
-
-[[52]]
-NULL
-
-[[53]]
-NULL</code></pre>
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====
+Trithemis annulata 
+===== Monitors =====
+thin = 1: alpha_eps, alpha_gamma, alpha_p, alpha_psi1, mean_psi
+===== Samplers =====
+RW sampler (9)
+  - alpha_psi1
+  - beta_tin_psi1
+  - alpha_gamma
+  - beta_year_gamma
+  - alpha_eps
+  - beta_year_eps
+  - alpha_p
+  - beta_effort
+  - beta_year_p
+posterior_predictive sampler (109)
+  - z[]  (109 elements)
+binary sampler (6213)
+  - z[]  (6213 elements)
+===== Comments =====</code></pre>
 </div>
 <div class="cell-output-display">
 <div>
@@ -2814,13 +2600,14 @@ NULL</code></pre>
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
