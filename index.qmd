@@ -20,6 +20,13 @@ Serie dati raccolti in Piemonte e Lombardia nel periodo compreso tra il 1999 e i
 
 ## Daily log
 
+- 2026-02-15
+    - terzo run dei modelli rivisti e allineati per TIN_1
+        - configurate anche nuove condizioni per ridurre R-hat di:
+            - C. pulchellum
+            - C. aenea
+            - O. cecilia
+            - S. nigra
 - 2026-02-12
     - integrazione anno 2004 e sua rimozione dai grafici
     - figure manoscritto

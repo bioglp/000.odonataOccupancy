@@ -117,3 +117,13 @@ odo |>
   write.csv('input/Sönke/odoTraits.csv')
 
 ```
+
+```{r}
+odo |>
+  select(species, Temp_Group) |>
+  group_split(Temp_Group)
+
+dist_matrix <- dist(df_scaled, method = "euclidean")
+hc_ward <- hclust(dist_matrix, method = "ward.D2")
+
+```

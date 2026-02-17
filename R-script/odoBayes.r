@@ -193,10 +193,10 @@ odoBayes <- function(nomeSp, nk = 10) {
 
   samples <- runMCMC(
     c_mcmc,
-    niter = 20000,
-    nburnin = 5000,
-    nchains = 3,
-    thin = 10,
+    niter = 30000,
+    nburnin = 10000,
+    nchains = 4,
+    thin = 15,
     samplesAsCodaMCMC = T,
     progressBar = F
   )

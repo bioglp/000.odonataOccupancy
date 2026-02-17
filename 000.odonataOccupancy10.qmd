@@ -500,10 +500,15 @@ effort_matrix <- dfo %>%
 dfo$cellcodeX <- dfo$cellcode
 source('R-script/odoBayes.r')
 
-# odoBayes('Sympetrum depressiusculum', '10')
-# odoBayes('Trithemis annulata','10')
-# odoBayes('Aeshna isoceles','90')
-# odoBayes("Libellula depressa",'50')
+# configurazione da 30000 run
+#    niter = 30000,
+#    nburnin = 10000,
+#    nchains = 4,
+#    thin = 15,
+# odoBayes('Coenagrion pulchellum', '30')
+# odoBayes('Cordulia aenea','30')
+# odoBayes('Ophiogomphus cecilia','30')
+# odoBayes("Selysiothemis nigra",'30')
 # odoBayes("Sympetrum sanguineum")
 # odoBayes("Ophiogomphus cecilia")
 # resultsBayes <- map(listaSpecie, odoBayes)

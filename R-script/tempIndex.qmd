@@ -3,6 +3,11 @@ title: "Temperature.Index"
 format: html
 ---
 
+```{r}
+odo <- read.csv('input/Sönke/odoTraits.csv')
+dfo <- merge(dfo, odo)
+```
+
 # modello bayesiano per TempIndex
 
 ```{r}
@@ -567,77 +572,23 @@ odoMultiSpecies_AllGroups <- function(species_index_df, nk = 10, ncores = 3) {
     comparisons = comparisons
   ))
 }
+```
 
-### -------------------------
-
-# Script di verifica preliminare
-verify_data <- function(species_index_df) {
-  cat("=== VERIFICA PRELIMINARE ===\n\n")
-
-  # 1. Controllare distribuzione specie per gruppo
-  cat("Distribuzione specie per gruppo:\n")
-  print(table(species_index_df$gindex))
-
-  # 2. Verificare che tutte le specie esistano in dfo
-  species_list <- unique(species_index_df$species)
-  species_in_dfo <- unique(dfo$species)
-  missing <- setdiff(species_list, species_in_dfo)
-
-  if (length(missing) > 0) {
-    cat("\nATTENZIONE: Specie mancanti in dfo:\n")
-    print(missing)
-    return(FALSE)
-  }
-
-  # 3. Contare osservazioni per specie
-  obs_per_species <- dfo %>%
-    filter(species %in% species_list) %>%
-    group_by(species) %>%
-    summarise(n_obs = n(), .groups = 'drop') %>%
-    arrange(n_obs)
-
-  cat("\nOsservazioni per specie:\n")
-  print(obs_per_species)
-
-  # 4. Verificare celle e anni
-  cat("\nNumero di celle:", length(unique(dfo$cellcodeX)), "\n")
-  cat(
-    "Anni disponibili:",
-    paste(sort(unique(dfo$date_year)), collapse = ", "),
-    "\n"
-  )
-
-  # 5. Stimare tempo di esecuzione
-  n_species <- nrow(species_index_df)
-  estimated_minutes <- n_species * 2 # approssimazione: 2 min per specie
-
-  cat("\n=== STIMA TEMPO ===\n")
-  cat("Numero totale di specie:", n_species, "\n")
-  cat("Tempo stimato:", round(estimated_minutes / 60, 1), "ore\n")
-
-  return(TRUE)
-}
-
-# Eseguire verifica
-dfo_with_gindex <- dfo %>%
-  mutate(gindex = Temp_Group) %>%
-  select(species, gindex) %>%
-  distinct()
-
-verify_data(dfo_with_gindex)
-
-### -------------------------
-# Test con 1 specie per gruppo
+```{r}
 test_species <- dfo %>%
   group_by(Temp_Group) %>%
   distinct(species) %>%
-  slice_head(n = 1) %>%
+  #slice_head(n = 1) %>%
   ungroup() %>%
   mutate(gindex = Temp_Group) %>%
   select(species, gindex)
 
-results <- odoMultiSpecies_AllGroups(test_species, ncores = 2)
+all_results <- odoMultiSpecies_AllGroups(test_species, ncores = 7)
+```
 
-### -------------------------
+
+```{r}
+multi <- readRDS('output_bayes/MULTISPECIES_ALL_GROUPS_2026-02-15.rds')
+str(multi)
 
 ```
