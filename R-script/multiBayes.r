@@ -124,10 +124,23 @@ odoMultiSpecies_AllGroups <- function(species_index_df, nk = 10, ncores = 7) {
   cat("Verifica gindex:\n")
   print(table(gindex_vec))
 
+  # Numero gruppi
+  n_groups <- length(unique(gindex_vec))
+  cat("Numero gruppi:", n_groups, "\n")
+
+  if (!all(sort(unique(gindex_vec)) == 1:n_groups)) {
+    stop(
+      "gindex deve contenere valori contigui da 1 a ",
+      n_groups,
+      ". Valori trovati: ",
+      paste(sort(unique(gindex_vec)), collapse = ", ")
+    )
+  }
+
   # 2. DEFINIZIONE MODELLO
   code <- nimbleCode({
-    # --- HYPERPRIORS PER OGNI GRUPPO (1-4) ---
-    for (tg in 1:4) {
+    # --- HYPERPRIORS PER OGNI GRUPPO ---
+    for (tg in 1:n_groups) {
       mu_alpha_psi1[tg] ~ dnorm(0, sd = 2)
       mu_alpha_gamma[tg] ~ dnorm(0, sd = 2)
       mu_alpha_eps[tg] ~ dnorm(0, sd = 2)
@@ -243,6 +256,7 @@ odoMultiSpecies_AllGroups <- function(species_index_df, nk = 10, ncores = 7) {
     n_sites = nrow(y_list[[1]]),
     n_years = ncol(y_list[[1]]),
     n_species = n_species,
+    n_groups = n_groups,
     n_obs = nrow(obs_data),
     species_obs = obs_data$species_idx,
     site_obs = obs_data$site_idx,
@@ -268,6 +282,7 @@ odoMultiSpecies_AllGroups <- function(species_index_df, nk = 10, ncores = 7) {
     constants,
     data,
     n_sp,
+    n_groups,
     y_matrices
   ) {
     set.seed(seed_val)
@@ -297,14 +312,14 @@ odoMultiSpecies_AllGroups <- function(species_index_df, nk = 10, ncores = 7) {
     }
 
     initial_values <- list(
-      mu_alpha_psi1 = rnorm(4, 0, 0.5),
-      mu_alpha_gamma = rnorm(4, 0, 0.5),
-      mu_alpha_eps = rnorm(4, 0, 0.5),
-      mu_alpha_p = rnorm(4, 0, 0.5),
-      sigma_alpha_psi1 = rexp(4, 1),
-      sigma_alpha_gamma = rexp(4, 1),
-      sigma_alpha_eps = rexp(4, 1),
-      sigma_alpha_p = rexp(4, 1),
+      mu_alpha_psi1 = rnorm(n_groups, 0, 0.5),
+      mu_alpha_gamma = rnorm(n_groups, 0, 0.5),
+      mu_alpha_eps = rnorm(n_groups, 0, 0.5),
+      mu_alpha_p = rnorm(n_groups, 0, 0.5),
+      sigma_alpha_psi1 = rexp(n_groups, 1),
+      sigma_alpha_gamma = rexp(n_groups, 1),
+      sigma_alpha_eps = rexp(n_groups, 1),
+      sigma_alpha_p = rexp(n_groups, 1),
       alpha_psi1 = rnorm(n_sp, 0, 0.5),
       alpha_gamma = rnorm(n_sp, 0, 0.5),
       alpha_eps = rnorm(n_sp, 0, 0.5),
@@ -372,6 +387,7 @@ odoMultiSpecies_AllGroups <- function(species_index_df, nk = 10, ncores = 7) {
           nim_constants,
           nim_data,
           n_species,
+          n_groups,
           y_list
         )
       })
@@ -391,7 +407,7 @@ odoMultiSpecies_AllGroups <- function(species_index_df, nk = 10, ncores = 7) {
   cat("\nCalcolando statistiche di gruppo...\n")
 
   group_results <- list()
-  for (g in 1:4) {
+  for (g in 1:n_groups) {
     species_in_group <- which(gindex_vec == g)
 
     if (length(species_in_group) == 0) {
@@ -555,15 +571,15 @@ odoMultiSpecies_AllGroups <- function(species_index_df, nk = 10, ncores = 7) {
     geom_point(size = 2) +
     scale_color_viridis_d(
       name = "Group",
-      labels = paste("Group", 1:4)
+      labels = paste("Group", 1:n_groups)
     ) +
     scale_fill_viridis_d(
       name = "Group",
-      labels = paste("Group", 1:4)
+      labels = paste("Group", 1:n_groups)
     ) +
     scale_y_continuous(limits = c(0, 1), labels = scales::percent) +
     labs(
-      title = "Occupancy across Groups",
+      title = "Occupancy Comparison across Groups",
       x = "Year",
       y = "Mean Occupancy"
     ) +
@@ -633,8 +649,8 @@ odoMultiSpecies_AllGroups <- function(species_index_df, nk = 10, ncores = 7) {
   )]
 
   comparisons <- list()
-  for (g1 in 1:3) {
-    for (g2 in (g1 + 1):4) {
+  for (g1 in 1:(n_groups - 1)) {
+    for (g2 in (g1 + 1):n_groups) {
       diff_psi1 <- mu_psi1_samples[, g2] - mu_psi1_samples[, g1]
       diff_gamma <- mu_gamma_samples[, g2] - mu_gamma_samples[, g1]
 
@@ -655,7 +671,7 @@ odoMultiSpecies_AllGroups <- function(species_index_df, nk = 10, ncores = 7) {
   cat("\n=== CONFRONTI GRUPPI vs GLOBALE ===\n")
 
   group_vs_global <- list()
-  for (g in 1:4) {
+  for (g in 1:n_groups) {
     if (is.null(group_results[[g]])) {
       next
     }
@@ -722,12 +738,12 @@ odoMultiSpecies_AllGroups <- function(species_index_df, nk = 10, ncores = 7) {
     ) +
     geom_line(linewidth = 1.2) +
     scale_color_viridis_d(
-      name = "Temperature Group",
-      labels = paste("Group", 1:4)
+      name = "Group",
+      labels = paste("Group", 1:n_groups)
     ) +
     scale_fill_viridis_d(
-      name = "Temperature Group",
-      labels = paste("Group", 1:4)
+      name = "Group",
+      labels = paste("Group", 1:n_groups)
     ) +
     labs(
       title = "Difference in Occupancy: Each Group vs Global Mean",
