@@ -215,7 +215,7 @@ write.csv(tab, 'risultatiBayes.csv')
 tab |>
   ggplot(aes(x = reorder(species, tau), y = tau, fill = trend)) +
   geom_col() +
-  coord_flip() + # barre orizzontali per leggibilità
+  coord_flip() +
   labs(
     x = "",
     y = "\nMann-Kendall's tau",

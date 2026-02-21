@@ -4,7 +4,7 @@ glimpse(dfo)
 
 
 dfo |>
-  filter(code == 'Continental') |>
+  #filter(code == 'Continental') |>
   group_by(cellcode, date_year) |>
   summarise(mean_tin = mean(tin_1, na.rm = T)) |>
   ggplot(aes(mean_tin, date_year, group = date_year)) +

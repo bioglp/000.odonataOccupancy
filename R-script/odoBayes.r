@@ -1,6 +1,7 @@
-# funzione odoBayes
-# per il calcolo dell'occupancy
-# richiede la definizione di un campo cellcodeX
+#' funzione odoBayes
+#' per il calcolo occupancy
+#' richiede la definizione di un campo cellcodeX
+
 odoBayes <- function(nomeSp, nk = 10) {
   cat(nomeSp, '\n')
 

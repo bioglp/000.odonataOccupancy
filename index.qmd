@@ -12,6 +12,10 @@ css: css/bujo01.css
 
 Serie dati raccolti in Piemonte e Lombardia nel periodo compreso tra il 1999 e il 2025 con piattaforma Ornitho e Atlante preliminare. Analisi della regione biogeografica Continentale (estesa ai margini con celle 10k e 20k).
 
+## Manoscritto
+
+- [link](https://docs.google.com/document/d/10sNJ2TZ42LVXTqc1Tq_nP4gVh2qahpNHJx4WY_Rn0sQ/edit?tab=t.0)
+
 ## Output elaborazioni
 
 -   [output10k](https://bioglp.github.io/000.odonataOccupancy/000.odonataOccupancy10.html)
@@ -19,6 +23,11 @@ Serie dati raccolti in Piemonte e Lombardia nel periodo compreso tra il 1999 e i
 -   [output20k](https://bioglp.github.io/000.odonataOccupancy/000.odonataOccupancy20.html)
 
 ## Daily log
+
+- 2026-02-19
+    - modificare i plot dei gruppi di specie con un riferimento iniziale pari al 100%
+    - run per tutte le specie in un solo gruppo
+    - confine area pianura padana
 
 - 2026-02-15
     - terzo run dei modelli rivisti e allineati per TIN_1
