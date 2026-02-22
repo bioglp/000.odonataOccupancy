@@ -5,7 +5,7 @@ date: 2025-11-08
 format: 
     html:
         theme: cosmo
-css: css/bujo01.css
+css: docs/css/bujo01.css
 ---
 
 ## Progetto Odonata Occupancy
