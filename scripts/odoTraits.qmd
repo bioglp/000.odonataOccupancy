@@ -8,7 +8,7 @@ format: html
 ```{r}
 library(tidyverse)
 library(here)
-odo <- read.csv(here('input/Sönke/odoTraits.csv'))
+odo <- read.csv(here('data/raw/Sönke/odoTraits.csv'))
 ```
 
 ```{r}
@@ -126,4 +126,8 @@ odo |>
 dist_matrix <- dist(df_scaled, method = "euclidean")
 hc_ward <- hclust(dist_matrix, method = "ward.D2")
 
+
+odo |>
+  select(species, Temp_Group) |>
+  group_split(Temp_Group)
 ```

@@ -37,7 +37,7 @@ Campi del dataset di partenza filtrato per cellcode (grid 10km):
 year_start <- 2004
 
 #dfo <- read.xlsx('input/datasetSegnalazioni_R20251106.xlsx')
-dfo <- read_csv('input/datasetSegnalazioni_R20251106.csv')
+dfo <- read_csv('data/raw/datasetSegnalazioni_R20251106.csv')
 dfo <- dfo |>
   rename_with(tolower) |>
   filter(date_year >= year_start) |>
@@ -69,7 +69,7 @@ dfo <- dfo |>
   select(date_year, species, cellcode, cellcode20, tin_1)
 
 # iNaturalist
-iNat <- read_csv('input/iNaturalist_20241123.csv')
+iNat <- read_csv('data/raw/iNaturalist_20241123.csv')
 iNat <- iNat |>
   select(
     date_year = DATE_YEAR,

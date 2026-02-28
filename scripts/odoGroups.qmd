@@ -1,5 +1,5 @@
 ---
-title: "Temperature.Index"
+title: "Functional Groups"
 format: html
 ---
 
@@ -11,14 +11,14 @@ library(tidyr)
 library(ggplot2)
 library(coda)
 
-odo <- read.csv('input/Sönke/odoTraits.csv')
+odo <- read.csv('data/raw/Sönke/odoTraits.csv')
 dfo <- merge(dfo, odo)
 ```
 
 # modello bayesiano per TempIndex
 
 ```{r}
-source('R-script/multiBayes.r')
+source('R/odoBayesFamily.r')
 glimpse(dfo)
 
 ## temp index
@@ -37,6 +37,15 @@ test_species <- dfo %>%
   #slice_head(n = 1) %>% # per estrarre solo una specie per gruppo
   ungroup() %>%
   mutate(gindex = IW_Group) %>%
+  select(species, gindex)
+
+# HV (Habitat value)
+test_species <- dfo %>%
+  group_by(HV_Group) %>%
+  distinct(species) %>%
+  #slice_head(n = 1) %>% # per estrarre solo una specie per gruppo
+  ungroup() %>%
+  mutate(gindex = HV_Group) %>%
   select(species, gindex)
 
 all_results <- odoMultiSpecies_AllGroups(test_species, ncores = 7)
