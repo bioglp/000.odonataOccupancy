@@ -128,6 +128,6 @@ hc_ward <- hclust(dist_matrix, method = "ward.D2")
 
 
 odo |>
-  select(species, Temp_Group) |>
-  group_split(Temp_Group)
+  select(species, HV_Group) |>
+  group_split(HV_Group)
 ```
