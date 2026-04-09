@@ -23,14 +23,25 @@ Serie dati raccolti in Piemonte e Lombardia nel periodo compreso tra il 1999 e i
 -   [output20k](https://bioglp.github.io/000.odonataOccupancy/000.odonataOccupancy20.html)
 
 ## Daily log
+- 2026-04-09
+    - figura di sintesi per i trend di tutte le specie e correzione O. cancellatum
+    - stesura prima parte results 
+
+- 2026-03-30
+    - mappa, controllo grafico O. cancellatum, stesura risultati
+    - esclusione anno 2004 dall'elaborazioni, giustificazione statistica
+    - nota per Alessandro Marucci
+
+- 2026-03-19
+    - rappresentazione dei trend con Kendall values
 
 - 2026-03-13
     - plot 100% e estrazione tabelle con valori
+    - tabelle di sintesi per specie
 
 - 2026-03-06
-    - tabelle e invio
-    - riscalare plot 100%
-    - fig. mappa
+    - riscalare plot gruppi al 100%
+    - fig. mappa con pianura padana
     manoscritto
         - caricare MM
         - inizio risultati

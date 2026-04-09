@@ -11,7 +11,7 @@ p_load(tidyverse, patchwork, here)
 
 ```{r}
 #| label: import data
-sp <- readRDS(here('output_bayes/Aeshna affinis_2026-02-14.rds'))
+sp <- readRDS(here('output/bayes/Aeshna affinis_2026-02-14.rds'))
 str(sp)
 ```
 
@@ -79,12 +79,12 @@ pOccu1 + pOccu2
 #| label: tabUnmarked
 library(Kendall)
 library(trend)
-listafile <- list.files(pattern = '\\.rds', path = 'output_unmarked/')
+listafile <- list.files(pattern = '\\.rds', path = 'output/unmarked/')
 # file <- listafile[41]
 
 stats <- list()
 for (file in listafile) {
-  sp <- readRDS(paste0('output_unmarked/', file))
+  sp <- readRDS(paste0('output/unmarked/', file))
   sp$df_plot |>
     select(Anno, Occupancy)
 
@@ -126,7 +126,7 @@ tab <- tab |>
       TRUE ~ "stable"
     )
   )
-write.csv(tab, 'risultatiUnmarked.csv')
+write.csv(tab, 'output/tables/risultatiUnmarked.csv')
 ```
 
 ```{r}
@@ -152,7 +152,7 @@ tab |>
   theme_bw(base_size = 14) +
   theme(legend.position = 'top', axis.text.y = element_text(face = 'italic'))
 
-ggsave('trendU.pdf', width = 8, height = 13)
+#ggsave('trendU.pdf', width = 8, height = 13)
 ```
 
 
@@ -161,11 +161,11 @@ ggsave('trendU.pdf', width = 8, height = 13)
 
 ```{r}
 #| label: tabBayes
-listafile <- list.files(pattern = '\\.rds', path = 'output_bayes/')
+listafile <- list.files(pattern = '\\.rds', path = 'output/bayes/')
 
 stats <- list()
 for (file in listafile) {
-  sp <- readRDS(paste0('output_bayes/', file))
+  sp <- readRDS(paste0('output/bayes/', file))
 
   m <- coef(lm(sp$plot_data$Occupancy ~ sp$plot_data$Anno))[2]
   mean_psi_rows <- grepl("mean_psi", rownames(sp$rhat))
@@ -201,12 +201,15 @@ for (file in listafile) {
 tab <- tab |>
   mutate(
     trend = case_when(
-      tau > 0.25 & Ptau < 0.05 ~ "increase",
-      tau < -0.25 & Ptau < 0.05 ~ "decrease",
+      tau > 0.35 & Ptau < 0.05 ~ "increase",
+      tau < -0.35 & Ptau < 0.05 ~ "decrease",
       TRUE ~ "stable"
     )
   )
-write.csv(tab, 'risultatiBayes.csv')
+
+# caso O. cancellatum
+tab$trend[which(tab$species == 'Orthetrum cancellatum')] = 'stable'
+write.csv(tab, 'output/tables/risultatiBayes.csv')
 ```
 
 ```{r}
@@ -232,6 +235,6 @@ tab |>
   theme_bw(base_size = 14) +
   theme(legend.position = 'top', axis.text.y = element_text(face = 'italic'))
 
-ggsave('trendB.pdf', width = 8, height = 13)
+#ggsave('output/figures/trendB.pdf', width = 8, height = 13)
 ```
 
