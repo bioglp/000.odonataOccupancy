@@ -1,0 +1,150 @@
+[10:49:35] ======================================
+[10:49:35] odoRichness_robust — avvio
+[10:49:35] Log: output/output_bayes/multispecies/richness_run.log
+[10:49:35] Checkpoint dir: output/output_bayes/multispecies/checkpoints
+[10:49:35] Specie osservate: 53 | n_zero: 50 | n_total: 103
+[10:49:35] Preparazione dati per 53 specie...
+[10:49:38] Dimensioni: 321 siti × 22 anni
+[10:49:38] Nodi processo di stato: 103 × 321 × 22 = 727386
+[10:57:42] Osservazioni totali: 174529
+[10:57:42] Fase 1/4 — build modello NIMBLE...
+[17:03:23] ======================================================
+[17:03:23] odoRichness_robust — avvio
+[17:03:23] Log:            output/output_bayes/multispecies/richness_run.log
+[17:03:23] Checkpoint dir: output/output_bayes/multispecies/checkpoints
+[17:03:23] Specie osservate: 53 | n_zero: 15 | n_total: 68
+[17:03:23] ------------------------------------------------------
+[17:03:23] Sezione 1 — Selezione stratificata siti
+[17:03:23]   Siti disponibili: 321
+[17:03:23]   Target:           100
+[17:03:23]   Soglia rarità:    presenza < 5 siti
+[17:03:23]   Strati (tin_1):   4
+[17:03:23]   Effort (anni survey) — min:1 Q1:5 med:10 Q3:15 max:21
+[17:03:23]   Specie rare (<5 siti): 0 — 
+[17:03:23]   Siti forzati (contengono specie rare): 0
+[17:03:23]   Allocazione per strato:
+[17:03:23]     Strato 1 (240 disponibili) → 75 selezionati
+[17:03:23]     Strato 2 (68 disponibili) → 21 selezionati
+[17:03:23]     Strato 3 (8 disponibili) → 2 selezionati
+[17:03:23]     Strato 4 (5 disponibili) → 2 selezionati
+[17:05:10] ======================================================
+[17:05:10] odoRichness_robust — avvio
+[17:05:10] Log:            output/output_bayes/multispecies/richness_run.log
+[17:05:10] Checkpoint dir: output/output_bayes/multispecies/checkpoints
+[17:05:10] Specie osservate: 53 | n_zero: 13 | n_total: 66
+[17:05:10] ------------------------------------------------------
+[17:05:10] Sezione 1 — Selezione stratificata siti
+[17:05:10]   Siti disponibili: 321
+[17:05:10]   Target:           100
+[17:05:10]   Soglia rarità:    presenza < 5 siti
+[17:05:10]   Strati (tin_1):   4
+[17:05:10]   Effort (anni survey) — min:1 Q1:5 med:10 Q3:15 max:21
+[17:05:10]   Specie rare (<5 siti): 0 — 
+[17:05:10]   Siti forzati (contengono specie rare): 0
+[17:05:10]   Allocazione per strato:
+[17:05:10]     Strato 1 (240 disponibili) → 75 selezionati
+[17:05:10]     Strato 2 (68 disponibili) → 21 selezionati
+[17:05:10]     Strato 3 (8 disponibili) → 2 selezionati
+[17:05:10]     Strato 4 (5 disponibili) → 2 selezionati
+[17:05:10]   Siti selezionati: 100 (0 forzati + 100 stratificati)
+[17:05:10]   Effort medio — selezionati: 11.3  |  esclusi: 9.8 anni
+[17:05:10]   Metadati selezione salvati.
+[17:05:10] ------------------------------------------------------
+[17:05:10] Sezione 2 — Preparazione dati
+[17:05:12] Dimensioni: n_sites=321 | n_years=22 | n_total=66
+[17:05:12] Nodi processo di stato: 66 x 321 x 22 = 466092
+[17:18:40] Osservazioni totali: 174529
+[17:18:40] ------------------------------------------------------
+[17:18:40] Sezione 5 — Compilazione NIMBLE
+[17:18:40] Fase 1/3 — build modello...
+[17:53:20]   34.7 min
+[17:53:20] Fase 2/3 — compilazione C++...
+[18:07:00]   13.7 min
+[18:07:00] Fase 3/3 — build e compilazione MCMC...
+[00:04:07]   357.1 min
+[00:04:07] ------------------------------------------------------
+[00:04:07] Sezione 6 — Test run (50 iterazioni)
+[00:04:24]   ERRORE: in binary sampler, all log probability density values are negative infinity and sampling cannot proceed
+[07:45:09] ======================================================
+[07:45:09] odoRichness_robust — avvio
+[07:45:09] Log:            output/output_bayes/multispecies/richness_run.log
+[07:45:09] Checkpoint dir: output/output_bayes/multispecies/checkpoints
+[07:45:09] Specie osservate: 53 | n_zero: 13 | n_total: 66
+[07:45:09] ------------------------------------------------------
+[07:45:09] Sezione 1 — Selezione stratificata siti
+[07:45:09]   Siti disponibili: 321
+[07:45:09]   Target:           100
+[07:45:09]   Soglia rarità:    presenza < 5 siti
+[07:45:09]   Strati (tin_1):   4
+[07:45:09]   Effort (anni survey) — min:1 Q1:5 med:10 Q3:15 max:21
+[07:45:09]   Specie rare (<5 siti): 0 — 
+[07:45:09]   Siti forzati (contengono specie rare): 0
+[07:45:09]   Allocazione per strato:
+[07:45:09]     Strato 1 (240 disponibili) → 75 selezionati
+[07:45:09]     Strato 2 (68 disponibili) → 21 selezionati
+[07:45:09]     Strato 3 (8 disponibili) → 2 selezionati
+[07:45:09]     Strato 4 (5 disponibili) → 2 selezionati
+[07:45:09]   Siti selezionati: 100 (0 forzati + 100 stratificati)
+[07:45:09]   Effort medio — selezionati: 11.3  |  esclusi: 9.8 anni
+[07:45:09]   Metadati selezione salvati.
+[07:45:09] ------------------------------------------------------
+[07:45:09] Sezione 2 — Preparazione dati
+[07:45:11] Dimensioni: n_sites=321 | n_years=22 | n_total=66
+[07:45:11] Nodi processo di stato: 66 x 321 x 22 = 466092
+[07:53:52] Osservazioni totali: 174529
+[07:53:52] ------------------------------------------------------
+[07:53:52] Sezione 5 — Compilazione NIMBLE
+[07:53:52] Fase 1/3 — build modello...
+[08:45:56]   52.1 min
+[08:45:56]   Log-prob valori iniziali: -253046
+[08:45:56] Fase 2/3 — compilazione C++...
+[08:59:04]   13.1 min
+[08:59:04] Fase 3/3 — build e compilazione MCMC...
+[13:12:54]   253.8 min
+[13:12:54] ------------------------------------------------------
+[13:12:54] Sezione 6 — Test run (50 iterazioni)
+[13:13:21]   iter/min: 110.2
+[13:13:21]   Stima tempo totale: ~9.1 ore
+[13:13:21] ------------------------------------------------------
+[13:13:21] Sezione 7 — Campionamento MCMC
+[13:13:21]   n_chains=3 | niter=20000 | nburnin=5000 | thin=10
+[13:13:21]   Campioni per catena: 1500
+[13:13:21] Catena 1/3 — avvio
+[15:50:22]   completata in 157 min
+[15:50:22]   checkpoint: output/output_bayes/multispecies/checkpoints/chain_1.rds
+[15:50:22] Catena 2/3 — avvio
+[18:28:34]   completata in 158.2 min
+[18:28:34]   checkpoint: output/output_bayes/multispecies/checkpoints/chain_2.rds
+[18:28:34] Catena 3/3 — avvio
+[21:06:45]   completata in 158.2 min
+[21:06:45]   checkpoint: output/output_bayes/multispecies/checkpoints/chain_3.rds
+[21:06:45] ------------------------------------------------------
+[21:06:45] Sezione 8 — Risultati
+[21:06:45] ATTENZIONE: omega > 0.97 → n_zero troppo piccolo. Ripeti con n_zero = 23
+[21:06:45] omega:  0.982 [0.931 - 1.000]
+[21:06:45] N_pool: 65.8 [64.0 - 66.0]  (osservate: 53 | stimate non rilevate: 12.8)
+[21:06:45] Richness per anno:
+[21:06:45]   2004: 65.6 [64.0 - 66.0]
+[21:06:45]   2005: 65.7 [64.0 - 66.0]
+[21:06:45]   2006: 65.7 [64.0 - 66.0]
+[21:06:45]   2007: 65.7 [64.0 - 66.0]
+[21:06:45]   2008: 65.7 [64.0 - 66.0]
+[21:06:45]   2009: 65.7 [64.0 - 66.0]
+[21:06:45]   2010: 65.7 [64.0 - 66.0]
+[21:06:45]   2011: 65.7 [64.0 - 66.0]
+[21:06:45]   2012: 65.7 [64.0 - 66.0]
+[21:06:45]   2013: 65.8 [64.0 - 66.0]
+[21:06:45]   2014: 65.8 [64.0 - 66.0]
+[21:06:45]   2015: 65.7 [64.0 - 66.0]
+[21:06:45]   2016: 65.7 [64.0 - 66.0]
+[21:06:45]   2017: 65.6 [64.0 - 66.0]
+[21:06:45]   2018: 65.8 [64.0 - 66.0]
+[21:06:45]   2019: 65.8 [64.0 - 66.0]
+[21:06:45]   2020: 65.7 [64.0 - 66.0]
+[21:06:45]   2021: 65.8 [64.0 - 66.0]
+[21:06:45]   2022: 65.8 [64.0 - 66.0]
+[21:06:45]   2023: 65.7 [64.0 - 66.0]
+[21:06:45]   2024: 65.7 [64.0 - 66.0]
+[21:06:45]   2025: 65.7 [64.0 - 66.0]
+[21:06:47] Salvato: output/output_bayes/multispecies/RICHNESS_2026-05-17.rds / .pdf / _siti.pdf
+[21:06:47] Analisi completata.

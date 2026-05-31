@@ -1,0 +1,53 @@
+#######################################################################
+## The following is the JAGS MSOM file used to analyze the data from
+## Tingley et al. 2020. Multi-species occupancy models as robust 
+## estimators of community richness. Methods in Ecology and Evolution.
+########################################################################
+
+
+model{
+  ###############
+  ## Likelihood
+  ###############
+    ##loop through the species
+      for(i in 1:N.aug){
+        ##species presence model
+          w[i] ~ dbern(omega)
+          w.psi[i] <- w[i]*psi[i]
+        
+        ##detection probability model
+          for(j in 1:n.sites){
+            ##occupancy model
+              z[j,i] ~ dbern(w.psi[i])
+            
+            ##detection model
+              z.p[j,i] <- z[j,i]*p[i]
+              y[j,i] ~ dbinom(z.p[j,i], n.reps)
+    
+          }##end loop through sites
+          
+        ##random effects
+          logit(psi[i]) <- b0[i] 
+          b0[i] ~ dnorm(mu.psi, tau.psi)
+          
+          logit(p[i]) <- a0[i] 
+          a0[i] ~ dnorm(mu.p, tau.p)
+          
+      }##end loop through species
+  
+  #####################
+  ## Define the priors
+  #####################
+    mu.psi ~ dnorm(0, 0.001)
+    tau.psi ~ dgamma(0.1, 0.1)
+    mu.p ~ dnorm(0, 0.001)
+    tau.p ~ dgamma(0.1, 0.1)
+    omega ~ dunif(0,1)
+  
+  #######################
+  ## Derived parameters
+  #######################
+    sd.psi <- 1/tau.psi
+    sd.p <- 1/tau.p
+    N <- omega*N.aug
+}

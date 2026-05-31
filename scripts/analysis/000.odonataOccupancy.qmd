@@ -10,7 +10,7 @@ format:
     toc: true
 execute:
   warning: false
-editor: visual
+editor: source
 editor_options: 
   chunk_output_type: console
 ---

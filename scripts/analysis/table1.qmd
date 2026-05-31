@@ -1,0 +1,22 @@
+---
+title: "Untitled"
+format: html
+---
+
+```{r}
+library(tidyverse)
+library(patchwork)
+library(rstatix)
+
+dfb <- read.csv('output/tables/risultatiBayes.csv')
+dfu <- read.csv('output/tables/risultatiUnmarked.csv')
+traits <- read.csv('output/tables/odoTraits.csv')
+```
+
+
+```{r}
+models <- left_join(dfb,dfu, by = 'species')
+tab1 <- left_join(traits,models, by= 'species')
+
+write.csv(tab1,'output/tables/tab1.csv')
+```

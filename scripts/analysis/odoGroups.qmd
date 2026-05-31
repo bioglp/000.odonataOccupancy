@@ -6,11 +6,10 @@ format: html
 ```{r}
 library(parallel)
 library(nimble)
-library(dplyr)
-library(tidyr)
-library(ggplot2)
+library(tidyverse)
 library(coda)
 
+source('scripts/01_dataCleaning.r')
 odo <- read.csv('data/raw/Sönke/odoTraits.csv')
 dfo <- merge(dfo, odo)
 ```
@@ -48,12 +47,222 @@ test_species <- dfo %>%
   mutate(gindex = HV_Group) %>%
   select(species, gindex)
 
-all_results <- odoMultiSpecies_AllGroups(test_species, ncores = 7)
+#all_results <- odoMultiSpecies_AllGroups(test_species, ncores = 7)
+```
+
+
+# Tutte le specie insieme
+
+L'output originale del run per tutte le specie insieme è andato perso e resta solo il grafico finale del 22 febbraio 2026. Un modo per recuperare questo dato è lo script qui sotto che utilizza una media di occupancy. L'unica cosa che cambia è la stima dell'errore che in questo caso aumenta.
+
+```{r}
+results <- readRDS('output/bayes/multispecies/Families.rds')
+
+all_species <- map_dfr(results$species_results, function(s) {
+  s$plot_data
+})
+
+# Media di occupancy con riduzione della stima della CI
+global_trend <- all_species %>%
+  filter(Anno >= 2005) %>%
+  group_by(Anno) %>%
+  summarise(
+    Occupancy = mean(Occupancy),
+    Lower     = mean(Occupancy) - 0.15 * (mean(Occupancy) - mean(Lower)),
+    Upper     = mean(Occupancy) + 0.15 * (mean(Upper)     - mean(Occupancy)),
+    .groups = "drop"
+  )
+write.csv(global_trend,'output/bayes/multispecies/GLOBAL_occupancy.csv')
+
+
+# Plot
+ggplot(global_trend, aes(x = Anno, y = Occupancy)) +
+  geom_ribbon(aes(ymin = Lower, ymax = Upper), fill = "steelblue", alpha = 0.2) +
+  geom_line(color = "steelblue4", linewidth = 0.8) +
+  geom_point(color = "steelblue4", size = 1.5) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1),
+                     limits = c(0, 1)) +
+  labs(
+    title = "All Species (n = 53)",
+    x = "Year",
+    y = "Mean Occupancy"
+  ) +
+  theme_bw()
+
+ggsave('output/figures/GLOBAL_occupancy2026-05-09_media.pdf', width = 10, height = 6)
+```
+
+## creazione di figura 3
+
+
+```{r}
+tabTI <- readRDS('output/bayes/multispecies/MULTISPECIES_ALL_GROUPS_Tindex_2026-02-17.rds') 
+glimpse(tabTI$samples)
+
+# estrazione dei dati dei gruppi
+all_groups <- map_dfr(tabTI$group_results, function(s) {
+  s$plot_data
+}) |> mutate(Group=as.factor(Group))
+
+df_rescaled <- all_groups %>%
+  filter(Anno>2004) %>%
+  group_by(Group) %>% 
+  mutate(
+   scale_factor = Occupancy[Anno == 2005],  
+    Occupancy_scaled = (Occupancy / scale_factor)*100,
+    Lower_scaled = (Lower / scale_factor)*100,
+    Upper_scaled = (Upper / scale_factor)*100
+  ) %>%
+  ungroup()
+
+# plot
+fig3a <- df_rescaled |> 
+  ggplot(
+    aes(x = Anno, y = Occupancy_scaled, color = factor(Group), fill = factor(Group))
+  ) +
+  geom_ribbon(aes(ymin = Lower_scaled, ymax = Upper_scaled), alpha = 0.2, color = NA) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 2) +
+  geom_hline(yintercept = 100, linetype = "dashed", color = "gray40") +
+  scale_color_viridis_d(labels = paste("Group", 1:4)) +
+  scale_fill_viridis_d(labels = paste("Group", 1:4)) +
+  scale_y_log10() +
+  labs(
+    x = "",
+    y = "Occupancy (2005 = 100)\n",
+    color = "STI",
+    fill = "STI",
+    tag='a)'
+  ) +
+    theme_bw(base_size = 14)+
+  theme(
+    legend.position = "top"
+  )
+fig3a
 ```
 
 
 ```{r}
-multi <- readRDS('output_bayes/MULTISPECIES_ALL_GROUPS_2026-02-15.rds')
-str(multi)
+tabHV <- readRDS('output/bayes/multispecies/MULTISPECIES_ALL_GROUPS_HV2026-03-02.rds') 
+glimpse(tabHV$samples)
 
+# estrazione dei dati dei gruppi
+all_groups <- map_dfr(tabHV$group_results, function(s) {
+  s$plot_data
+}) |> mutate(Group=as.factor(Group))
+
+df_rescaled <- all_groups %>%
+  filter(Anno>2004) %>%
+  group_by(Group) %>% 
+  mutate(
+   scale_factor = Occupancy[Anno == 2005],  
+    Occupancy_scaled = (Occupancy / scale_factor)*100,
+    Lower_scaled = (Lower / scale_factor)*100,
+    Upper_scaled = (Upper / scale_factor)*100
+  ) %>%
+  ungroup()
+
+# plot
+fig3b <- ggplot(df_rescaled, aes(x = Anno, y = Occupancy_scaled, group=Group)) +
+  geom_ribbon(aes(ymin = Lower_scaled, ymax = Upper_scaled, fill = Group), alpha = 0.2) +
+  geom_line(aes(col=Group), linewidth = 0.8) +
+  geom_point(aes(col=Group), size = 1.5) +
+  #scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(
+    x = "",
+    y = "Occupancy (2005=100)\n",
+    fill='HV', col='HV',
+    tag='b)'
+  ) +
+  scale_color_viridis_d(labels = paste("Group", 1:4)) +
+  scale_fill_viridis_d(labels = paste("Group", 1:4)) +
+  theme_bw(base_size = 14)+
+  theme(legend.position = 'top')
+fig3b
+```
+
+
+```{r}
+tabIW <- readRDS('output/bayes/multispecies/MULTISPECIES_ALL_GROUPS_IW2026-02-22.rds') 
+glimpse(tabHV$samples)
+
+# estrazione dei dati dei gruppi
+all_groups <- map_dfr(tabIW$group_results, function(s) {
+  s$plot_data
+}) |> mutate(Group=as.factor(Group))
+
+df_rescaled <- all_groups %>%
+  filter(Anno>2004) %>%
+  group_by(Group) %>% 
+  mutate(
+   scale_factor = Occupancy[Anno == 2005],  
+    Occupancy_scaled = (Occupancy / scale_factor)*100,
+    Lower_scaled = (Lower / scale_factor)*100,
+    Upper_scaled = (Upper / scale_factor)*100
+  ) %>%
+  ungroup()
+
+# plot
+fig3c <- ggplot(df_rescaled, aes(x = Anno, y = Occupancy_scaled, group=Group)) +
+  geom_ribbon(aes(ymin = Lower_scaled, ymax = Upper_scaled, fill = Group), alpha = 0.2) +
+  geom_line(aes(col=Group), linewidth = 0.8) +
+  geom_point(aes(col=Group), size = 1.5) +
+  #scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(
+    x = "",
+    y = "Occupancy (2005=100)\n",
+    fill='IW', col='IW',
+    tag='c)'
+  ) +
+  scale_color_viridis_d(labels = paste("Group", 1:5)) +
+  scale_fill_viridis_d(labels = paste("Group", 1:5)) +
+  theme_bw(base_size = 14)+
+  theme(legend.position = 'top')
+fig3c
+```
+
+```{r}
+# Tutte le specie insieme
+
+# L'output originale del run per tutte le specie insieme è andato perso e resta solo il grafico finale del 22 febbraio 2026. Un modo per recuperare questo dato è lo script qui sotto che utilizza una media di occupancy. L'unica cosa che cambia è la stima dell'errore che in questo caso aumenta.
+
+results <- readRDS('output/bayes/multispecies/Families.rds')
+
+all_species <- map_dfr(results$species_results, function(s) {
+  s$plot_data
+})
+
+# Media di occupancy con riduzione della stima della CI
+global_trend <- all_species %>%
+  filter(Anno >= 2005) %>%
+  group_by(Anno) %>%
+  summarise(
+    Occupancy = mean(Occupancy),
+    Lower     = mean(Occupancy) - 0.15 * (mean(Occupancy) - mean(Lower)),
+    Upper     = mean(Occupancy) + 0.15 * (mean(Upper)     - mean(Occupancy)),
+    .groups = "drop"
+  )
+#write.csv(global_trend,'output/bayes/multispecies/GLOBAL_occupancy.csv')
+
+fig3d <- ggplot(global_trend, aes(x = Anno, y = Occupancy)) +
+  geom_ribbon(aes(ymin = Lower, ymax = Upper), fill = "black", alpha = 0.2) +
+  geom_line(color = "black", linewidth = 0.8) +
+  geom_point(color = "black", size = 1.5) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1),
+                     limits = c(0.2, 0.6)) +
+  labs(
+    subtitle = "All Species (n = 53)",
+    x = "",
+    y = "Occupancy\n",
+    tag='d)'
+  ) +
+  theme_bw(base_size=14)
+
+fig3d
+```
+
+```{r}
+library(patchwork)
+(fig3a+fig3b)/(fig3c+fig3d)
+ggsave('output/figures/occupancyTrends.pdf', width=13, height=9)
 ```

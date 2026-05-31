@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <script id="outline-metadata" type="text/json">
+      {"sidebar.queries":[{"filterPath":"\/\/heading","id":"query-F307F954-C5E6-466B-847C-2C3EC2FE58CA","text":"Headings"}]}
+    </script>
+  </head>
+  <body>
+    <ul id="XeU_TilYHNdhmhj-BWivX" data-created="0001-01-01T00:00:00Z" data-modified="0001-01-01T00:00:00Z">
+      <li id="b-" data-type="heading" data-created="2026-05-05T13:00:08Z" data-modified="2026-05-05T13:00:15Z">
+        <p>Intro</p>
+        <ul>
+          <li id="GS" data-created="2026-05-05T13:00:15Z" data-modified="2026-05-12T08:19:37Z">
+            <p>The <strong>86,287</strong> records available for the continental biogeographic region of Piedmont and Lombardy permitted to analyze occupancy trends for a total of 53 Odonata species.</p>
+            <ul>
+              <li data-created="2026-05-12T08:19:37Z" data-modified="2026-05-12T08:20:01Z">
+                <p>Modificare per illustrare l’importanza dell’approccio Bayesiano</p>
+              </li>
+            </ul>
+          </li>
+          <li id="XN" data-created="2026-05-05T13:10:06Z" data-modified="2026-05-05T13:10:06Z">
+            <p/>
+          </li>
+          <li id="BJ" data-created="2026-05-05T13:00:45Z" data-modified="2026-05-08T20:56:23Z">
+            <p>The two analytical approaches employed provided consistent results across the 53 species analyzed and trend classifications agreed in 81.1% of cases (Tab. 1) and no species showed a diametrically opposite trend (declining vs. increasing). Discrepancies were limited to a small subset of species and were confined to borderline cases, where estimated trends were close to zero (Sen’s slope magnitude ranging from 0.000 to 0.012). Overall, this high level of agreement supports the robustness of the Bayesian framework and confirms that the main ecological patterns identified are not method-dependent. Accordingly, subsequent results are presented based on the Bayesian approach.</p>
+          </li>
+        </ul>
+      </li>
+      <li id="K8" data-created="2026-05-05T13:00:08Z" data-modified="2026-05-05T13:00:08Z">
+        <p/>
+      </li>
+      <li id="dB" data-type="heading" data-created="2026-05-04T22:03:15Z" data-modified="2026-05-04T22:21:59Z">
+        <p>Temperature index</p>
+        <ul>
+          <li id="bm" data-created="2026-05-04T22:10:21Z" data-modified="2026-05-04T22:54:52Z">
+            <p>The Temperature Index (TI) analysis revealed a clear divergence among species groups, highlighting a climate-driven reshaping of the odonate community. In particular, cold-adapted species declined, while thermophilic species expanded (Fig. 3c). Species of group TI1, which are associated with cool-water conditions, exhibited the steepest and most consistent decline. Occupancy fell rapidly from 100% to 87% by 2007, 79% by 2010, continuing downward without any sign of stabilization, reaching 62% by 2025. Species of group TI2 followed a similar downward trend, losing approximately 20% of their starting occupancy by 2025. By contrast, group TI3 never fell below its baseline. Occupancy of this warm-adapted species increased slightly in 2006 and stabilized around 107% throughout the entire monitoring period. Finally, the most remarkable pattern was associated with thermophilic species, driven by the presence of <em>Trithemis annulata</em>. By 2023, this species had expanded its range by nearly 900% from its first occurrence in 2017.</p>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </body>
+</html>

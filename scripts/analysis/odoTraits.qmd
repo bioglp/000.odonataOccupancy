@@ -6,8 +6,8 @@ format: html
 ## Import data
 
 ```{r}
-library(tidyverse)
-library(here)
+library(pacman)
+p_load(tidyverse, here, ggpur, rstatix)
 odo <- read.csv(here('data/raw/Sönke/odoTraits.csv'))
 ```
 
@@ -18,6 +18,14 @@ library(factoextra)
 df_pca <- odo |>
   select("Temperature.Index", "HV", "IW")
 rownames(df_pca) <- odo$species
+```
+
+```{r}
+library(rstatix)
+odo |>
+  select(HV_Group, HV) |>
+  group_by(HV_Group) |>
+  get_summary_stats()
 ```
 
 ```{r}
@@ -113,9 +121,8 @@ odo$IW_Group <- cut(
   include.lowest = TRUE,
   labels = c("1", "2", "3", "4", "5")
 )
-odo |>
-  write.csv('input/Sönke/odoTraits.csv')
-
+# odo |>
+#   write.csv('input/Sönke/odoTraits.csv')
 ```
 
 ```{r}
@@ -130,4 +137,45 @@ hc_ward <- hclust(dist_matrix, method = "ward.D2")
 odo |>
   select(species, HV_Group) |>
   group_split(HV_Group)
+```
+
+
+```{r}
+HV100 <- read.csv('output/bayes/multispecies/HV100_2026-03-13.csv')
+HV100 |>
+  group_by(Group) |>
+  get_summary_stats(Occupancy) |>
+  select(mean, sd)
+```
+
+
+```{r}
+IW100 <- read.csv('output/bayes/multispecies/IW100_2026-03-13.csv')
+IW100 |>
+  group_by(Group) |>
+  get_summary_stats(Occupancy) |>
+  select(mean, sd)
+
+odo |>
+  select(species, IW_Group) |>
+  filter(IW_Group == 5)
+
+IW100 |>
+  filter(Anno == 2016)
+```
+
+
+```{r}
+TI100 <- read.csv('output/bayes/multispecies/TI100_2026-03-13.csv')
+TI100 |>
+  group_by(Group) |>
+  get_summary_stats(Occupancy) |>
+  select(mean, sd)
+
+odo |>
+  select(species, Temp_Group) |>
+  filter(Temp_Group == 5)
+
+TI100 |>
+  filter(Anno == 2016)
 ```

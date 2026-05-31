@@ -1,7 +1,7 @@
 ---
 title: "000.odonataOccupancy"
 author: Gianandrea La Porta
-date: 2025-11-08
+date: 2026-05-31
 format: 
     html:
         theme: cosmo
@@ -19,10 +19,24 @@ Serie dati raccolti in Piemonte e Lombardia nel periodo compreso tra il 1999 e i
 ## Output elaborazioni
 
 -   [output10k](https://bioglp.github.io/000.odonataOccupancy/000.odonataOccupancy10.html)
-
 -   [output20k](https://bioglp.github.io/000.odonataOccupancy/000.odonataOccupancy20.html)
 
 ## Daily log
+
+- 🌱 NEXT
+    - confronto riduzione della biodiversità in valle del Po rispetto al resto d'EU
+
+- 2026-05-31
+    - elaborare una stima di richness secondo il modello di Tingley
+    - creare figura 3 con le specie:
+        - S. metallica, A. mixta
+        - T. annulata, S. fonscolombi/S. fusca
+    - rivedere colori per trend di figura 4
+
+- 2026-05-11
+    - creata figura 3 con i trend dei gruppi - odoGroups.qmd
+    - elaborata tabella 1 con i valori degli indici e Modello Bayesiano
+
 - 2026-04-09
     - figura di sintesi per i trend di tutte le specie e correzione O. cancellatum
     - stesura prima parte results 

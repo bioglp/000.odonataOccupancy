@@ -1,7 +1,7 @@
 ---
 title: "occupancyOdonata10k"
 author: "Gianandrea La Porta"
-date: "2025-02-07"
+date: "2026-05-31"
 format: 
   html:
     theme: cosmo
@@ -21,13 +21,19 @@ output-dir: reports
 ## Libraries
 
 ```{r libraries}
-dir.create('input', showWarnings = FALSE)
-#dir.create('output', showWarnings = FALSE)
-#dir.create('plots', showWarnings = FALSE)
-dir.create('R-script', showWarnings = FALSE)
-library(rtrim)
+#library(rtrim)
 library(pacman)
-p_load(tidyverse, gt, skimr, ggpubr, rstatix, openxlsx, scales, patchwork)
+p_load(
+  tidyverse,
+  gt,
+  skimr,
+  ggpubr,
+  rstatix,
+  openxlsx,
+  scales,
+  patchwork,
+  parallel
+)
 theme_set(theme_bw(base_size = 14))
 ```
 
@@ -80,6 +86,7 @@ iNat <- iNat |>
   )
 
 dfo <- rbind(dfo, iNat)
+dim(dfo)
 ```
 
 ```{r nomiSpecie}
@@ -123,6 +130,7 @@ dfo |>
   arrange(desc(n))
 
 dim(dfo)
+unique(dfo$species) # 69 specie totali
 ```
 
 La serie dati va dal `r min(dfo$date_year)` al `r max(dfo$date_year)`.
@@ -277,7 +285,6 @@ dfo <- dfo |>
 Plot del numero di celle in cui la specie è stata osservata nel corso degli anni. Il dato non tiene conto dello sforzo di ricerca.
 
 ```{r linear_trend, fig.height=5, fig.width=7}
-
 # Numero di siti per specie e anno
 species_sites <- dfo |>
   group_by(species, date_year) |>
@@ -322,7 +329,6 @@ Per tenere conto anche del differente sforzo di copertura delle celle del territ
 ```{r glm_offset}
 #| eval: true
 #| include: true
-
 # 1. PREPARAZIONE DATI
 all_cells <- sort(unique(dfo$cellcode))
 all_years <- sort(unique(dfo$date_year))
@@ -380,7 +386,6 @@ species_trends <- results |>
 Le specie che mostrano trend negativi significativi nei loro range sono:
 
 ```{r negative-trends}
-
 # Seleziona solo le righe con pendenza negativa
 negative_trends <- species_trends |>
   filter(term == "date_year", estimate < 0, p.value < 0.05) |>
@@ -453,7 +458,7 @@ effort_matrix <- dfo |>
   column_to_rownames("cellcodeX") |>
   as.matrix()
 
-source('R-script/occuProb.R')
+source('R/occuProb.R')
 
 # listaSpecie
 # occuProb("Sympetrum depressiusculum")
@@ -475,7 +480,7 @@ source('R-script/occuProb.R')
 library(nimble)
 library(coda)
 
-# source('R-Script/baseDati.R')
+#source('RbaseDati.R')
 # nomeSp = 'Trithemis annulata'
 
 # 1. PREPARAZIONE DATI COMUNI
@@ -499,7 +504,8 @@ effort_matrix <- dfo %>%
   as.matrix()
 
 dfo$cellcodeX <- dfo$cellcode
-source('R-script/odoBayes.r')
+source('R/odoBayes.r')
+source('R/odoRichness.r')
 
 # configurazione da 30000 run
 #    niter = 30000,
@@ -513,4 +519,16 @@ source('R-script/odoBayes.r')
 # odoBayes("Sympetrum sanguineum")
 # odoBayes("Ophiogomphus cecilia")
 # resultsBayes <- map(listaSpecie, odoBayes)
+```
+
+
+```{r}
+res <- odoRichness_robust(
+  species_index_df = dfo,
+  all_cells = all_cells,
+  all_years = all_years,
+  n_sites_target = 100,
+  rare_threshold = 5,
+  n_zero = 13
+)
 ```
